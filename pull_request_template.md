@@ -1,10 +1,10 @@
-# TOTO
+# Summary
 
 - Write here
 - Write here
 
-## Relate Task
+## Related tasks
 
-## Tested case
+## Tested cases
 
 ## Captured images
