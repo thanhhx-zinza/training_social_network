@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  db:
+    image: mysql:5.7.22
+    command: --character-set-server=utf8mb4
+    environment:
+      MYSQL_USER: tung
+      MYSQL_PASSWORD: 12345
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: course_laravel
+    volumes:
+      - ./dump:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8081:80
+    links:
+      - db
+
+  web:
+    tty: true
+    stdin_open: true
+    command: sh /docker-entrypoint.sh
+    build: ./docker-dev/web
+    links:
+      - db
+    ports:
+      - 8000:8000
+      - 443:443
+    environment:
+      APP_DEBUG: 'true'
+      XDEBUG_MODE: coverage
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/app/vendor/bin
+    volumes:
+      - .:/app:cached
+      - ./docker-dev/web/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - composer_caches:/app/vendor
+
+volumes:
+  composer_caches:
