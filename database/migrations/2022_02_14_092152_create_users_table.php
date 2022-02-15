@@ -7,19 +7,19 @@ use Illuminate\Support\Facades\Schema;
 class CreateUsersTable extends Migration
 {
     /**
-     * Run the migrations
+     * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->char('name', 50);
             $table->char('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->char('password');
-            $table->timestamp('email_verified_at')->default(null)->nullable();
-            $table->rememberToken()->default(null)->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }
