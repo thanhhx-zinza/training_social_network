@@ -20,8 +20,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: 12345
-          MYSQL_DATABASE: course_laravel
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: social_media
         ports:
           - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
