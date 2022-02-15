@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="p-3 auth-form">
-    <h1 class="text-center">Welcome</h1>
+    <h1 class="text-center">Login</h1>
     <div class="mt-5 login-form">
         @php
             $email = (old('email') != null) ? old('email') : '';
@@ -17,8 +17,7 @@
             @csrf
             <!-- Email -->
             <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
+                <div class="col">
                     <input
                         type="email"
                         name="email"
@@ -33,32 +32,28 @@
 
             <!-- Password -->
             <div class="row mt-3">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
+                <div class="col">
                     <input type="password" name="password" class="form-control form-control-lg"  placeholder="Password" required autocomplete="current-password">
                 </div>
             </div>
 
             <div class="row mt-4">
-                <div class="col-md-1"></div>
-                <div class="col-md-5">
+                <div class="col-6">
                     <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
                         <label class="form-check-label" for="remember">
                             Remember me?
                         </label>
                     </div>
                 </div>
-                <div class="col-md-5 text-end">
+                <div class="col-6 text-end">
                     <a class="forgot-pass" href="">Forgot password?</a>
                 </div>
             </div>
 
             @if ($errors->any())
                 <div class="row mt-3">
-                    <div class="col-md-1"></div>
-                    <div class="alert alert-danger col-md-10">
+                    <div class="alert alert-danger col">
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
