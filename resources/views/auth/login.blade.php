@@ -13,7 +13,7 @@
         @php
             $email = (old('email') != null) ? old('email') : '';
         @endphp
-        <form method="post" action="{{ route('login.authenticate') }}">
+        <form method="post" action="{{ route('auth.authenticate') }}">
             @csrf
             <!-- Email -->
             <div class="row">
