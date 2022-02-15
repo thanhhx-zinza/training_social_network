@@ -1,4 +1,4 @@
-name: Phpcs
+name: Testing coding convention with Phpcs
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ feature/22/add_github_action ]
 
 jobs:
-  laravel-tests:
+  phpcs:
 
     runs-on: ubuntu-latest
 
