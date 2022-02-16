@@ -19,7 +19,6 @@ class CreateReactionsTable extends Migration
             $table->integer('posts_id');
             $table->char('type', 50);
             $table->timestamps();
-            
         });
     }
 

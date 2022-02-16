@@ -17,9 +17,9 @@ class PermissionChecker
      */
     public function handle(Request $request, Closure $next, $roles)
     {
-        $allowRoles = explode('|',$roles);
-        if (in_array(Auth::user()->getStrRole(),$allowRoles)) {
-            return $next($request); 
+        $allowRoles = explode('|', $roles);
+        if (in_array(Auth::user()->getStrRole(), $allowRoles)) {
+            return $next($request);
         }
         return redirect(url('admin/403'));
     }

@@ -19,7 +19,6 @@ class CreateSettingsTable extends Migration
             $table->integer('is_noti');
             $table->integer('is_add_friend');
             $table->timestamps();
-            
         });
     }
 

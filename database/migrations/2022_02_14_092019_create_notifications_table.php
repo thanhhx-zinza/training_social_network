@@ -20,7 +20,6 @@ class CreateNotificationsTable extends Migration
             $table->char('content', 50);
             $table->char('action', 50);
             $table->timestamps();
-            
         });
     }
 

@@ -19,7 +19,6 @@ class CreateRelationsTable extends Migration
             $table->integer('friends_id');
             $table->char('type', 50);
             $table->timestamps();
-            
         });
     }
 

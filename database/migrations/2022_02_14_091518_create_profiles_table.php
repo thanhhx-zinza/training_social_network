@@ -22,7 +22,6 @@ class CreateProfilesTable extends Migration
             $table->char('gender', 50);
             $table->time('birthday');
             $table->timestamps();
-            
         });
     }
 
