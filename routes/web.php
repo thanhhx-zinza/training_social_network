@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\App\PostController;
+use App\Http\Controllers\App\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +22,11 @@ Route::get('/register', [AuthController::class, 'register'])->name('auth.registe
 Route::post('/register', [AuthController::class, 'registerAccount'])->name('auth.register_account');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('app.home');
-    })->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
     Route::get('/profile', function () {
         return view('welcome');
     })->name('profile');
 
-    Route::resource('post', PostController::class)->except(['index']);
+    Route::resource('post', PostController::class);
 });

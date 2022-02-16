@@ -1,4 +1,4 @@
-@extends('layout.layout')
+@extends('app-layout.layout')
 
 @section('title', 'Login')
 

@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\App;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
@@ -12,10 +15,10 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function index()
-    // {
-    //     //
-    // }
+    public function index()
+    {
+        //
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -33,9 +36,19 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //
+        $audiences = ['public', 'private', 'only-me', 'friends'];
+        if (!in_array($request->audience, $audiences)) {
+            return redirect()->back();
+        }
+        $post = new Post();
+        $post->users_id = Auth::user()->id;
+        $post->content = $request->content;
+        $post->audience = $request->audience;
+        $post->display = 1;
+        $post->save();
+        return redirect(route('home.index'));
     }
 
     /**
