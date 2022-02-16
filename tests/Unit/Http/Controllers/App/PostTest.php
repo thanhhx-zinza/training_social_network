@@ -6,21 +6,35 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class PostTest extends TestCase
 {
     use DatabaseTransactions;
-    use WithoutMiddleware;
 
     /**
-     * @return void
+     * Test function index when logged in
+     *
      */
-    // protected function setUp(): void
-    // {
-    //     $user = User::first();
-    //     $this->be($user);
-    // }
+    public function testIndexWLoggedIn()
+    {
+        $user = User::first();
+        $this->be($user);
+        $response = $this->get('/post');
+        $response->assertOk();
+        $data = $response->getOriginalContent()->getData();
+        $this->assertTrue(isset($data['user']) && isset($data['audiences']));
+    }
+
+    /**
+     * Test function index when logged out
+     *
+     */
+    public function testIndexWLoggedOut()
+    {
+        $response = $this->get('/post');
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
+    }
 
     /**
      * Test function store successfully
@@ -37,6 +51,11 @@ class PostTest extends TestCase
             'content' => 'hello world',
             'audience' => $audience,
         ]);
+        $this->assertDatabaseHas('posts', [
+            'users_id' => $user->id,
+            'content' => 'hello world',
+            'audience' => $audience,
+        ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
     }
@@ -49,7 +68,7 @@ class PostTest extends TestCase
         return [
             ['public'],
             ['private'],
-            ['only-me'],
+            ['onlyme'],
             ['friends']
         ];
     }

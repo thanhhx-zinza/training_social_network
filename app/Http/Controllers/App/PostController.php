@@ -10,6 +10,13 @@ use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
+    private $audiences = [];
+
+    public function __construct()
+    {
+        $this->audiences = Post::getAudiences();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +24,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        return view('app.post', ['user' => $user, 'audiences' => $this->audiences]);
     }
 
     /**
@@ -38,17 +46,19 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $audiences = ['public', 'private', 'only-me', 'friends'];
-        if (!in_array($request->audience, $audiences)) {
-            return redirect()->back();
+        if (!in_array($request->audience, array_flip($this->audiences))) {
+            return redirect()->back()->withInput();
         }
         $post = new Post();
         $post->users_id = Auth::user()->id;
         $post->content = $request->content;
         $post->audience = $request->audience;
         $post->display = 1;
-        $post->save();
-        return redirect(route('home.index'));
+        if ($post->save()) {
+            return redirect(route('home.index'));
+        } else {
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
