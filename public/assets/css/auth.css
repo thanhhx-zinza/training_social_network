@@ -6,6 +6,10 @@
     border: 1px solid lightgray;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
+.login-form, .register-form {
+    margin: auto;
+    width: 70%;
+}
 input.btn-login, input.btn-register {
     background-color: #00c292;
     color: white;
@@ -23,3 +27,10 @@ input.btn-login, input.btn-register {
    color: black;
    text-decoration: underline;
 }
+@media only screen and (max-width: 600px) {
+    .auth-form {
+        width: 100%;
+        border: none;
+        box-shadow: none;
+    }
+  }
