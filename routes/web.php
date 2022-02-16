@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +22,12 @@ Route::post('/register', [AuthController::class, 'registerAccount'])->name('auth
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        return view('welcome');
+        return view('app.home');
     })->name('home');
 
     Route::get('/profile', function () {
         return view('welcome');
     })->name('profile');
+
+    Route::resource('post', PostController::class)->except(['index']);
 });
