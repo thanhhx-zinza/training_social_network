@@ -13,26 +13,26 @@ class PostTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * Test function index when logged in
+     * Test function create when logged in
      *
      */
-    public function testIndexWLoggedIn()
+    public function testCreateWLoggedIn()
     {
         $user = User::first();
         $this->be($user);
-        $response = $this->get('/post');
+        $response = $this->get('/post/create');
         $response->assertOk();
         $data = $response->getOriginalContent()->getData();
         $this->assertTrue(isset($data['user']) && isset($data['audiences']));
     }
 
     /**
-     * Test function index when logged out
+     * Test function create when logged out
      *
      */
-    public function testIndexWLoggedOut()
+    public function testCreateWLoggedOut()
     {
-        $response = $this->get('/post');
+        $response = $this->get('/post/create');
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
@@ -81,7 +81,7 @@ class PostTest extends TestCase
      */
     public function testStoreFailInValidate($content, $audience)
     {
-        $this->get(route('post.index'));
+        $this->get('post/create');
         Session::start();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -89,7 +89,7 @@ class PostTest extends TestCase
             'audience' => $audience,
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post');
+        $response->assertRedirect('/post/create');
     }
 
     /**
@@ -111,7 +111,7 @@ class PostTest extends TestCase
      */
     public function testStoreFailWWrongAudience()
     {
-        $this->get(route('post.index'));
+        $this->get('post/create');
         Session::start();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -119,6 +119,6 @@ class PostTest extends TestCase
             'audience' => 'kkk',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post');
+        $response->assertRedirect('/post/create');
     }
 }

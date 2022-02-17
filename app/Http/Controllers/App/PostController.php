@@ -5,8 +5,8 @@ namespace App\Http\Controllers\App;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostRequest;
+use \stdClass;
 
 class PostController extends Controller
 {
@@ -24,8 +24,24 @@ class PostController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        return view('app.post', ['user' => $user, 'audiences' => $this->audiences]);
+        $postList = Post::where('display', '=', '1')
+            ->where('users_id', '=', $this->user()->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+        $posts = [];
+        if ($postList != null) {
+            foreach ($postList as $row) {
+                $k = new stdClass();
+                $k->id = $row->id;
+                $k->content = $row->content;
+                $k->audience = Post::getAudienceValue($row->audience);
+                $k->userName = $row->getUser->name;
+                $posts[] = $k;
+            }
+            return view('app.post-read', ['posts' => $posts]);
+        } else {
+            return view('app.error');
+        }
     }
 
     /**
@@ -35,7 +51,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('app.post-create-update', ['user' => $this->user(), 'audiences' => $this->audiences]);
     }
 
     /**
@@ -46,11 +62,11 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        if (!in_array($request->audience, array_flip($this->audiences))) {
+        if (!Post::checkAudience($request->audience)) {
             return redirect()->back()->withInput();
         }
         $post = new Post();
-        $post->user_id = Auth::user()->id;
+        $post->users_id = $this->user()->id;
         $post->content = $request->content;
         $post->audience = $request->audience;
         $post->display = 1;
@@ -80,7 +96,11 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('app.post-create-update', [
+            'user' => $this->user(),
+            'audiences' => $this->audiences,
+            'post' => $post
+        ]);
     }
 
     /**
@@ -90,9 +110,20 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        if (!Post::checkAudience($request->audience)
+            || $post->users_id !== $this->user()->id
+        ) {
+            return redirect()->back()->withInput();
+        }
+        $post->content = $request->content;
+        $post->audience = $request->audience;
+        if ($post->save()) {
+            return redirect(route('post.index'));
+        } else {
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
