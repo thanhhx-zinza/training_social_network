@@ -50,6 +50,7 @@ class AuthTest extends TestCase
      */
     public function testAuthenticateFailInValidate($email, $password)
     {
+        $response = $this->get('/login');
         Session::start();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -57,7 +58,7 @@ class AuthTest extends TestCase
             'password' => $password,
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/login');
     }
 
     /**
@@ -81,6 +82,7 @@ class AuthTest extends TestCase
      */
     public function testAuthLoginFailWWrongEmail()
     {
+        $response = $this->get('/login');
         Session::start();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -88,7 +90,7 @@ class AuthTest extends TestCase
             'password' => '12345678',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/login');
     }
 
      /**
@@ -98,6 +100,7 @@ class AuthTest extends TestCase
      */
     public function testAuthLoginFailWWrongPassword()
     {
+        $response = $this->get('/login');
         Session::start();
         $user = User::first();
         $response = $this->post('login', [
@@ -106,6 +109,6 @@ class AuthTest extends TestCase
             'password' => '123456789jfjf',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/login');
     }
 }

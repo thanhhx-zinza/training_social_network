@@ -80,6 +80,7 @@ class PostTest extends TestCase
      */
     public function testStoreFailInValidate($content, $audience)
     {
+        $this->get(route('post.index'));
         Session::start();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -87,7 +88,7 @@ class PostTest extends TestCase
             'audience' => $audience,
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/post');
     }
 
     /**
@@ -109,6 +110,7 @@ class PostTest extends TestCase
      */
     public function testStoreFailWWrongAudience()
     {
+        $this->get(route('post.index'));
         Session::start();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -116,6 +118,6 @@ class PostTest extends TestCase
             'audience' => 'kkk',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/post');
     }
 }
