@@ -18,7 +18,7 @@
             <div class="col-5"></div>
             <div class="col-3 text-end">
                 <a class="btn btn-primary btn-sm" href="{{ route('post.edit', ['post' => $post->id]) }}" role="button">Edit</a>
-                <a class="btn btn-primary btn-sm" href="#" role="button">Delete</a>
+                <a class="btn btn-primary btn-sm" href="{{ route('post.destroy', ['post' => $post->id]) }}" role="button">Delete</a>
             </div>
         </div>
         <div class="row my-3 mx-1">

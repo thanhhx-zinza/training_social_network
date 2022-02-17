@@ -132,8 +132,16 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        if ($post != null
+            && $post->users_id == $this->user()->id
+        ) {
+            $post->delete();
+            return redirect(route("post.index"));
+        } else {
+            return view('app.error');
+        }
     }
 }

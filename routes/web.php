@@ -24,8 +24,11 @@ Route::post('/register', [AuthController::class, 'registerAccount'])->name('auth
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
-    Route::resource('post', PostController::class);
+
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::resource('post', PostController::class)->except(['destroy']);
+    Route::get('post/{post}/delete', [PostController::class, 'destroy'])->name('post.destroy');
 });
