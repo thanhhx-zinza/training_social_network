@@ -1,12 +1,12 @@
-@extends('layout.layout')
+@extends('app-layout.layout')
 
 @section('title', 'Login')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/auth/auth.css') }}">
 @endsection
 
-@section('content')
+@section('main')
 <div class="p-3 auth-form">
     <h1 class="text-center">Login</h1>
     <div class="mt-5 login-form">
