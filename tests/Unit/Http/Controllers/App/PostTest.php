@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Models\Post;
 
 class PostTest extends TestCase
 {
@@ -234,7 +233,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $post = Post::where('users_id', '=', $user->id)->first();
+        $post = Post::where('user_id', '=', $user->id)->first();
         Session::start();
         $response = $this->put('post/'.$post->id, [
             '_token' => csrf_token(),
@@ -243,7 +242,7 @@ class PostTest extends TestCase
         ]);
         $this->assertDatabaseHas('posts', [
             'id' => $post->id,
-            'users_id' => $user->id,
+            'user_id' => $user->id,
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'public',
         ]);
@@ -260,7 +259,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $post = Post::where('users_id', '=', $user->id)->first();
+        $post = Post::where('user_id', '=', $user->id)->first();
         $response = $this->get('post/'.$post->id.'/edit');
         Session::start();
         $response = $this->put('post/'.$post->id, [
@@ -298,7 +297,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $post = Post::where('users_id', '!=', $user->id)->first();
+        $post = Post::where('user_id', '!=', $user->id)->first();
         $response = $this->get('post/'.$post->id.'/edit');
         Session::start();
         $response = $this->put('post/'.$post->id, [
@@ -317,7 +316,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $post = Post::where('users_id', '=', $user->id)->first();
+        $post = Post::where('user_id', '=', $user->id)->first();
         $response = $this->get('post/'.$post->id.'/edit');
         Session::start();
         $response = $this->put('post/'.$post->id, [
@@ -350,7 +349,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $post = Post::where('users_id', '!=', $user->id)->first();
+        $post = Post::where('user_id', '!=', $user->id)->first();
         Session::start();
         $response = $this->get('post/'.$post->id.'/delete', [
             '_token' => csrf_token(),
@@ -381,7 +380,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $post = Post::where('users_id', '=', $user->id)->first();
+        $post = Post::where('user_id', '=', $user->id)->first();
         $response = $this->get('post/'.$post->id.'/delete');
         $postDeleted = Post::where('id', '=', $post->id)->onlyTrashed()->first();
         $this->assertTrue($postDeleted->deleted_at != null);

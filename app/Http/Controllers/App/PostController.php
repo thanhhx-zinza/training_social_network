@@ -25,7 +25,7 @@ class PostController extends Controller
     public function index()
     {
         $postList = Post::where('display', '=', '1')
-            ->where('users_id', '=', $this->user()->id)
+            ->where('user_id', '=', $this->user()->id)
             ->orderBy('created_at', 'desc')
             ->paginate(5);
         $posts = [];
@@ -66,7 +66,7 @@ class PostController extends Controller
             return redirect()->back()->withInput();
         }
         $post = new Post();
-        $post->users_id = $this->user()->id;
+        $post->user_id = $this->user()->id;
         $post->content = $request->content;
         $post->audience = $request->audience;
         $post->display = 1;
@@ -120,7 +120,7 @@ class PostController extends Controller
         $post = Post::find($id);
         if ($post != null) {
             if (!Post::checkAudience($request->audience)
-                || $post->users_id !== $this->user()->id
+                || $post->user_id !== $this->user()->id
             ) {
                 return redirect()->back()->withInput();
             }
@@ -146,7 +146,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         if ($post != null
-            && $post->users_id == $this->user()->id
+            && $post->user_id == $this->user()->id
         ) {
             $post->delete();
             return redirect(route("post.index"));

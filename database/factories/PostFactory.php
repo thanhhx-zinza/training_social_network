@@ -16,7 +16,7 @@ class PostFactory extends Factory
     {
         $user = User::first();
         return [
-            'users_id' => $user->id,
+            'user_id' => $user->id,
             'content' => 'Hello world',
             'audience' => 'public',
             'display' => 1,

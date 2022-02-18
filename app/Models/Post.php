@@ -26,7 +26,7 @@ class Post extends Model
 
     public function getUser()
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public static function getAudienceValue($audienceKey)
