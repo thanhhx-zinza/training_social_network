@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\Post;
 
 class PostTest extends TestCase
 {
@@ -52,7 +53,7 @@ class PostTest extends TestCase
             'audience' => $audience,
         ]);
         $this->assertDatabaseHas('posts', [
-            'users_id' => $user->id,
+            'user_id' => $user->id,
             'content' => 'hello world',
             'audience' => $audience,
         ]);

@@ -50,7 +50,7 @@ class PostController extends Controller
             return redirect()->back()->withInput();
         }
         $post = new Post();
-        $post->users_id = Auth::user()->id;
+        $post->user_id = Auth::user()->id;
         $post->content = $request->content;
         $post->audience = $request->audience;
         $post->display = 1;

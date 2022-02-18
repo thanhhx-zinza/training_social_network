@@ -1,13 +1,9 @@
-@extends('app-layout.layout')
-
-@section('title', 'Login')
-
-@section('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/auth/auth.css') }}">
-@endsection
-
+@extends('guest-layout.layout')
 @section('main')
-<div class="p-3 auth-form">
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6 border">
+    <div class="p-3 auth-form">
     <h1 class="text-center">Register</h1>
     <div class="mt-5 register-form">
         @php
@@ -72,5 +68,7 @@
             </div>
         </form>
     <div>
+</div>
+    </div>
 </div>
 @endsection
