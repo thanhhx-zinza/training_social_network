@@ -40,7 +40,7 @@ class PostController extends Controller
             }
             return view('app.post-read', ['posts' => $posts]);
         } else {
-            return view('app.error');
+            return redirect('error');
         }
     }
 
@@ -94,13 +94,18 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        return view('app.post-create-update', [
-            'user' => $this->user(),
-            'audiences' => $this->audiences,
-            'post' => $post
-        ]);
+        $post = Post::find($id);
+        if ($post != null) {
+            return view('app.post-create-update', [
+                'user' => $this->user(),
+                'audiences' => $this->audiences,
+                'post' => $post
+            ]);
+        } else {
+            return redirect('error');
+        }
     }
 
     /**
@@ -110,19 +115,24 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(PostRequest $request, Post $post)
+    public function update(PostRequest $request, $id)
     {
-        if (!Post::checkAudience($request->audience)
-            || $post->users_id !== $this->user()->id
-        ) {
-            return redirect()->back()->withInput();
-        }
-        $post->content = $request->content;
-        $post->audience = $request->audience;
-        if ($post->save()) {
-            return redirect(route('post.index'));
+        $post = Post::find($id);
+        if ($post != null) {
+            if (!Post::checkAudience($request->audience)
+                || $post->users_id !== $this->user()->id
+            ) {
+                return redirect()->back()->withInput();
+            }
+            $post->content = $request->content;
+            $post->audience = $request->audience;
+            if ($post->save()) {
+                return redirect(route('post.index'));
+            } else {
+                return redirect()->back()->withInput();
+            }
         } else {
-            return redirect()->back()->withInput();
+            return redirect('error');
         }
     }
 
@@ -141,7 +151,7 @@ class PostController extends Controller
             $post->delete();
             return redirect(route("post.index"));
         } else {
-            return view('app.error');
+            return redirect('error');
         }
     }
 }

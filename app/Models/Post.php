@@ -12,7 +12,7 @@ class Post extends Model
     use HasFactory;
     use SoftDeletes;
 
-    public static $audiences = [
+    private static $audiences = [
         'public' => 'Public',
         'private' => 'Private',
         'onlyme' => 'Only me',
@@ -31,7 +31,7 @@ class Post extends Model
 
     public static function getAudienceValue($audienceKey)
     {
-        foreach(self::$audiences as $key => $value) {
+        foreach (self::$audiences as $key => $value) {
             if ($audienceKey === $key) {
                 return $value;
             }
