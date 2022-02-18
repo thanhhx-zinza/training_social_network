@@ -41,6 +41,7 @@ class ProfileControllerTest extends TestCase
         ];
         $this->new = profile::create($this->profile);
     }
+    
     /**
      * @dataProvider provider
      */
@@ -86,16 +87,14 @@ class ProfileControllerTest extends TestCase
             }
             array_push($result, $a);
         }
-        // dd($result);
         return $result;
     }
 
-    public function testUpdateNoChange()
+    public function testUpdateSuccess()
     {
         $this->be(User::orderby('id', 'desc')->first());
         $a = Auth::User()->profile;
         $this->profile = [
-            'user_id' => $a->user_id,
             'first_name' => $a->first_name,
             'last_name' => $a->last_name,
             'address' => $a->address,
@@ -104,29 +103,7 @@ class ProfileControllerTest extends TestCase
             'phone_number' => $a->phone_number
         ];
         $response = $this->call('POST', '/profile/update', $this->profile);
-        $response->assertRedirect('/');
-    }
-
-    public function testUpdateToChange()
-    {
-        $this->be(User::orderby('id', 'desc')->first());
-        $a = Auth::User()->profile;
-        $this->profile = [
-            'user_id' => $a->user_id,
-            'first_name' => 'nvnvnvnvn',
-            'last_name' => $a->last_name,
-            'address' => $a->address,
-            'gender' => $a->gender,
-            'birthday' => $a->birthday,
-            'phone_number' => $a->phone_number
-        ];
-        // dd($profile);
-        // dd(Auth::User()->profile);
-        $response = $this->call('POST', '/profile/update', $this->profile);
-        // dd(1);
         $response->assertRedirect('/profile/show');
-        // dd(1);
-        unset($this->profile['_token']);
         $this->assertDatabaseHas('profiles', $this->profile);
     }
 

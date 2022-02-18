@@ -74,7 +74,6 @@ class AuthTest extends TestCase
             'birthday' => $faker->datetime()
         ];
         $new = profile::create($profile);
-
         $profile = $user->profile;
         // dd($profile);
         $profile->first_name = $first_name;
@@ -115,12 +114,8 @@ class AuthTest extends TestCase
             }
             array_push($result, $a);
         }
-        // dd($result);
         return $result;
     }
-
-
-
 
     /**
      * Test function authenticate fail in validate

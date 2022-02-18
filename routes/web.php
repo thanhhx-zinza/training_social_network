@@ -24,11 +24,6 @@ Route::post('/register', [AuthController::class, 'registerAccount'])->name('auth
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
-
-    Route::get('/profile', function () {
-        return view('welcome');
-    })->name('profile');
-
     Route::resource('post', PostController::class);
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');

@@ -1,9 +1,7 @@
 @extends('app-layout.layout')
-
 @section('main')
 <!-- Button trigger modal -->
 <script>
-  
   var loadFile = function(event) {
     var output = document.getElementById('output');
     output.src = URL.createObjectURL(event.target.files[0]);
@@ -48,7 +46,7 @@
       <div class="row">
         <div class="mt-5 col-6">
           <button type="button" class="btn btn-primary">Choose image</button>
-        </div>  
+        </div>
         <div class="mt-5 col-6">
           <button type="button" class="btn btn-primary">Reset profile picture</button>
         </div>
