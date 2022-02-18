@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\App;
 
-use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use \stdClass;
+use App\Models\Post;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -24,10 +25,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $postList = Post::where('display', '=', '1')
-            ->where('user_id', '=', $this->user()->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        $postList = Post::getCurrentUserPosts($this->currentUser()->id);
         $posts = [];
         if ($postList != null) {
             foreach ($postList as $row) {
@@ -51,7 +49,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('app.post-create-update', ['user' => $this->user(), 'audiences' => $this->audiences]);
+        return view('app.post-create-update', ['user' => $this->currentUser(), 'audiences' => $this->audiences]);
     }
 
     /**
@@ -66,7 +64,7 @@ class PostController extends Controller
             return redirect()->back()->withInput();
         }
         $post = new Post();
-        $post->user_id = $this->user()->id;
+        $post->user_id = $this->currentUser()->id;
         $post->content = $request->content;
         $post->audience = $request->audience;
         $post->display = 1;
@@ -99,7 +97,7 @@ class PostController extends Controller
         $post = Post::find($id);
         if ($post != null) {
             return view('app.post-create-update', [
-                'user' => $this->user(),
+                'user' => $this->currentUser(),
                 'audiences' => $this->audiences,
                 'post' => $post
             ]);
@@ -120,7 +118,7 @@ class PostController extends Controller
         $post = Post::find($id);
         if ($post != null) {
             if (!Post::checkAudience($request->audience)
-                || $post->user_id !== $this->user()->id
+                || $post->user_id !== $this->currentUser()->id
             ) {
                 return redirect()->back()->withInput();
             }
@@ -146,7 +144,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         if ($post != null
-            && $post->user_id == $this->user()->id
+            && $post->user_id == $this->currentUser()->id
         ) {
             $post->delete();
             return redirect(route("post.index"));

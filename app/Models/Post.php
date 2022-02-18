@@ -29,6 +29,14 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function getCurrentUserPosts($id)
+    {
+        return self::display()
+            ->where('user_id', '=', $id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+    }
+
     public static function getAudienceValue($audienceKey)
     {
         foreach (self::$audiences as $key => $value) {
@@ -48,5 +56,10 @@ class Post extends Model
             return false;
         }
         return true;
+    }
+
+    public function scopeDisplay($query)
+    {
+        $query->where('display', 1);
     }
 }
