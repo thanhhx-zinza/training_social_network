@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
@@ -24,17 +23,20 @@ class Post extends Model
         return self::$audiences;
     }
 
-    public function getUser()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function getCurrentUserPosts($id)
+    /**
+     * Scope a query to only include newest post
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeNewestPosts($query)
     {
-        return self::display()
-            ->where('user_id', '=', $id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        $query->where('display', 1)->orderBy('created_at', 'desc');
     }
 
     public static function getAudienceValue($audienceKey)
@@ -50,16 +52,11 @@ class Post extends Model
     /**
      * Check audience
      */
-    public static function checkAudience($audience)
+    public function checkAudience($audience)
     {
         if (!in_array($audience, array_flip(self::$audiences))) {
             return false;
         }
         return true;
-    }
-
-    public function scopeDisplay($query)
-    {
-        $query->where('display', 1);
     }
 }

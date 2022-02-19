@@ -25,18 +25,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        $postList = Post::getCurrentUserPosts($this->currentUser()->id);
-        $posts = [];
+        $postList = $this->currentUser()->posts()->newestPosts()->paginate(5);
         if ($postList != null) {
             foreach ($postList as $row) {
-                $k = new stdClass();
-                $k->id = $row->id;
-                $k->content = $row->content;
-                $k->audience = Post::getAudienceValue($row->audience);
-                $k->userName = $row->getUser->name;
-                $posts[] = $k;
+                $row->audience = Post::getAudienceValue($row->audience);
             }
-            return view('app.post-read', ['posts' => $posts]);
+            return view('app.post-read', ['posts' => $postList, 'userName' => $this->currentUser()->name]);
         } else {
             return redirect('error');
         }
