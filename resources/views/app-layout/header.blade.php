@@ -28,6 +28,9 @@
         </ul>
     </div>
     <div class="col-3">
-        <p>Hello world</p>
+        <span>Hello world / </span>
+        <span>
+            <a href="{{ route('auth.logout') }}">Logout</a>
+        </span>
     </div>
 </div>

@@ -5,7 +5,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Profile;
 
 class User extends Authenticatable
 {
@@ -47,5 +46,18 @@ class User extends Authenticatable
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function relations()
+    {
+        return $this->hasMany(Relation::class);
+    }
+
+    /**
+     * Check user is exist in db or not
+     */
+    public function checkExistUser($id)
+    {
+        self::findOrFail($id);
     }
 }
