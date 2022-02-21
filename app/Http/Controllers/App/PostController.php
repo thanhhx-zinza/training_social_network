@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\App;
 
-use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostRequest;
+use \stdClass;
+use App\Models\Post;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -24,8 +25,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        return view('app.post', ['user' => $user, 'audiences' => $this->audiences]);
+        $postList = $this->currentUser()->posts()->newestPosts()->paginate(5);
+        if ($postList != null) {
+            foreach ($postList as $row) {
+                $row->audience = Post::getAudienceValue($row->audience);
+            }
+            return view('app.post-read', ['posts' => $postList, 'userName' => $this->currentUser()->name]);
+        } else {
+            return redirect('error');
+        }
     }
 
     /**
@@ -35,7 +43,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('app.post-create-update', ['user' => $this->currentUser(), 'audiences' => $this->audiences]);
     }
 
     /**
@@ -46,11 +54,11 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        if (!in_array($request->audience, array_flip($this->audiences))) {
+        if (!Post::checkAudience($request->audience)) {
             return redirect()->back()->withInput();
         }
         $post = new Post();
-        $post->user_id = Auth::user()->id;
+        $post->user_id = $this->currentUser()->id;
         $post->content = $request->content;
         $post->audience = $request->audience;
         $post->display = 1;
@@ -78,9 +86,18 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        //
+        $post = Post::find($id);
+        if ($post != null) {
+            return view('app.post-create-update', [
+                'user' => $this->currentUser(),
+                'audiences' => $this->audiences,
+                'post' => $post
+            ]);
+        } else {
+            return redirect('error');
+        }
     }
 
     /**
@@ -90,9 +107,25 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, $id)
     {
-        //
+        $post = Post::find($id);
+        if ($post != null) {
+            if (!Post::checkAudience($request->audience)
+                || $post->user_id !== $this->currentUser()->id
+            ) {
+                return redirect()->back()->withInput();
+            }
+            $post->content = $request->content;
+            $post->audience = $request->audience;
+            if ($post->save()) {
+                return redirect(route('post.index'));
+            } else {
+                return redirect()->back()->withInput();
+            }
+        } else {
+            return redirect('error');
+        }
     }
 
     /**
@@ -101,8 +134,16 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        if ($post != null
+            && $post->user_id == $this->currentUser()->id
+        ) {
+            $post->delete();
+            return redirect(route("post.index"));
+        } else {
+            return redirect('error');
+        }
     }
 }
