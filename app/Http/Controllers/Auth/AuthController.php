@@ -30,7 +30,13 @@ class AuthController extends Controller
             $request->session()->regenerate();
             if (Auth::User()->profile == null) {
                 Profile::create([
-                    'user_id' => Auth::User()->id
+                    'user_id' => Auth::User()->id,
+                    'first_name' => '',
+                    'last_name' => '',
+                    'phone_number' => '',
+                    'gender' => '',
+                    'birthday' => '1900-01-01',
+                    'address' => ''
                 ]);
                 // dd(Auth::User()->profile->id);
                 return redirect()->route('profile.edit');
@@ -71,7 +77,7 @@ class AuthController extends Controller
         $user->password = Hash::make($request->password);
         if ($user->save()) {
             Auth::login($user);
-            return redirect(route('home'));
+            return redirect(route('home.index'));
         } else {
             return back()->withInput();
         }
