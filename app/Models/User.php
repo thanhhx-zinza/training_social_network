@@ -84,5 +84,8 @@ class User extends Authenticatable
     public function scopeFriendable($query, $id)
     {
         $query->where('id', '!=', $id)->where('is_added', 1);
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }

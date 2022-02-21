@@ -35,8 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
     Route::get('/comment/home', [CommentController::class, 'indexHome'])->name('comment.indexHome');
     Route::post('/comment/update', [CommentController::class, 'update'])->name('comment.update');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/comment/edit', [CommentController::class, 'edit'])->name('comment.edit');
+    Route::post('/comment/editRep', [CommentController::class, 'editRep'])->name('comment.editRep');
+    Route::post('comment/delete', [CommentController::class, 'destroy'])->name('comment.destroy');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 

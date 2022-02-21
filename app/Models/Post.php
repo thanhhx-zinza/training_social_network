@@ -23,7 +23,7 @@ class Post extends Model
         return self::$audiences;
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
@@ -56,12 +56,8 @@ class Post extends Model
     {
         return in_array($audience, array_flip(self::$audiences));
     }
-    public function comment()
+    public function comments()
     {
         return $this->hasMany(Comment::class);
-    }
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 }

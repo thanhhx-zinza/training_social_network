@@ -28,7 +28,12 @@ class PostController extends Controller
             foreach ($postList as $row) {
                 $row->audience = Post::getAudienceValue($row->audience);
             }
-            return view('app.post-read', ['posts' => $postList, 'userName' => $this->currentUser()->name]);
+            return view('app.post-read', [
+                'posts' => $postList,
+                'userName' => $this->currentUser()->name,
+                'edit' => false,
+                'editRep' => false
+            ]);
         } else {
             return redirect('error');
         }

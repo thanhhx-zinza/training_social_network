@@ -9,107 +9,74 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $post = Auth::User()->post->first();
-        $comment = $post->comment;
-        $edit = false;
-        return view ('app.comment', [
-            'post' => $post, 
-            'comment' => $comment,
-            'edit' => $edit
-        ]);
-    }
-
-    public function indexHome()
-    {
-        $post = Post::all();
-        return view ('app.commentHome', ['post' => $post]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $comment = comment::create([
             'user_id' => Auth::User()->id,
             'post_id' => $request->post_id,
-            'content' => $request->content
+            'previous_id' => $request->previous_id,
+            'content' => $request->content,
+            'level' => $request->level
         ]);
-        return redirect()->route('comment.index', ['comment' => $comment]);
+        return redirect()->route('post.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request)
     {
+        $postList = $this->currentUser()->posts()->newestPosts()->paginate(5);
         $commentEdit = comment::find($request->id);
-        $post = Auth::User()->post->first();
-        $comment = $post->comment;
-        $edit = true;
-        return view ('app.comment', [
-            'post' => $post, 
-            'comment' => $comment,
-            'commentEdit' => $commentEdit,
-            'edit' => $edit
-        ]);
+        if ($postList != null) {
+            foreach ($postList as $row) {
+                $row->audience = Post::getAudienceValue($row->audience);
+            }
+            return view('app.post-read', [
+                'posts' => $postList,
+                'userName' => $this->currentUser()->name,
+                'commentEdit' => $commentEdit,
+                'edit' => true,
+                'editRep' => false
+            ]);
+        } else {
+            return redirect('error');
+        }
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function editRep(Request $request)
+    {
+        $postList = $this->currentUser()->posts()->newestPosts()->paginate(5);
+        $commentEdit = comment::find($request->id);
+        if ($postList != null) {
+            foreach ($postList as $row) {
+                $row->audience = Post::getAudienceValue($row->audience);
+            }
+            return view('app.post-read', [
+                'posts' => $postList,
+                'userName' => $this->currentUser()->name,
+                'commentEdit' => $commentEdit,
+                'edit' => false,
+                'editRep' => true
+            ]);
+        } else {
+            return redirect('error');
+        }
+    }
     public function update(Request $request)
     {
         $comment = Comment::find($request->id);
         $comment->content = $request->content;
         if ($comment->save()) {
-            return redirect()->route('comment.index');
+            return redirect()->route('post.index');
         }
-
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $comment = Comment::find($request->id);
+        if ($comment != null
+            && $comment->user_id == $this->currentUser()->id
+        ) {
+            $comment->delete();
+            return redirect(route("post.index"));
+        } else {
+            return redirect('error');
+        }
     }
 }
