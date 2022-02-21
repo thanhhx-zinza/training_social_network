@@ -6,6 +6,7 @@ use App\Http\Controllers\App\PostController;
 use App\Http\Controllers\App\HomeController;
 use App\Http\Controllers\App\RelationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +30,13 @@ Route::get('/error', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
-
+    Route::resource('post', PostController::class);
+    Route::post('/comment/store', [CommentController::class, 'store'])->name('comment.store');
+    Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
+    Route::get('/comment/home', [CommentController::class, 'indexHome'])->name('comment.indexHome');
+    Route::post('/comment/update', [CommentController::class, 'update'])->name('comment.update');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/comment/edit', [CommentController::class, 'edit'])->name('comment.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
