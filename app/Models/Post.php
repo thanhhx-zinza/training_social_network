@@ -39,6 +39,16 @@ class Post extends Model
         $query->where('display', 1)->orderBy('created_at', 'desc');
     }
 
+    public function scopePublicPost($query)
+    {
+        $query->where('audience', 'public');
+    }
+
+    public function getPostPublic()
+    {
+        return $this->where('audience', 'public')->get();
+    }
+
     public static function getAudienceValue($audienceKey)
     {
         foreach (self::$audiences as $key => $value) {
@@ -56,8 +66,11 @@ class Post extends Model
     {
         return in_array($audience, array_flip(self::$audiences));
     }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
+
+    protected $fillable = ['user_id', 'content', 'display', 'audience'];
 }

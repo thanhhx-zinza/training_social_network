@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-9">
                     <div class="media-body">
-                        <h4 class="media-heading">{{$comment->user->profile->first_name}}aa</h4>
+                        <h4 class="media-heading">{{$comment->user->profile->first_name}}</h4>
                         <div class="row">{{$comment->content}}</div>
                         <div class="row">
                             <div class="col-2">
@@ -106,7 +106,7 @@
                                         </div>
                                         <div class="col-9">
                                             <div class="media-body">
-                                                <h4 class="media-heading">{{$reply->user->profile->first_name}}aa</h4>
+                                                <h4 class="media-heading">{{$reply->user->profile->first_name}}</h4>
                                                 <div class="row">{{$reply->content}}</div>
                                                 <div class="row">
                                                     <div class="col-2">

@@ -17,6 +17,27 @@ class CommentTest extends TestCase
      * Test function index when logged in
      *
      */
+    public function testStoreWithPostNotPublic()
+    {
+        $user = User::first();
+        $this->be($user);
+        Session::start();
+        $user->posts()->create([
+            'content' => 'content',
+            'audience' => 'private',
+            'display' => 1
+        ]);
+        $response = $this->post('/comment', [
+            '_token' => csrf_token(),
+            'post_id' => Post::orderBy('id', 'desc')->first()->id,
+            'previous_id' => -1,
+            'content' => 'hello world',
+            'level' => 1
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect('/error');
+    }
+
     public function testStoreSuccess()
     {
         $user = User::first();
@@ -24,13 +45,6 @@ class CommentTest extends TestCase
         Session::start();
         $response = $this->post('/comment', [
             '_token' => csrf_token(),
-            'post_id' => Post::first()->id,
-            'previous_id' => -1,
-            'content' => 'hello world',
-            'level' => 1
-        ]);
-        $this->assertDatabaseHas('comments', [
-            'user_id' => $user->id,
             'post_id' => Post::first()->id,
             'previous_id' => -1,
             'content' => 'hello world',
@@ -55,8 +69,25 @@ class CommentTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('/post');
     }
-    
-    public function testEdit()
+
+    public function testEditWithCommentOfOtherUser()
+    {
+        $user = User::first();
+        $this->be($user);
+        Session::start();
+        $user = User::skip(1)->first();
+        $user->comments()->create([
+            'post_id' => Post::first()->id,
+            'previous_id' => -1,
+            'content' => 'hello world',
+            'level' => 1
+        ]);
+        $response = $this->get('/comment/' . Comment::orderBy('id', 'desc')->first()->id . '/edit');
+        $response->assertStatus(302);
+        $response->assertRedirect('/error');
+    }
+
+    public function testEditSuccess()
     {
         $user = User::first();
         $this->be($user);
@@ -65,7 +96,24 @@ class CommentTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testDestroy()
+    public function testDestroyWithCommentOfOtherUser()
+    {
+        $user = User::first();
+        $this->be($user);
+        Session::start();
+        $user = User::skip(1)->first();
+        $user->comments()->create([
+            'post_id' => Post::first()->id,
+            'previous_id' => -1,
+            'content' => 'hello world',
+            'level' => 1
+        ]);
+        $response = $this->delete('/comment/' . Comment::orderBy('id', 'desc')->first()->id);
+        $response->assertStatus(302);
+        $response->assertRedirect('/error');
+    }
+
+    public function testDestroySuccess()
     {
         $user = User::first();
         $this->be($user);
