@@ -62,7 +62,7 @@ class User extends Authenticatable
      * Check user is exist in db or not
      *
      */
-    public function checkExistUser($id)
+    public function isExistUser($id)
     {
         return self::find($id);
     }
@@ -71,11 +71,11 @@ class User extends Authenticatable
      * Check user is able to add friend or not
      *
      */
-    public function checkAbleAddFriend($id, $currentUser)
+    public function isFriendable($id)
     {
-        $user = self::checkExistUser($id);
+        $user = self::isExistUser($id);
         if ($user != null) {
-            if ($user->is_added != 1 || $user->id == $currentUser->id) {
+            if ($user->is_added != 1 || $user->id == $this->id) {
                 return false;
             }
             return true;
@@ -87,7 +87,7 @@ class User extends Authenticatable
      * Scope a query to get only user is able to add friend
      *
      */
-    public function scopeAbleAddFriendUsers($query, $id)
+    public function scopeFriendable($query, $id)
     {
         $query->where('id', '!=', $id)->where('is_added', 1);
     }

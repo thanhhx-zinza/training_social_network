@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('post', PostController::class)->except(['destroy']);
     Route::get('post/{post}/delete', [PostController::class, 'destroy'])->name('post.destroy');
 
-    Route::get('/relations', [RelationController::class, 'getAddFriend'])->name('relations.get_add_friend');
+    Route::get('/relations', [RelationController::class, 'getAddFriendList'])->name('relations.get_add_friend_list');
     Route::post('/relations/{relation}', [RelationController::class, 'addFriend'])->name('relations.add_friend');
     Route::get('/relations/requests', [RelationController::class, 'getRequests'])->name('relations.get_requests');
     Route::patch('/relations/{relation}', [RelationController::class, 'responseRequest'])->name('relations.response_request');

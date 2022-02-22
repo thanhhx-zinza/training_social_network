@@ -15,7 +15,7 @@ class Relation extends Model
      * @var array
      */
     protected $fillable = [
-        'friend_id', 'type_user', 'type_friend'
+        'friend_id', 'type'
     ];
 
     public function users()
@@ -24,24 +24,25 @@ class Relation extends Model
     }
 
     /**
-     * Scope a query to get relations is unable add friend
+     * Scope a query to get relations is unable to add friend
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return void
      */
-    public function scopeUnableAddFriendRelations($query)
+    public function scopeTypeNotFriendable($query)
     {
-        $query->where('type_user', '!=', 'follow')->where('type_friend', '!=', 'decline');
+        $userTypes = ['friend', 'request'];
+        $query->whereIn('type', $userTypes);
     }
 
     /**
-     * Scope a query to get users is unable add friend
+     * Scope a query to get relations are requestions
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return void
      */
-    public function scopeGetRequestRelations($query)
+    public function scopeTypeRequest($query)
     {
-        $query->where('type_friend', 'response')->where('type_user', 'request');
+        $query->where('type', 'request');
     }
 }
