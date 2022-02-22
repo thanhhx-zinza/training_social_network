@@ -31,8 +31,6 @@ class PostController extends Controller
             return view('app.post-read', [
                 'posts' => $postList,
                 'userName' => $this->currentUser()->name,
-                'edit' => false,
-                'editRep' => false
             ]);
         } else {
             return redirect('error');

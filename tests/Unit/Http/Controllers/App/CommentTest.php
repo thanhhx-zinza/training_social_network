@@ -22,18 +22,17 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->post('/comment/store', [
+        $response = $this->post('/comment', [
             '_token' => csrf_token(),
-            'user_id' => $user->id,
             'post_id' => Post::first()->id,
-            'previous_id' => Comment::first()->id,
+            'previous_id' => -1,
             'content' => 'hello world',
             'level' => 1
         ]);
         $this->assertDatabaseHas('comments', [
             'user_id' => $user->id,
             'post_id' => Post::first()->id,
-            'previous_id' => Comment::first()->id,
+            'previous_id' => -1,
             'content' => 'hello world',
             'level' => 1
         ]);
@@ -46,13 +45,12 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->post('/comment/update', [
+        $response = $this->put('/comment/' . Comment::first()->id, [
             '_token' => csrf_token(),
-            'id' => Comment::first()->id,
-            'content' => 'hello world'
+            'content' => 'thank you everyone'
         ]);
         $this->assertDatabaseHas('comments', [
-            'content' => 'hello world'
+            'content' => 'thank you everyone'
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/post');
@@ -63,7 +61,16 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->post('/comment/edit', ['id' => $user->comments->first()->id]);
+        $response = $this->get('/comment/' . Comment::first()->id . '/edit');
         $response->assertStatus(200);
+    }
+
+    public function testDestroy()
+    {
+        $user = User::first();
+        $this->be($user);
+        Session::start();
+        $response = $this->delete('/comment/' . Comment::first()->id);
+        $response->assertStatus(302);
     }
 }

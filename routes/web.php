@@ -31,13 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::resource('post', PostController::class);
-    Route::post('/comment/store', [CommentController::class, 'store'])->name('comment.store');
-    Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
-    Route::get('/comment/home', [CommentController::class, 'indexHome'])->name('comment.indexHome');
-    Route::post('/comment/update', [CommentController::class, 'update'])->name('comment.update');
-    Route::post('/comment/edit', [CommentController::class, 'edit'])->name('comment.edit');
-    Route::post('/comment/editRep', [CommentController::class, 'editRep'])->name('comment.editRep');
-    Route::post('comment/delete', [CommentController::class, 'destroy'])->name('comment.destroy');
+    Route::resource('comment', CommentController::class);
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
