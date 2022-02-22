@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password'
     ];
 
     /**
@@ -50,14 +50,45 @@ class User extends Authenticatable
 
     public function relations()
     {
-        return $this->hasMany(Relation::class);
+        return $this->hasMany(Relation::class, 'user_id');
+    }
+
+    public function relationsFriend()
+    {
+        return $this->hasMany(Relation::class, 'friend_id');
     }
 
     /**
      * Check user is exist in db or not
+     *
      */
     public function checkExistUser($id)
     {
-        self::findOrFail($id);
+        return self::find($id);
+    }
+
+    /**
+     * Check user is able to add friend or not
+     *
+     */
+    public function checkAbleAddFriend($id, $currentUser)
+    {
+        $user = self::checkExistUser($id);
+        if ($user != null) {
+            if ($user->is_added != 1 || $user->id == $currentUser->id) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Scope a query to get only user is able to add friend
+     *
+     */
+    public function scopeAbleAddFriendUsers($query, $id)
+    {
+        $query->where('id', '!=', $id)->where('is_added', 1);
     }
 }

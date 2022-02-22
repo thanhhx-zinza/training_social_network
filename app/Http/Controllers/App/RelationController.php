@@ -15,84 +15,84 @@ class RelationController extends Controller
      */
     public function getAddFriend()
     {
-        $relations = $this->currentUser()->relations()->select('friend_id')->get();
-        $addFriendUsers = [];
-        if (count($relations) == 0) {
-            $addFriendUsers = User::where('id', '!=', $this->currentUser()->id)
-                ->where('is_added', 1)
-                ->paginate(9);
-        } elseif (count($relations) > 0) {
-            $addFriendUsers = User::where('id', '!=', $this->currentUser()->id)
-                ->where('is_added', 1)
-                ->whereNotIn('id', $relations)
-                ->paginate(9);
-        }
-        if ($addFriendUsers != null) {
-            return view('app.relations-list', ['userList' => $addFriendUsers, 'action' => 'add-friend']);
-        } else {
+        $unableAddFriendRelations = $this->currentUser()
+            ->relations()
+            ->unableAddFriendRelations()
+            ->select('friend_id')
+            ->get();
+        if ($unableAddFriendRelations != null) {
+            $ableAddFriendUsers = User::ableAddFriendUsers($this->currentUser()->id);
+            if (count($unableAddFriendRelations) == 0) {
+                $ableAddFriendUsers = $ableAddFriendUsers->paginate(9);
+            } elseif (count($unableAddFriendRelations) > 0) {
+                $ableAddFriendUsers = $ableAddFriendUsers->whereNotIn('id', $unableAddFriendRelations)->paginate(9);
+            } else {
+                return redirect('error');
+            }
+            if ($ableAddFriendUsers != null) {
+                return view('app.relations-list', ['userList' => $ableAddFriendUsers, 'action' => 'add-friend']);
+            }
             return redirect('error');
         }
+        return redirect('error');
     }
 
-    /**
-     * Add friend
-     *
-     */
     public function addFriend($friendId)
     {
-        User::checkExistUser($friendId);
-        $userRelation = new Relation();
-        $userRelation->user_id = $this->currentUser()->id;
-        $userRelation->friend_id = $friendId;
-        $userRelation->type_user = 'request';
-        $userRelation->type_friend = 'response';
-        if ($userRelation->save()) {
-            return redirect(route('relations.get_add_friend'));
-        } else {
+        if (User::checkAbleAddFriend($friendId, $this->currentUser())) {
+            $userRelation = $this->currentUser()->relations()->create([
+                'friend_id' => $friendId,
+                'type_user' => 'request',
+                'type_friend' => 'response'
+            ]);
+            if ($userRelation) {
+                return redirect(route('relations.get_add_friend'));
+            }
             return redirect('error');
         }
+        return redirect()->back();
     }
 
-    /**
-     * Get add friend requests
-     */
     public function getRequests()
     {
-        $relations = Relation::where('friend_id', $this->currentUser()->id)
+        $requestRelations = $this->currentUser()->relationsFriend()
+            ->getRequestRelations()
             ->select('user_id')
-            ->where('type_friend', 'response')
-            ->where('type_user', 'request')
-            ->paginate(9);
-        $requestUsers = [];
-        if (count($relations) > 0) {
-            $requestUsers = User::where('id', '!=', $this->currentUser()->id)
-                ->whereIn('id', $relations)
-                ->paginate(9);
-        }
-        if ($requestUsers != null) {
-            return view('app.relations-list', ['userList' => $requestUsers, 'action' => 'requests']);
-        } else {
+            ->get();
+        if ($requestRelations != null) {
+            $requestUsers = [];
+            if (count($requestRelations) >= 0) {
+                $requestUsers = User::whereIn('id', $requestRelations)->paginate(9);
+            } elseif (count($requestRelations) < 0) {
+                return redirect('error');
+            }
+            if ($requestUsers != null) {
+                return view('app.relations-list', ['userList' => $requestUsers, 'action' => 'requests']);
+            }
             return redirect('error');
         }
+        return redirect('error');
     }
 
     public function responseRequest($user_id, Request $request)
     {
         $type = isset($request->type) ? strtolower($request->type) : '';
         $arr = ['accept', 'decline'];
-        if ($type !== '' && in_array($type, $arr)) {
-            $relations = Relation::where('user_id', $user_id)
-                ->where('friend_id', $this->currentUser()->id)
-                ->firstOrFail();
-            $relations->type_user = ($type == 'accept') ? 'friend' : 'follow';
-            $relations->type_friend = ($type == 'accept') ? 'friend' : 'decline';
-            if ($relations->save()) {
-                return redirect(route('relations.get_requests'));
-            } else {
+        if ($type !== ''
+            && in_array($type, $arr)
+            && User::checkExistUser($user_id) != null
+        ) {
+            $relations = $this->currentUser()->relationsFriend()->where('user_id', $user_id)->first();
+            if ($relations != null) {
+                $relations->type_user = ($type == 'accept') ? 'friend' : 'follow';
+                $relations->type_friend = ($type == 'accept') ? 'friend' : 'decline';
+                if ($relations->save()) {
+                    return redirect(route('relations.get_requests'));
+                }
                 return redirect('error');
             }
-        } else {
             return redirect('error');
         }
+        return redirect('error');
     }
 }
