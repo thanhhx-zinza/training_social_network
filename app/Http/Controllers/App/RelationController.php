@@ -6,9 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\Relation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Valuestore\Valuestore;
 
 class RelationController extends Controller
 {
+    private $paginationNum = 0;
+
+    public function __construct()
+    {
+        $settings = Valuestore::make(storage_path('app/settings.json'));
+        $this->paginationNum = $settings->get('relation_pagination');
+        if ($this->paginationNum == null) {
+            $this->paginationNum = 0;
+        }
+    }
     /**
      * Display a listing of user who are not friend
      *
@@ -28,16 +39,16 @@ class RelationController extends Controller
         $requestingLength = count($requestingRelations);
 
         if ($requestedLength == 0 && $requestingLength == 0) {
-            $users = $users->paginate(9);
+            $users = $users->paginate($this->paginationNum);
         } elseif ($requestedLength == 0 || $requestingLength == 0) {
             if ($requestingLength == 0) {
-                $users = $users->whereNotIn('id', $requestedRelations)->paginate(9);
+                $users = $users->whereNotIn('id', $requestedRelations)->paginate($this->paginationNum);
             } else {
-                $users = $users->whereNotIn('id', $requestingRelations)->paginate(9);
+                $users = $users->whereNotIn('id', $requestingRelations)->paginate($this->paginationNum);
             }
         } else {
             $arr = array_merge($requestedRelations, $requestingRelations);
-            $users = $users->whereNotIn('id', $arr)->paginate(9);
+            $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
         }
 
         if (count($users) >= 0) {
@@ -69,7 +80,7 @@ class RelationController extends Controller
             ->get();
         $requestUsers = [];
         if (count($requestRelations) >= 0) {
-            $requestUsers = User::whereIn('id', $requestRelations)->paginate(9);
+            $requestUsers = User::whereIn('id', $requestRelations)->paginate($this->paginationNum);
         } else {
             return redirect('error');
         }
