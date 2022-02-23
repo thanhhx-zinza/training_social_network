@@ -28,6 +28,13 @@
         </ul>
     </div>
     <div class="col-3">
-        <p>Hello world</p>
+        @if (Auth::user() != null)
+            <span>{{ Auth::user()->email }}</span>
+        @else
+            <span>Hello world</span>
+        @endif
+        <span>
+           / <a href="{{ route('auth.logout') }}">Logout</a>
+        </span>
     </div>
 </div>

@@ -54,9 +54,6 @@ class Post extends Model
      */
     public function checkAudience($audience)
     {
-        if (!in_array($audience, array_flip(self::$audiences))) {
-            return false;
-        }
-        return true;
+        return in_array($audience, array_flip(self::$audiences));
     }
 }

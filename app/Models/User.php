@@ -5,7 +5,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Profile;
 
 class User extends Authenticatable
 {
@@ -18,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password'
     ];
 
     /**
@@ -47,5 +46,43 @@ class User extends Authenticatable
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function relations()
+    {
+        return $this->hasMany(Relation::class, 'user_id');
+    }
+
+    public function relationsFriend()
+    {
+        return $this->hasMany(Relation::class, 'friend_id');
+    }
+
+    /**
+     * Check user is exist in db or not
+     *
+     */
+    public function isExistUser($id)
+    {
+        return self::find($id);
+    }
+
+    /**
+     * Check user is able to add friend or not
+     *
+     */
+    public function isFriendable($id)
+    {
+        $user = self::isExistUser($id);
+        return $user != null && $user->is_added == 1 && $user->id == $this->id;
+    }
+
+    /**
+     * Scope a query to get only user is able to add friend
+     *
+     */
+    public function scopeFriendable($query, $id)
+    {
+        $query->where('id', '!=', $id)->where('is_added', 1);
     }
 }
