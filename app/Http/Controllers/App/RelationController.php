@@ -15,10 +15,7 @@ class RelationController extends Controller
     public function __construct()
     {
         $settings = Valuestore::make(storage_path('app/settings.json'));
-        $this->paginationNum = $settings->get('relation_pagination');
-        if ($this->paginationNum == null) {
-            $this->paginationNum = 0;
-        }
+        $this->paginationNum = $settings->get('relation_pagination', 0);
     }
     /**
      * Display a listing of user who are not friend
@@ -41,11 +38,8 @@ class RelationController extends Controller
         if ($requestedLength == 0 && $requestingLength == 0) {
             $users = $users->paginate($this->paginationNum);
         } elseif ($requestedLength == 0 || $requestingLength == 0) {
-            if ($requestingLength == 0) {
-                $users = $users->whereNotIn('id', $requestedRelations)->paginate($this->paginationNum);
-            } else {
-                $users = $users->whereNotIn('id', $requestingRelations)->paginate($this->paginationNum);
-            }
+            $arr = ($requestingLength == 0) ? $requestedRelations : $requestingRelations;
+            $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
         } else {
             $arr = array_merge($requestedRelations, $requestingRelations);
             $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
@@ -94,24 +88,24 @@ class RelationController extends Controller
     {
         $type = isset($request->type) ? strtolower($request->type) : '';
         $arr = ['accept', 'decline'];
-        if (in_array($type, $arr) && User::isExistUser($user_id) != null) {
-            $relations = $this->currentUser()->relationsFriend()->where('user_id', $user_id)->first();
-            if ($relations != null) {
-                if ($type == 'accept') {
-                    $relations->type = 'friend';
-                    if ($relations->save()) {
-                        return redirect(route('relations.get_requests'));
-                    }
-                    return redirect('error');
-                } else {
-                    if ($relations->delete()) {
-                        return redirect(route('relations.get_requests'));
-                    }
-                    return redirect('error');
-                }
+        if (!in_array($type, $arr) || User::isExistUser($user_id) == null) {
+            return redirect('error');
+        }
+        $relations = $this->currentUser()->relationsFriend()->where('user_id', $user_id)->first();
+        if ($relations == null) {
+            return redirect('error');
+        }
+        if ($type == 'accept') {
+            $relations->type = 'friend';
+            if ($relations->save()) {
+                return redirect(route('relations.get_requests'));
+            }
+            return redirect('error');
+        } else {
+            if ($relations->delete()) {
+                return redirect(route('relations.get_requests'));
             }
             return redirect('error');
         }
-        return redirect('error');
     }
 }

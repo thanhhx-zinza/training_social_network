@@ -74,13 +74,7 @@ class User extends Authenticatable
     public function isFriendable($id)
     {
         $user = self::isExistUser($id);
-        if ($user != null) {
-            if ($user->is_added != 1 || $user->id == $this->id) {
-                return false;
-            }
-            return true;
-        }
-        return false;
+        return $user != null && $user->is_added == 1 && $user->id == $this->id;
     }
 
     /**
