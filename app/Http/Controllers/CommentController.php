@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, $post_id)
     {
-        $post = Post::publicPost()->find($request->post_id);
+        $post = Post::isPublic()->find($post_id);
         if ($post) {
             $newComment = $this->currentUser()->comments()->create([
                 'post_id' => $post->id,
@@ -18,7 +18,7 @@ class CommentController extends Controller
                 'level' => $request->level
             ]);
             if ($newComment) {
-                return redirect()->route('post.index');
+                return redirect()->route('posts.index');
             } else {
                 return redirect()->route('error');
             }
@@ -27,23 +27,24 @@ class CommentController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit($post_id, $comment_id)
     {
-        $comment = $this->currentUser()->comments->find($id);
+        $comment = $this->currentUser()->comments->find($comment_id);
         if ($comment) {
-            return view('app.comment.edit', ['comment' => $comment]);
+            $post = Post::find($post_id);
+            return view('app.comment.edit', ['comment' => $comment, 'post' => $post]);
         } else {
             return redirect()->route('error');
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $post_id, $comment_id)
     {
-        $comment = $this->currentUser()->comments->find($id);
-        $comment->content = $request->content;
+        $comment = $this->currentUser()->comments->find($comment_id);
         if ($comment) {
+            $comment->content = $request->content;
             if ($comment->save()) {
-                return redirect()->route('post.index');
+                return redirect()->route('posts.index');
             } else {
                 return redirect()->route('error');
             }
@@ -52,15 +53,11 @@ class CommentController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy($post_id, $comment_id)
     {
-        $comment = $this->currentUser()->comments->find($id);
-        if ($comment) {
-            if ($comment->delete()) {
-                return redirect(route("post.index"));
-            } else {
-                return redirect()->route('error');
-            }
+        $comment = $this->currentUser()->comments->find($comment_id);
+        if ($comment && $comment->delete()) {
+            return redirect()->route("posts.index");
         } else {
             return redirect()->route('error');
         }

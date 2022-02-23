@@ -24,6 +24,11 @@ class Comment extends Model
         return $this->hasMany(Comment::Class, 'previous_id', 'id');
     }
 
+    public function scopeOfLevel($query, $level)
+    {
+        $query->where('level', $level);
+    }
+
     protected $fillable = [
         'user_id', 'previous_id', 'level', 'post_id', 'content'
     ];

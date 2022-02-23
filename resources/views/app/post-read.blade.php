@@ -17,8 +17,8 @@
             </div>
             <div class="col-5"></div>
             <div class="col-3 text-end">
-                <a class="btn btn-primary btn-sm" href="{{ route('post.edit', ['post' => $post->id]) }}" role="button">Edit</a>
-                <a class="btn btn-primary btn-sm" href="{{ route('post.destroy', ['post' => $post->id]) }}" role="button">Delete</a>
+                <a class="btn btn-primary btn-sm" href="{{ route('posts.edit', ['post' => $post->id]) }}" role="button">Edit</a>
+                <a class="btn btn-primary btn-sm" href="{{ route('posts.destroy', ['post' => $post->id]) }}" role="button">Delete</a>
             </div>
         </div>
         <div class="row my-3 mx-1">
@@ -29,12 +29,11 @@
 <!-- begin post comment -->
 <div class="container">
     <h3>comment this post</h3>
-    <form action="{{route('comment.store')}}" method="POST">
+    <form action="{{route('posts.comments.store', $post->id)}}" method="POST">
         @csrf
         @method('POST')
         <div class="form-group">
             <label for="">Content of comment</label>
-            <input type="hidden" value="{{$post->id}}" name="post_id">
             <input type="hidden" value="1" name="level">
             <input type="hidden" value="-1" name="previous_id">
             <textarea name="content" class="form-control" rows="3" require="required" placeholder="Input content(*)"></textarea>
@@ -44,7 +43,7 @@
 <!-- end post comment -->
 
 <?php
-    $comments = $post->comments->where('level', 1);
+    $comments = $post->comments()->ofLevel(1)->get();
 ?>
 
 <!-- begin comments -->
@@ -63,21 +62,21 @@
                         <div class="row">{{$comment->content}}</div>
                         <div class="row">
                             <div class="col-2">
-                                <form action="{{route('comment.edit', $comment->id)}}" method="GET" class="col-2">
+                                <form action="{{route('posts.comments.edit', [$post->id, $comment->id])}}" method="GET" class="col-2">
                                     @csrf
                                     @method('GET')
                                     <button type="submit" class="btn btn-primary">Edit</button>
                                 </form>
                             </div>
                             <div class="col-2">
-                                <form action="{{route('comment.destroy', $comment->id)}}" method="POST" class="col-2">
+                                <form action="{{route('posts.comments.destroy',[$post->id, $comment->id])}}" method="POST" class="col-2">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-primary">Delete</button>
                                 </form>
                             </div>
                         </div>
-                        <form action="{{route('comment.store')}}" method="POST">
+                        <form action="{{ route('posts.comments.store', $post->id) }}" method="POST">
                             @csrf
                             @method('POST')
                             <div class="form-group">
@@ -110,13 +109,13 @@
                                                 <div class="row">{{$reply->content}}</div>
                                                 <div class="row">
                                                     <div class="col-2">
-                                                        <form action="{{route('comment.edit', $reply->id)}}" method="GET" class="col-2">
+                                                        <form action="{{route('posts.comments.edit',[$post->id, $reply->id])}}" method="GET" class="col-2">
                                                             @method('GET')
                                                             <button type="submit" class="btn btn-primary">Edit</button>
                                                         </form>
                                                     </div>
                                                     <div class="col-3">
-                                                        <form action="{{route('comment.destroy', $reply->id)}}" method="POST" class="col-2">
+                                                        <form action="{{route('posts.comments.destroy', [$post->id, $reply->id])}}" method="POST" class="col-2">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-primary">Delete</button>

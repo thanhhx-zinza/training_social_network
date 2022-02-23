@@ -27,7 +27,7 @@ class CommentTest extends TestCase
             'audience' => 'private',
             'display' => 1
         ]);
-        $response = $this->post('/comment', [
+        $response = $this->post('/posts/' . Post::orderBy('id', 'desc')->first()->id . '/comments', [
             '_token' => csrf_token(),
             'post_id' => Post::orderBy('id', 'desc')->first()->id,
             'previous_id' => -1,
@@ -43,7 +43,7 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->post('/comment', [
+        $response = $this->post('/posts/' . Post::first()->id . '/comments', [
             '_token' => csrf_token(),
             'post_id' => Post::first()->id,
             'previous_id' => -1,
@@ -51,7 +51,7 @@ class CommentTest extends TestCase
             'level' => 1
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post');
+        $response->assertRedirect('/posts');
     }
 
     public function testUpdateSuccess()
@@ -59,7 +59,7 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->put('/comment/' . Comment::first()->id, [
+        $response = $this->put('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id, [
             '_token' => csrf_token(),
             'content' => 'thank you everyone'
         ]);
@@ -67,7 +67,7 @@ class CommentTest extends TestCase
             'content' => 'thank you everyone'
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post');
+        $response->assertRedirect('/posts');
     }
 
     public function testEditWithCommentOfOtherUser()
@@ -82,7 +82,7 @@ class CommentTest extends TestCase
             'content' => 'hello world',
             'level' => 1
         ]);
-        $response = $this->get('/comment/' . Comment::orderBy('id', 'desc')->first()->id . '/edit');
+        $response = $this->get('/posts/' . Post::first()->id . '/comments/' . Comment::orderBy('id', 'desc')->first()->id . '/edit');
         $response->assertStatus(302);
         $response->assertRedirect('/error');
     }
@@ -92,7 +92,7 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->get('/comment/' . Comment::first()->id . '/edit');
+        $response = $this->get('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id . '/edit');
         $response->assertStatus(200);
     }
 
@@ -108,7 +108,7 @@ class CommentTest extends TestCase
             'content' => 'hello world',
             'level' => 1
         ]);
-        $response = $this->delete('/comment/' . Comment::orderBy('id', 'desc')->first()->id);
+        $response = $this->delete('/posts/' . Post::first()->id . '/comments/' . Comment::orderBy('id', 'desc')->first()->id);
         $response->assertStatus(302);
         $response->assertRedirect('/error');
     }
@@ -118,7 +118,7 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->delete('/comment/' . Comment::first()->id);
+        $response = $this->delete('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id);
         $response->assertStatus(302);
     }
 }

@@ -15,9 +15,9 @@
         }
     @endphp
     @if (!isset($post))
-        <form class="row rounded-3 shadow m-3" method="post" action="{{ route('post.store') }}" enctype="multipart/form-data">
+        <form class="row rounded-3 shadow m-3" method="post" action="{{ route('posts.store') }} "enctype="multipart/form-data">
     @else
-        <form class="row rounded-3 shadow m-3" method="post" action="{{ route('post.update', ['post' => $post->id]) }}" enctype="multipart/form-data">
+        <form class="row rounded-3 shadow m-3" method="post" action="{{ route('posts.update', ['post' => $post->id]) }} "enctype="multipart/form-data">
         @method('PUT')
     @endif
         @csrf

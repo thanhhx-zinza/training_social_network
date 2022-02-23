@@ -3,7 +3,7 @@
 @section('title', 'Social Network')
 
 @section('main')
-<form action="{{route('comment.update', $comment->id)}}" method="POST">
+<form action="{{route('posts.comments.update',[$post->id, $comment->id])}}" method="POST">
     @csrf
     @method('PUT')
     <div class="form-floating">

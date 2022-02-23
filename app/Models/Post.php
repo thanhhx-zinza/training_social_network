@@ -39,14 +39,9 @@ class Post extends Model
         $query->where('display', 1)->orderBy('created_at', 'desc');
     }
 
-    public function scopePublicPost($query)
+    public function scopeIsPublic($query)
     {
         $query->where('audience', 'public');
-    }
-
-    public function getPostPublic()
-    {
-        return $this->where('audience', 'public')->get();
     }
 
     public static function getAudienceValue($audienceKey)

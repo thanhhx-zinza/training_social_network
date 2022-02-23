@@ -120,7 +120,7 @@ class PostController extends Controller
             $post->content = $request->content;
             $post->audience = $request->audience;
             if ($post->save()) {
-                return redirect(route('post.index'));
+                return redirect(route('posts.index'));
             } else {
                 return redirect()->back()->withInput();
             }
@@ -142,7 +142,7 @@ class PostController extends Controller
             && $post->user_id == $this->currentUser()->id
         ) {
             $post->delete();
-            return redirect(route("post.index"));
+            return redirect(route("posts.index"));
         } else {
             return redirect('error');
         }

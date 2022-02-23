@@ -30,17 +30,16 @@ Route::get('/error', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
-    Route::resource('post', PostController::class);
-    Route::resource('comment', CommentController::class);
+    Route::resource('posts.comments', CommentController::class);
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
-    Route::resource('post', PostController::class)->except(['destroy']);
-    Route::get('post/{post}/delete', [PostController::class, 'destroy'])->name('post.destroy');
 
     Route::get('/relations', [RelationController::class, 'getAddFriendList'])->name('relations.get_add_friend_list');
     Route::post('/relations/{relation}', [RelationController::class, 'addFriend'])->name('relations.add_friend');
     Route::get('/relations/requests', [RelationController::class, 'getRequests'])->name('relations.get_requests');
     Route::patch('/relations/{relation}', [RelationController::class, 'responseRequest'])->name('relations.response_request');
+    
+    Route::resource('posts', PostController::class)->except(['destroy']);
+    Route::get('posts/{post}/delete', [PostController::class, 'destroy'])->name('posts.destroy');
 });
