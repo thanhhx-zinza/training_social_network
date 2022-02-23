@@ -18,7 +18,13 @@
             <div class="col-5"></div>
             <div class="col-3 text-end">
                 <a class="btn btn-primary btn-sm" href="{{ route('posts.edit', ['post' => $post->id]) }}" role="button">Edit</a>
-                <a class="btn btn-primary btn-sm" href="{{ route('posts.destroy', ['post' => $post->id]) }}" role="button">Delete</a>
+                <div class="col-2">
+                    <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST" class="col-2">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="row my-3 mx-1">

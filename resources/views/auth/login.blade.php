@@ -62,7 +62,7 @@
 
             <div class="row my-5">
                 <div class="col text-center">
-                    <input type="submit" value="Login" class="btn btn-login">
+                    <input type="submit" value="Login" class="btn btn-primary">
                 </div>
             </div>
         </form>

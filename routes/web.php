@@ -40,6 +40,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/relations/requests', [RelationController::class, 'getRequests'])->name('relations.get_requests');
     Route::patch('/relations/{relation}', [RelationController::class, 'responseRequest'])->name('relations.response_request');
     
-    Route::resource('posts', PostController::class)->except(['destroy']);
-    Route::get('posts/{post}/delete', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::resource('posts', PostController::class);
 });

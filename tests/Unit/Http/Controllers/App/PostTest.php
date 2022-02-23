@@ -336,7 +336,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $response = $this->get('posts/-1/delete');
+        $response = $this->delete('posts/-1');
         $response->assertStatus(302);
         $response->assertRedirect('/error');
     }
@@ -351,7 +351,7 @@ class PostTest extends TestCase
         $this->be($user);
         $post = Post::where('user_id', '!=', $user->id)->first();
         Session::start();
-        $response = $this->get('posts/'.$post->id.'/delete', [
+        $response = $this->delete('posts/'.$post->id, [
             '_token' => csrf_token(),
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'public',
@@ -367,7 +367,7 @@ class PostTest extends TestCase
     public function testDestroyWLoggedOut()
     {
         $post = Post::first();
-        $response = $this->get('posts/'.$post->id.'/delete');
+        $response = $this->delete('posts/'.$post->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
@@ -381,7 +381,7 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $post = Post::where('user_id', '=', $user->id)->first();
-        $response = $this->get('posts/'.$post->id.'/delete');
+        $response = $this->delete('posts/'.$post->id);
         $postDeleted = Post::where('id', '=', $post->id)->onlyTrashed()->first();
         $this->assertTrue($postDeleted->deleted_at != null);
         $response->assertStatus(302);

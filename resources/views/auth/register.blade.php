@@ -63,7 +63,7 @@
 
             <div class="row my-5">
                 <div class="col text-center">
-                    <input type="submit" value="Sign up" class="btn btn-register">
+                    <input type="submit" value="Sign up" class="btn btn-primary">
                 </div>
             </div>
         </form>
