@@ -23,7 +23,7 @@ class Post extends Model
         return self::$audiences;
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
@@ -37,6 +37,11 @@ class Post extends Model
     public function scopeNewestPosts($query)
     {
         $query->where('display', 1)->orderBy('created_at', 'desc');
+    }
+
+    public function scopeIsPublic($query)
+    {
+        $query->where('audience', 'public');
     }
 
     public static function getAudienceValue($audienceKey)
@@ -56,4 +61,11 @@ class Post extends Model
     {
         return in_array($audience, array_flip(self::$audiences));
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    protected $fillable = ['user_id', 'content', 'display', 'audience'];
 }

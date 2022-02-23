@@ -90,7 +90,7 @@
       <div class="mb-3 row">
         <label class="col-sm-2 col-form-label">Gender</label>
         <div class="col-sm-10">
-          <select class="form-select form-control" aria-label="Default select example">
+          <select class="form-select form-control" aria-label="Default select example" name = "gender">
             <option selected>Open this select menu</option>
             <option value="1">Male</option>
             <option value="2">FeMale</option>

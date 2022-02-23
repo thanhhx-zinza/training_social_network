@@ -28,7 +28,10 @@ class PostController extends Controller
             foreach ($postList as $row) {
                 $row->audience = Post::getAudienceValue($row->audience);
             }
-            return view('app.post-read', ['posts' => $postList, 'userName' => $this->currentUser()->name]);
+            return view('app.post-read', [
+                'posts' => $postList,
+                'userName' => $this->currentUser()->name,
+            ]);
         } else {
             return redirect('error');
         }
@@ -117,7 +120,7 @@ class PostController extends Controller
             $post->content = $request->content;
             $post->audience = $request->audience;
             if ($post->save()) {
-                return redirect(route('post.index'));
+                return redirect(route('posts.index'));
             } else {
                 return redirect()->back()->withInput();
             }
@@ -139,7 +142,7 @@ class PostController extends Controller
             && $post->user_id == $this->currentUser()->id
         ) {
             $post->delete();
-            return redirect(route("post.index"));
+            return redirect(route("posts.index"));
         } else {
             return redirect('error');
         }

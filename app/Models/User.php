@@ -85,4 +85,9 @@ class User extends Authenticatable
     {
         $query->where('id', '!=', $id)->where('is_added', 1);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

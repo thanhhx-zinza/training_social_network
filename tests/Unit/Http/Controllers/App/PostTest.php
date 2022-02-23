@@ -20,7 +20,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $response = $this->get('/post');
+        $response = $this->get('/posts');
         $response->assertOk();
         $response->assertViewIs('app.post-read');
         $data = $response->getOriginalContent()->getData();
@@ -37,7 +37,7 @@ class PostTest extends TestCase
      */
     public function testIndexWLoggedOut()
     {
-        $response = $this->get('/post');
+        $response = $this->get('/posts');
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
@@ -50,7 +50,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $response = $this->get('/post/create');
+        $response = $this->get('/posts/create');
         $response->assertOk();
         $response->assertViewIs('app.post-create-update');
         $data = $response->getOriginalContent()->getData();
@@ -63,7 +63,7 @@ class PostTest extends TestCase
      */
     public function testCreateWLoggedOut()
     {
-        $response = $this->get('/post/create');
+        $response = $this->get('/posts/create');
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
@@ -75,7 +75,7 @@ class PostTest extends TestCase
     public function testStoreWLoggedOut()
     {
         Session::start();
-        $response = $this->post('/post', [
+        $response = $this->post('/posts', [
             '_token' => csrf_token(),
             'content' => 'hello world',
             'audience' => 'public',
@@ -94,7 +94,7 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->post('/post', [
+        $response = $this->post('/posts', [
             '_token' => csrf_token(),
             'content' => 'hello world',
             'audience' => $audience,
@@ -128,7 +128,7 @@ class PostTest extends TestCase
      */
     public function testStoreFailInValidate($content, $audience)
     {
-        $this->get('post/create');
+        $this->get('posts/create');
         Session::start();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -136,7 +136,7 @@ class PostTest extends TestCase
             'audience' => $audience,
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post/create');
+        $response->assertRedirect('/posts/create');
     }
 
     /**
@@ -160,15 +160,15 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $this->get('post/create');
+        $this->get('posts/create');
         Session::start();
-        $response = $this->post('/post', [
+        $response = $this->post('/posts', [
             '_token' => csrf_token(),
             'content' => 'Hello wolrd',
             'audience' => 'kkk',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post/create');
+        $response->assertRedirect('/posts/create');
     }
 
     /**
@@ -179,7 +179,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $response = $this->get('post/-1/edit');
+        $response = $this->get('posts/-1/edit');
         $response->assertStatus(302);
         $response->assertRedirect('/error');
     }
@@ -193,7 +193,7 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $post = Post::first();
-        $response = $this->get('post/'.$post->id.'/edit');
+        $response = $this->get('posts/'.$post->id.'/edit');
         $response->assertOk();
         $response->assertViewIs('app.post-create-update');
         $data = $response->getOriginalContent()->getData();
@@ -209,7 +209,7 @@ class PostTest extends TestCase
     public function testEditWLoggedOut()
     {
         $post = Post::first();
-        $response = $this->get('post/'.$post->id.'/edit');
+        $response = $this->get('posts/'.$post->id.'/edit');
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
@@ -221,7 +221,7 @@ class PostTest extends TestCase
     public function testUpdateWLoggedOut()
     {
         $post = Post::first();
-        $response = $this->put('post/'.$post->id);
+        $response = $this->put('posts/'.$post->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
@@ -235,7 +235,7 @@ class PostTest extends TestCase
         $this->be($user);
         $post = Post::where('user_id', '=', $user->id)->first();
         Session::start();
-        $response = $this->put('post/'.$post->id, [
+        $response = $this->put('posts/'.$post->id, [
             '_token' => csrf_token(),
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'public',
@@ -247,7 +247,7 @@ class PostTest extends TestCase
             'audience' => 'public',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post');
+        $response->assertRedirect('/posts');
     }
 
     /**
@@ -260,15 +260,15 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $post = Post::where('user_id', '=', $user->id)->first();
-        $response = $this->get('post/'.$post->id.'/edit');
+        $response = $this->get('posts/'.$post->id.'/edit');
         Session::start();
-        $response = $this->put('post/'.$post->id, [
+        $response = $this->put('posts/'.$post->id, [
             '_token' => csrf_token(),
             'content' => $content,
             'audience' => $audience,
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post/'.$post->id.'/edit');
+        $response->assertRedirect('/posts/'.$post->id.'/edit');
     }
 
     /**
@@ -280,7 +280,7 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->put('post/-1', [
+        $response = $this->put('posts/-1', [
             '_token' => csrf_token(),
             'content' => 'hello',
             'audience' => 'kk',
@@ -298,15 +298,15 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $post = Post::where('user_id', '!=', $user->id)->first();
-        $response = $this->get('post/'.$post->id.'/edit');
+        $response = $this->get('posts/'.$post->id.'/edit');
         Session::start();
-        $response = $this->put('post/'.$post->id, [
+        $response = $this->put('posts/'.$post->id, [
             '_token' => csrf_token(),
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'public',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post/'.$post->id.'/edit');
+        $response->assertRedirect('/posts/'.$post->id.'/edit');
     }
 
      /**
@@ -317,15 +317,15 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $post = Post::where('user_id', '=', $user->id)->first();
-        $response = $this->get('post/'.$post->id.'/edit');
+        $response = $this->get('posts/'.$post->id.'/edit');
         Session::start();
-        $response = $this->put('post/'.$post->id, [
+        $response = $this->put('posts/'.$post->id, [
             '_token' => csrf_token(),
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'kkkk',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/post/'.$post->id.'/edit');
+        $response->assertRedirect('/posts/'.$post->id.'/edit');
     }
 
     /**
@@ -336,7 +336,7 @@ class PostTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        $response = $this->get('post/-1/delete');
+        $response = $this->delete('posts/-1');
         $response->assertStatus(302);
         $response->assertRedirect('/error');
     }
@@ -351,7 +351,7 @@ class PostTest extends TestCase
         $this->be($user);
         $post = Post::where('user_id', '!=', $user->id)->first();
         Session::start();
-        $response = $this->get('post/'.$post->id.'/delete', [
+        $response = $this->delete('posts/'.$post->id, [
             '_token' => csrf_token(),
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'public',
@@ -367,7 +367,7 @@ class PostTest extends TestCase
     public function testDestroyWLoggedOut()
     {
         $post = Post::first();
-        $response = $this->get('post/'.$post->id.'/delete');
+        $response = $this->delete('posts/'.$post->id);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
     }
@@ -381,10 +381,10 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $post = Post::where('user_id', '=', $user->id)->first();
-        $response = $this->get('post/'.$post->id.'/delete');
+        $response = $this->delete('posts/'.$post->id);
         $postDeleted = Post::where('id', '=', $post->id)->onlyTrashed()->first();
         $this->assertTrue($postDeleted->deleted_at != null);
         $response->assertStatus(302);
-        $response->assertRedirect('/post');
+        $response->assertRedirect('/posts');
     }
 }
