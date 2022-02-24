@@ -45,9 +45,7 @@ class AuthTest extends TestCase
             'birthday' => $faker->datetime(),
             'phone_number' => '0982048209',
         ];
-        // dd($profile);
         $new = profile::create($profile);
-        // dd($new);
         $response = $this->post('/login', [
             '_token' => csrf_token(),
             'email' => $user->email,
@@ -57,6 +55,8 @@ class AuthTest extends TestCase
     }
 
     /**
+     * Test login without profile
+     *
      * @dataProvider provider
      */
     public function testLoginWithoutProfile($first_name, $last_name, $phone_number, $birthday)
@@ -75,12 +75,10 @@ class AuthTest extends TestCase
         ];
         $new = profile::create($profile);
         $profile = $user->profile;
-        // dd($profile);
         $profile->first_name = $first_name;
         $profile->last_name = $last_name;
         $profile->phone_number = $phone_number;
         $profile->birthday = $birthday;
-        // dd($profile);
         $profile->save();
         $response = $this->post('/login', [
             '_token' => csrf_token(),
@@ -101,11 +99,10 @@ class AuthTest extends TestCase
             'birthday' => $faker->datetime()
         ];
         $profilez = array($profile, $profile, $profile);
-        // dd($profilez);
         $profilez[0]['first_name'] = '';
         $profilez[1]['last_name'] = '';
         $profilez[2]['phone_number'] = '';
-        $result= array();
+        $result = array();
         $a = array();
         for ($i = 0; $i <= 2; $i++) {
             $a = array();
@@ -119,6 +116,7 @@ class AuthTest extends TestCase
 
     /**
      * Test function authenticate fail in validate
+     *
      * @param string $email
      * @param string $password
      *
@@ -138,6 +136,8 @@ class AuthTest extends TestCase
     }
 
     /**
+     * Provider for function testAuthenticateFailInValidate()
+     *
      * @return array
      */
     public function providerTestAuthenticateFailInValidate()

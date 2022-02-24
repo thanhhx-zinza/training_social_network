@@ -14,7 +14,6 @@ class PostTest extends TestCase
 
     /**
      * Test function index when logged in
-     *
      */
     public function testIndexWLoggedIn()
     {
@@ -33,7 +32,6 @@ class PostTest extends TestCase
 
     /**
      * Test function create when logged out
-     *
      */
     public function testIndexWLoggedOut()
     {
@@ -44,7 +42,6 @@ class PostTest extends TestCase
 
     /**
      * Test function create when logged in
-     *
      */
     public function testCreate()
     {
@@ -59,7 +56,6 @@ class PostTest extends TestCase
 
     /**
      * Test function create when logged out
-     *
      */
     public function testCreateWLoggedOut()
     {
@@ -70,7 +66,6 @@ class PostTest extends TestCase
 
     /**
      * Test function store when logged out
-     *
      */
     public function testStoreWLoggedOut()
     {
@@ -109,6 +104,8 @@ class PostTest extends TestCase
     }
 
     /**
+     * Provider for funtion testStoreSuccess()
+     *
      * @return array
      */
     public function providerTestStoreSuccess()
@@ -117,7 +114,7 @@ class PostTest extends TestCase
             ['public'],
             ['private'],
             ['onlyme'],
-            ['friends']
+            ['friends'],
         ];
     }
 
@@ -140,6 +137,8 @@ class PostTest extends TestCase
     }
 
     /**
+     * Provider for function testStoreFailInValidate()
+     *
      * @return array
      */
     public function providerTestFailInValidate()
@@ -148,13 +147,12 @@ class PostTest extends TestCase
             ['', 'public'],
             ['kkk', 'publi123'],
             ['', ''],
-            [' ', ' ']
+            [' ', ' '],
         ];
     }
 
     /**
      * Test function authenticate fail when is wrong audience
-     *
      */
     public function testStoreFailWWrongAudience()
     {
@@ -173,7 +171,6 @@ class PostTest extends TestCase
 
     /**
      * Test function edit fail when logged in
-     *
      */
     public function testEditFail()
     {
@@ -186,7 +183,6 @@ class PostTest extends TestCase
 
     /**
      * Test function edit successfully when logged in
-     *
      */
     public function testEditSuccess()
     {
@@ -204,7 +200,6 @@ class PostTest extends TestCase
 
     /**
      * Test function edit when logged out
-     *
      */
     public function testEditWLoggedOut()
     {
@@ -216,7 +211,6 @@ class PostTest extends TestCase
 
     /**
      * Test function update when logged out
-     *
      */
     public function testUpdateWLoggedOut()
     {
@@ -273,7 +267,6 @@ class PostTest extends TestCase
 
     /**
      * Test function update fail when wrong id
-     *
      */
     public function testUpdateFailWWrongId()
     {
@@ -291,7 +284,6 @@ class PostTest extends TestCase
 
     /**
      * Test function update fail when wrong user_id
-     *
      */
     public function testUpdateFailWWrongUserId()
     {
@@ -330,7 +322,6 @@ class PostTest extends TestCase
 
     /**
      * Test function destroy fail when id not exists
-     *
      */
     public function testDestroyFailWIdNotExists()
     {
@@ -343,7 +334,6 @@ class PostTest extends TestCase
 
     /**
      * Test function destroy fail when wrong user_id
-     *
      */
     public function testDestroyFailWWrongUserId()
     {
@@ -362,7 +352,6 @@ class PostTest extends TestCase
 
     /**
      * Test function destroy when logged out
-     *
      */
     public function testDestroyWLoggedOut()
     {
@@ -374,7 +363,6 @@ class PostTest extends TestCase
 
     /**
      * Test function destroy success
-     *
      */
     public function testDestroySuccess()
     {

@@ -15,7 +15,7 @@ class Post extends Model
         'public' => 'Public',
         'private' => 'Private',
         'onlyme' => 'Only me',
-        'friends' => 'Friends'
+        'friends' => 'Friends',
     ];
 
     public static function getAudiences()

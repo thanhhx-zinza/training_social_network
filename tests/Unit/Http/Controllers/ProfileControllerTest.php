@@ -28,7 +28,7 @@ class ProfileControllerTest extends TestCase
         User::create([
             'name' => $faker->name(),
             'email' => $faker->email(),
-            'password' => $faker->name()
+            'password' => $faker->name(),
         ]);
         $this->profile = [
             'user_id' => User::orderBy('id', 'desc')->first()->id,
@@ -37,12 +37,14 @@ class ProfileControllerTest extends TestCase
             'address' => $faker->address,
             'gender' => $faker->randomElement(['male', 'female']),
             'birthday' => $faker->datetime(),
-            'phone_number' => $faker->phonenumber
+            'phone_number' => $faker->phonenumber,
         ];
         $this->new = profile::create($this->profile);
     }
-    
+
     /**
+     * Test update invalid error
+     *
      * @dataProvider provider
      */
     public function testUpdateInvalidError($first_name, $last_name, $address, $gender, $birthday)
@@ -73,12 +75,11 @@ class ProfileControllerTest extends TestCase
             'birthday' => $faker->datetime()
         ];
         $profilez = array($profile, $profile, $profile, $profile);
-        // dd($profilez);
         $profilez[0]['first_name'] = '';
         $profilez[1]['last_name'] = '';
         $profilez[2]['address'] = '';
         $profilez[3]['gender'] = '';
-        $result= array();
+        $result = array();
         $a = array();
         for ($i = 0; $i <= 3; $i++) {
             $a = array();
@@ -100,7 +101,7 @@ class ProfileControllerTest extends TestCase
             'address' => $a->address,
             'gender' => $a->gender,
             'birthday' => $a->birthday,
-            'phone_number' => $a->phone_number
+            'phone_number' => $a->phone_number,
         ];
         $response = $this->call('POST', '/profile/update', $this->profile);
         $response->assertRedirect('/profile/show');

@@ -15,7 +15,6 @@ class CommentTest extends TestCase
 
     /**
      * Test function index when logged in
-     *
      */
     public function testStoreWithPostNotPublic()
     {
@@ -61,10 +60,10 @@ class CommentTest extends TestCase
         Session::start();
         $response = $this->put('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id, [
             '_token' => csrf_token(),
-            'content' => 'thank you everyone'
+            'content' => 'thank you everyone',
         ]);
         $this->assertDatabaseHas('comments', [
-            'content' => 'thank you everyone'
+            'content' => 'thank you everyone',
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/posts');
@@ -82,7 +81,7 @@ class CommentTest extends TestCase
             'content' => 'hello world',
             'level' => 1
         ]);
-        $response = $this->get('/posts/' . Post::first()->id . '/comments/' . Comment::orderBy('id', 'desc')->first()->id . '/edit');
+        $response = $this->get('/posts/'.Post::first()->id.'/comments/'.Comment::orderBy('id', 'desc')->first()->id.'/edit');
         $response->assertStatus(302);
         $response->assertRedirect('/error');
     }
@@ -94,23 +93,6 @@ class CommentTest extends TestCase
         Session::start();
         $response = $this->get('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id . '/edit');
         $response->assertStatus(200);
-    }
-
-    public function testDestroyWithCommentOfOtherUser()
-    {
-        $user = User::first();
-        $this->be($user);
-        Session::start();
-        $user = User::skip(1)->first();
-        $user->comments()->create([
-            'post_id' => Post::first()->id,
-            'previous_id' => -1,
-            'content' => 'hello world',
-            'level' => 1
-        ]);
-        $response = $this->delete('/posts/' . Post::first()->id . '/comments/' . Comment::orderBy('id', 'desc')->first()->id);
-        $response->assertStatus(302);
-        $response->assertRedirect('/error');
     }
 
     public function testDestroySuccess()

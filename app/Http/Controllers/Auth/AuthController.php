@@ -23,7 +23,6 @@ class AuthController extends Controller
 
     /**
      * Handle an authentication attempt.
-     *
      */
     public function authenticate(LoginRequest $request)
     {
@@ -39,10 +38,8 @@ class AuthController extends Controller
                     'birthday' => '1900-01-01',
                     'address' => ''
                 ]);
-                // dd(Auth::User()->profile->id);
                 return redirect()->route('profile.edit');
             } else {
-                // dd(Auth::User()->profile);
                 if (Auth::User()->profile->first_name == ''
                 || Auth::User()->profile->last_name == ''
                 || Auth::User()->profile->phone_number == ''
@@ -68,7 +65,6 @@ class AuthController extends Controller
 
     /**
      * Register an account.
-     *
      */
     public function registerAccount(RegisterRequest $request)
     {

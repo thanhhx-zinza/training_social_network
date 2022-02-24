@@ -19,7 +19,6 @@ class RelationController extends Controller
 
     /**
      * Display a listing of user who are not friend
-     *
      */
     public function getAddFriendList()
     {
@@ -30,7 +29,7 @@ class RelationController extends Controller
         if ($friendIds->count() == 0 && $requestIds()->count() == 0) {
             $users = $users->paginate($this->paginationNum);
         } elseif ($friendIds->count() == 0 || $requestIds->count() == 0) {
-            $arr = ($friendIds->count() == 0) ? $requestIds :  $friendIds;
+            $arr = ($friendIds->count() == 0) ? $requestIds : $friendIds;
             $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
         } else {
             $arr = $friendIds->merge($requestIds);

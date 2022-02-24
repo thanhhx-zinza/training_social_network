@@ -27,7 +27,7 @@ class ProfileValidate extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'birthday' => 'required',
-            'phone_number' => 'required'
+            'phone_number' => 'required',
         ];
     }
 }

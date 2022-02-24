@@ -15,6 +15,6 @@ class Relation extends Model
      * @var array
      */
     protected $fillable = [
-        'friend_id', 'type'
+        'friend_id', 'type',
     ];
 }
