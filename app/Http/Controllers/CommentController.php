@@ -40,11 +40,17 @@ class CommentController extends Controller
 
     public function update(Request $request, $comment_id)
     {
-        $comment = $this->currentUser()->comments->find($comment_id);
-        if ($comment) {
-            $comment->content = $request->content;
-            if ($comment->save()) {
-                return redirect()->route('posts.index');
+        $post = Post::isPublic()->find($post_id);
+        post = Post::find($post_id);
+        if ($post) {
+            $comment = $this->currentUser()->comments->find($comment_id);
+            if ($comment) {
+                $comment->content = $request->content;
+                if ($comment->save()) {
+                    return redirect()->route('posts.index');
+                } else {
+                    return redirect()->route('error');
+                }
             } else {
                 return redirect()->route('error');
             }
@@ -55,9 +61,15 @@ class CommentController extends Controller
 
     public function destroy($comment_id)
     {
-        $comment = $this->currentUser()->comments->find($comment_id);
-        if ($comment && $comment->delete()) {
-            return redirect()->route("posts.index");
+        $post = Post::isPublic()->find($post_id);
+        post = Post::find($post_id);
+        if ($post) {
+            $comment = $this->currentUser()->comments->find($comment_id);
+            if ($comment && $comment->delete()) {
+                return redirect()->route("posts.index");
+            } else {
+                return redirect()->route('error');
+            }
         } else {
             return redirect()->route('error');
         }
