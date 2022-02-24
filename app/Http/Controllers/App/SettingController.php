@@ -34,7 +34,7 @@ class SettingController extends Controller
         $isAddFriend = ($request->isAddFriend && $request->isAddFriend === 'on') ? 1 : 0;
         $setting = $this->currentUser()->setting()->update([
             'is_noti' => $isNoti,
-            'is_add_friend' => $isAddFriend
+            'is_add_friend' => $isAddFriend,
         ]);
         if ($setting) {
             return redirect('/settings');
