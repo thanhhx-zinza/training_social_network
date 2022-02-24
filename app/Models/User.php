@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password'
+        'name', 'email', 'password',
     ];
 
     /**
@@ -48,42 +48,72 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-    public function relations()
+    public function requestedRelations()
     {
-        return $this->hasMany(Relation::class, 'user_id');
+        return $this->belongsToMany(User::class, 'relations', 'user_id', 'friend_id')->withTimestamps();
     }
 
-    public function relationsFriend()
+    public function requestingRelations()
     {
-        return $this->hasMany(Relation::class, 'friend_id');
+        return $this->belongsToMany(User::class, 'relations', 'friend_id', 'user_id')->withTimestamps();
     }
 
-    /**
-     * Check user is exist in db or not
-     *
-     */
+    public function requestedUsers()
+    {
+        return $this->requestedRelations()->wherePivot('type', 'request')->get();
+    }
+
+    public function requestingUsers()
+    {
+        return $this->requestingRelations()->wherePivot('type', 'request')->get();
+    }
+
+    public function friends()
+    {
+        return $this->requestedRelations()->wherePivot('type', 'friend')->get()
+            ->merge($this->requestingRelations()->wherePivot('type', 'friend')->get());
+    }
+
+    public function requestUsers()
+    {
+        return $this->requestedUsers()->merge($this->requestingUsers());
+    }
+
+    public function addFriend($friendId)
+    {
+        $this->requestedRelations()->attach($friendId, ['type' => 'request']);
+    }
+
+    public function isAddSuccess($friendId)
+    {
+        return count($this->requestedRelations()->where('user_id', $this->id)->where('friend_id', $friendId)->get()) == 1;
+    }
+
     public function isExistUser($id)
     {
         return self::find($id);
     }
 
-    /**
-     * Check user is able to add friend or not
-     *
-     */
     public function isFriendable($id)
     {
         $user = self::isExistUser($id);
-        return $user != null && $user->is_added == 1 && $user->id == $this->id;
+        return $user
+            && $id != $this->id
+            && $this->friends()->where('id', $id)->count() == 0
+            && $this->requestUsers()->where('id', $id)->count() == 0;
     }
 
-    /**
-     * Scope a query to get only user is able to add friend
-     *
-     */
-    public function scopeFriendable($query, $id)
+    public function getRequestingRelation($id)
     {
-        $query->where('id', '!=', $id)->where('is_added', 1);
+        return $this->requestingRelations()->wherePivot('user_id', $id)->wherePivot('type', 'request')->first()->pivot;
+    }
+
+    public function isRequestedBy($id)
+    {
+        $user = self::isExistUser($id);
+        return $user
+            && $id != $this->id
+            && $this->getRequestingRelation($id);
     }
 
     public function comments()

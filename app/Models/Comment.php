@@ -30,6 +30,6 @@ class Comment extends Model
     }
 
     protected $fillable = [
-        'user_id', 'previous_id', 'level', 'post_id', 'content'
+        'user_id', 'previous_id', 'level', 'post_id', 'content',
     ];
 }

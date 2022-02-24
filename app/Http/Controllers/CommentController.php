@@ -38,7 +38,7 @@ class CommentController extends Controller
         }
     }
 
-    public function update(Request $request, $post_id, $comment_id)
+    public function update(Request $request, $comment_id)
     {
         $comment = $this->currentUser()->comments->find($comment_id);
         if ($comment) {
@@ -53,7 +53,7 @@ class CommentController extends Controller
         }
     }
 
-    public function destroy($post_id, $comment_id)
+    public function destroy($comment_id)
     {
         $comment = $this->currentUser()->comments->find($comment_id);
         if ($comment && $comment->delete()) {
