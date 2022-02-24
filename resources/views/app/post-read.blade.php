@@ -38,7 +38,7 @@
         $reactions= $post->reactions();
         @endphp
         <div class="col-3">
-            <form action="{{route('reactions.store', $post->id)}}" method="POST">
+            <form action="{{route('reactions.store')}}" method="POST">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="type" value="like">
@@ -52,15 +52,14 @@
         $reactions= $post->reactions();
         @endphp
         <div class="col-3">
-            <form action="{{route('reactions.store', $post->id)}}" method="POST">
+            <form action="{{route('reactions.destroy', -1)}}" method="POST">
                 @csrf
-                @method('POST')
+                @method('DELETE')
                 <input type="hidden" name="type" value="unlike">
                 <input type="hidden" name="post_id" value="{{$post->id}}">
                 <input type="hidden" name="comment_id" value="-1">
                 <button class="btn btn-primary">Unlike</button>
             </form>
-            <h5>({{ count($reactions->ofType('unlike')->get()) }})</h5>
         </div>
     </div>
     <!-- end reaction -->
