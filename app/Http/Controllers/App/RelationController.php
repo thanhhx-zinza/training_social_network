@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\App;
 
 use App\Http\Controllers\Controller;
-use App\Models\Relation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Valuestore\Valuestore;
@@ -17,34 +16,26 @@ class RelationController extends Controller
         $settings = Valuestore::make(storage_path('app/settings.json'));
         $this->paginationNum = $settings->get('relation_pagination', 0);
     }
+
     /**
      * Display a listing of user who are not friend
      *
      */
     public function getAddFriendList()
     {
-        $requestedRelations = $this->currentUser()->relations()
-            ->typeNotFriendable()
-            ->select('friend_id')
-            ->get();
-        $requestingRelations = $this->currentUser()->relationsFriend()
-            ->typeNotFriendable()
-            ->select('user_id')
-            ->get();
-        $users = User::friendable($this->currentUser()->id);
-        $requestedLength = count($requestedRelations);
-        $requestingLength = count($requestingRelations);
+        $friendIds = $this->currentUser()->friends()->pluck(['id']);
+        $requestIds = $this->currentUser()->requestUsers()->pluck(['id']);
+        $users = User::where('id', '!=', $this->currentUser()->id);
 
-        if ($requestedLength == 0 && $requestingLength == 0) {
+        if ($friendIds->count() == 0 && $requestIds()->count() == 0) {
             $users = $users->paginate($this->paginationNum);
-        } elseif ($requestedLength == 0 || $requestingLength == 0) {
-            $arr = ($requestingLength == 0) ? $requestedRelations : $requestingRelations;
+        } elseif ($friendIds->count() == 0 || $requestIds->count() == 0) {
+            $arr = ($friendIds->count() == 0) ? $requestIds :  $friendIds;
             $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
         } else {
-            $arr = array_merge($requestedRelations, $requestingRelations);
+            $arr = $friendIds->merge($requestIds);
             $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
         }
-
         if (count($users) >= 0) {
             return view('app.relations-list', ['userList' => $users, 'action' => 'add-friend']);
         }
@@ -53,56 +44,53 @@ class RelationController extends Controller
 
     public function addFriend($friendId)
     {
-        if ($this->currentUser()->isFriendable($friendId)) {
-            $userRelation = $this->currentUser()->relations()->create([
-                'friend_id' => $friendId,
-                'type' => 'request'
-            ]);
-            if ($userRelation) {
-                return redirect(route('relations.get_add_friend_list'));
-            }
+        if (!$this->currentUser()->isFriendable($friendId)) {
             return redirect('error');
         }
-        return redirect()->back();
+        $this->currentUser()->addFriend($friendId);
+        if ($this->currentUser()->isAddSuccess($friendId)) {
+            return redirect()->route('relations.get_add_friend_list');
+        }
+        return redirect('error');
     }
 
     public function getRequests()
     {
-        $requestRelations = $this->currentUser()->relationsFriend()
-            ->typeRequest()
+        $requestRelations = $this->currentUser()->requestingRelations()
+            ->where('type', 'request')
             ->select('user_id')
             ->get();
         $requestUsers = [];
-        if (count($requestRelations) >= 0) {
+        if ($requestRelations->count() >= 0) {
             $requestUsers = User::whereIn('id', $requestRelations)->paginate($this->paginationNum);
         } else {
             return redirect('error');
         }
-        if (count($requestUsers) >= 0) {
+        if ($requestUsers->count() >= 0) {
             return view('app.relations-list', ['userList' => $requestUsers, 'action' => 'requests']);
         }
         return redirect('error');
     }
 
-    public function responseRequest($user_id, Request $request)
+    public function responseRequest($userId, Request $request)
     {
         $type = isset($request->type) ? strtolower($request->type) : '';
         $arr = ['accept', 'decline'];
-        if (!in_array($type, $arr) || User::isExistUser($user_id) == null) {
+        if (!in_array($type, $arr) || !$this->currentUser()->isRequestedBy($userId)) {
             return redirect('error');
         }
-        $relations = $this->currentUser()->relationsFriend()->where('user_id', $user_id)->first();
-        if ($relations == null) {
+        $relation = $this->currentUser()->getRequestingRelation($userId);
+        if ($relation == null) {
             return redirect('error');
         }
         if ($type == 'accept') {
-            $relations->type = 'friend';
-            if ($relations->save()) {
+            $relation->type = 'friend';
+            if ($relation->save()) {
                 return redirect(route('relations.get_requests'));
             }
             return redirect('error');
         } else {
-            if ($relations->delete()) {
+            if ($relation->delete()) {
                 return redirect(route('relations.get_requests'));
             }
             return redirect('error');
