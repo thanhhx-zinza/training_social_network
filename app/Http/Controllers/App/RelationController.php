@@ -24,17 +24,8 @@ class RelationController extends Controller
     {
         $friendIds = $this->currentUser()->friends()->pluck(['id']);
         $requestIds = $this->currentUser()->requestUsers()->pluck(['id']);
-        $users = User::where('id', '!=', $this->currentUser()->id);
-
-        if ($friendIds->count() == 0 && $requestIds()->count() == 0) {
-            $users = $users->paginate($this->paginationNum);
-        } elseif ($friendIds->count() == 0 || $requestIds->count() == 0) {
-            $arr = ($friendIds->count() == 0) ? $requestIds : $friendIds;
-            $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
-        } else {
-            $arr = $friendIds->merge($requestIds);
-            $users = $users->whereNotIn('id', $arr)->paginate($this->paginationNum);
-        }
+        $arr = $friendIds->merge($requestIds);
+        $users = User::where('id', '!=', $this->currentUser()->id)->whereNotIn('id', $arr)->paginate($this->paginationNum);
         if (count($users) >= 0) {
             return view('app.relations-list', ['userList' => $users, 'action' => 'add-friend']);
         }
