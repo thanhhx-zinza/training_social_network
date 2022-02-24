@@ -10,10 +10,34 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Faker\Factory;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthTest extends TestCase
 {
     use DatabaseTransactions;
+
+    protected function setUp() : void
+    {
+        parent::setup();
+        Session::start();
+        $faker = Factory::create();
+        User::create([
+            'name' => $faker->name(),
+            'email' => $faker->email(),
+            'password' => Hash::make('12345678')
+        ]);
+        $this->profile = [
+            'user_id' => User::orderBy('id', 'desc')->first()->id,
+            'first_name' => $faker->name,
+            'last_name' => $faker->name,
+            'address' => $faker->address,
+            'gender' => $faker->randomElement(['male', 'female']),
+            'birthday' => $faker->datetime(),
+            'phone_number' => $faker->phonenumber
+        ];
+        $this->new = profile::create($this->profile);
+    }
 
     /**
      * Test function login success
@@ -35,23 +59,10 @@ class AuthTest extends TestCase
     {
         Session::start();
         $user = User::orderBy('id', 'desc')->first();
-        $faker = Factory::create();
-        $profile = [
-            'user_id' => User::orderBy('id', 'desc')->first()->id,
-            'first_name' => $faker->name,
-            'last_name' => $faker->name,
-            'address' => $faker->address,
-            'gender' => $faker->randomElement(['male', 'female']),
-            'birthday' => $faker->datetime(),
-            'phone_number' => '0982048209',
-        ];
-        // dd($profile);
-        $new = profile::create($profile);
-        // dd($new);
         $response = $this->post('/login', [
             '_token' => csrf_token(),
             'email' => $user->email,
-            'password' => '12345678',
+            'password' => '12345678'
         ]);
         $response->assertOk();
     }
@@ -85,7 +96,7 @@ class AuthTest extends TestCase
         $response = $this->post('/login', [
             '_token' => csrf_token(),
             'email' => $user->email,
-            'password' => '12345678',
+            'password' => '12345678'
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/profile/edit');
