@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/relations', [RelationController::class, 'getAddFriendList'])->name('relations.get_add_friend_list');
     Route::post('/relations/{relation}', [RelationController::class, 'addFriend'])->name('relations.add_friend');

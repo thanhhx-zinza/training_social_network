@@ -52,7 +52,7 @@ class ProfileControllerTest extends TestCase
         Session::start();
         $this->be(User::orderby('id', 'desc')->first());
         $a = Auth::User()->profile;
-        $response = $this->call('POST', '/profile/update', array(
+        $response = $this->call('PUT', '/profile/update', array(
             '_token' => csrf_token(),
             'first_name' => $first_name,
             'last_name' => $last_name,
@@ -103,7 +103,7 @@ class ProfileControllerTest extends TestCase
             'birthday' => $a->birthday,
             'phone_number' => $a->phone_number,
         ];
-        $response = $this->call('POST', '/profile/update', $this->profile);
+        $response = $this->call('PUT', '/profile/update', $this->profile);
         $response->assertRedirect('/profile/show');
         $this->assertDatabaseHas('profiles', $this->profile);
     }

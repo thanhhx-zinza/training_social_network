@@ -1,22 +1,58 @@
 @extends('app-layout.layout')
 @section('main')
-<div class="col-6">
-    <div class="row">
-        <img src="{{asset('images/avatar.webp')}}" class="img-thumbnail" alt="profile image">
+
+<div class="row">
+    <div class="col-12">
+        <a class="d-block mb-3 text-decoration-none text-end text-info" href="{{ route("profile.edit") }}">Edit Profile</a>
     </div>
-    <div class="row mt-5">
-        <div class="col-8">
-            <h3>{{ $profiles->last_name . ' ' . $profiles->first_name }}</h3>
-        </div>
-        <div class="col-4">
-            <button type="button" class="btn btn-primary">Edit profile</button>
+    <div class="col-12">
+        <div class="mx-auto mb-5" style="width: 200px">
+            <img src="https://i0.wp.com/9tailedkitsune.com/wp-content/uploads/2020/10/jujutsukaisen.jpg?resize=800%2C445&ssl=1" class="rounded mx-auto d-block w-100" alt="...">
         </div>
     </div>
-    <div class="row border">
-        <div class="row mt-5">{{$profiles->phone_number}}aaa</div>
-        <div class="row mt-5">{{$profiles->address}}</div>
-        <div class="row mt-5">{{$profiles->gender}}</div>
-        <div class="row mt-5">{{$profiles->birthday}}</div>
+    <div class="col-12">
+        <div class="d-flex fs-5 justify-content-center my-3 text-center">
+            <label class="col-3">Last Name : </label> 
+            <div class="col-7">
+                {{ $profiles->last_name ?? "Cập nhật ngay"}}
+            </div>
+        </div>
+        <div class="d-flex fs-5 justify-content-center my-3 text-center">
+            <label class="col-3">First Name : </label> 
+            <div class="col-7">
+                {{ $profiles->first_name ?? "Cập nhật ngay"}}
+            </div>
+        </div>
+        <div class="d-flex fs-5 justify-content-center my-3 text-center">
+            <label class="col-3">Address: </label> 
+            <div class="col-7">
+                {{ $profiles->address ?? "Cập nhật ngay"}}
+            </div>
+        </div>
+        <div class="d-flex fs-5 justify-content-center my-3 text-center">
+            <label class="col-3">Gender: </label> 
+            @if(!empty($profiles->gender))
+            <div class="col-7">
+                {{ $profiles->gender == 1 ? "Male" : "Female"}}
+            </div>
+            @else
+            <div class="col-7">
+                Cập nhật ngay
+            </div>
+            @endif
+        </div>
+        <div class="d-flex fs-5 justify-content-center my-3 text-center">
+            <label class="col-3">Birtday: </label> 
+            <div class="col-7">
+                {{ $profiles->birthday ?? "Cập nhật ngay"}}
+            </div>
+        </div>
+        <div class="d-flex fs-5 justify-content-center my-3 text-center">
+            <label class="col-3">Phone Number: </label> 
+            <div class="col-7">
+                {{ $profiles->phone_number ?? "Cập nhật ngay"}}
+            </div>
+        </div>
     </div>
 </div>
 @endsection

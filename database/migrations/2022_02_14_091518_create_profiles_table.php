@@ -20,7 +20,7 @@ class CreateProfilesTable extends Migration
             $table->char('last_name', 50);
             $table->char('address', 50);
             $table->char('gender', 50);
-            $table->time('birthday');
+            $table->date('birthday');
             $table->timestamps();
         });
     }
