@@ -10,56 +10,58 @@ class CommentController extends Controller
     public function store(Request $request, $post_id)
     {
         $post = Post::isPublic()->find($post_id);
-        if ($post) {
-            $newComment = $this->currentUser()->comments()->create([
-                'post_id' => $post->id,
-                'previous_id' => $request->previous_id,
-                'content' => $request->content,
-                'level' => $request->level
-            ]);
-            if ($newComment) {
-                return redirect()->route('posts.index');
-            } else {
-                return redirect()->route('error');
-            }
-        } else {
+        if (!$post) {
             return redirect()->route('error');
         }
+        $newComment = $this->currentUser()->comments()->create([
+            'post_id' => $post->id,
+            'previous_id' => $request->previous_id,
+            'content' => $request->content,
+            'level' => $request->level
+        ]);
+        if (!$newComment) {
+            return redirect()->route('error');
+        }
+        return redirect()->route('posts.index');
     }
 
     public function edit($post_id, $comment_id)
     {
         $comment = $this->currentUser()->comments->find($comment_id);
-        if ($comment) {
-            $post = Post::find($post_id);
-            return view('app.comment.edit', ['comment' => $comment, 'post' => $post]);
-        } else {
+        if (!$comment) {
             return redirect()->route('error');
         }
+        $post = Post::find($post_id);
+        return view('app.comment.edit', ['comment' => $comment, 'post' => $post]);
     }
 
-    public function update(Request $request, $comment_id)
+    public function update(Request $request, $post_id, $comment_id)
     {
-        $comment = $this->currentUser()->comments->find($comment_id);
-        if ($comment) {
-            $comment->content = $request->content;
-            if ($comment->save()) {
-                return redirect()->route('posts.index');
-            } else {
-                return redirect()->route('error');
-            }
-        } else {
+        $post = Post::isPublic()->find($post_id);
+        if (!$post) {
             return redirect()->route('error');
         }
+        $comment = $this->currentUser()->comments->find($comment_id);
+        if (!$comment) {
+            return redirect()->route('error');
+        }
+        $comment->content = $request->content;
+        if (!$comment->save()) {
+            return redirect()->route('error');
+        }
+        return redirect()->route('posts.index');
     }
 
-    public function destroy($comment_id)
+    public function destroy($post_id, $comment_id)
     {
-        $comment = $this->currentUser()->comments->find($comment_id);
-        if ($comment && $comment->delete()) {
-            return redirect()->route("posts.index");
-        } else {
+        $post = Post::isPublic()->find($post_id);
+        if (!$post) {
             return redirect()->route('error');
         }
+        $comment = $this->currentUser()->comments->find($comment_id);
+        if (!$comment || !$comment->delete()) {
+            return redirect()->route('error');
+        }
+        return redirect()->route("posts.index");
     }
 }

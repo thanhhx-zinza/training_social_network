@@ -81,7 +81,8 @@ class CommentTest extends TestCase
             'content' => 'hello world',
             'level' => 1
         ]);
-        $response = $this->get('/posts/'.Post::first()->id.'/comments/'.Comment::orderBy('id', 'desc')->first()->id.'/edit');
+        $comment = Comment::orderBy('id', 'desc')->first();
+        $response = $this->get('/posts/' . Post::first()->id . '/comments/' . $comment->id . '/edit');
         $response->assertStatus(302);
         $response->assertRedirect('/error');
     }

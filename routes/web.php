@@ -8,6 +8,7 @@ use App\Http\Controllers\App\RelationController;
 use App\Http\Controllers\App\SettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\App\ReactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +48,5 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
+    Route::resource('reactions', ReactionController::class);
 });
