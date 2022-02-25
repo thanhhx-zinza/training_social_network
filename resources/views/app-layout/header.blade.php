@@ -29,12 +29,25 @@
     </div>
     <div class="col-3">
         @if (Auth::user() != null)
-            <span>{{ Auth::user()->email }}</span>
+            <span></span>
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ Auth::user()->email }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('profile.show') }}">Profile</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('settings.index') }}">Settings</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('auth.logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
         @else
             <span>Hello world</span>
         @endif
-        <span>
-           / <a href="{{ route('auth.logout') }}">Logout</a>
-        </span>
     </div>
 </div>

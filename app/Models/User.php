@@ -89,6 +89,19 @@ class User extends Authenticatable
         return count($this->requestedRelations()->where('user_id', $this->id)->where('friend_id', $friendId)->get()) == 1;
     }
 
+    public function setting()
+    {
+        return $this->hasOne(Setting::class);
+    }
+
+    public function scopeOpenAdd($query)
+    {
+        $query->whereRelation('setting', 'is_add_friend', 1);
+    }
+
+    /**
+     * Check user is exist in db or not
+     */
     public function isExistUser($id)
     {
         return self::find($id);
@@ -100,7 +113,8 @@ class User extends Authenticatable
         return $user
             && $id != $this->id
             && $this->friends()->where('id', $id)->count() == 0
-            && $this->requestUsers()->where('id', $id)->count() == 0;
+            && $this->requestUsers()->where('id', $id)->count() == 0
+            && $user->setting->is_add_friend == 1;
     }
 
     public function getRequestingRelation($id)
