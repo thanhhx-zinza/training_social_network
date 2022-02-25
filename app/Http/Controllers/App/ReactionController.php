@@ -22,9 +22,9 @@ class ReactionController extends Controller
             return redirect()->route('error');
         }
         $reaction = $this->currentUser()->reactions()->create([
-                'reactiontable_id' => $request->reaction_table_id,
-                'reactiontable_type' => $request->reaction_table_type,
-                'type' => $request->type
+            'reactiontable_id' => $request->reaction_table_id,
+            'reactiontable_type' => $request->reaction_table_type,
+            'type' => $request->type
         ]);
         if (!$reaction) {
             return redirect()->route('error');
