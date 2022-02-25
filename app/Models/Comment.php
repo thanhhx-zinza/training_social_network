@@ -24,6 +24,11 @@ class Comment extends Model
         return $this->hasMany(Comment::Class, 'previous_id', 'id');
     }
 
+    public function reactions()
+    {
+        return $this->morphMany(Reaction::class, 'reactiontable');
+    }
+
     public function scopeOfLevel($query, $level)
     {
         $query->where('level', $level);

@@ -69,7 +69,7 @@ class Post extends Model
 
     public function reactions()
     {
-        return $this->hasMany(Reaction::class);
+        return $this->morphMany(Reaction::class, 'reactiontable');
     }
 
     protected $fillable = ['user_id', 'content', 'display', 'audience'];

@@ -9,19 +9,14 @@ class Reaction extends Model
 {
     use HasFactory;
 
-    public function post()
-    {
-        return $this->belongsTo(Post::class);
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function comment()
+    public function reactiontable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 
     public function scopeOfType($query, $type)
@@ -34,12 +29,12 @@ class Reaction extends Model
         return $query->post_id == $post_id;
     }
 
-    public function scopeUserLiked($query, $user_id)
+    public function scopeLikeUser($query, $user_id)
     {
         $query->where('user_id', $user_id);
     }
 
     protected $fillable = [
-        'user_id', 'post_id', 'type', 'comment_id',
+        'user_id', 'reactiontable_id', 'reactiontable_type', 'type',
     ];
 }

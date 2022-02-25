@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnInReactions extends Migration
+class ChangeColOfReaction extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddColumnInReactions extends Migration
     public function up()
     {
         Schema::table('reactions', function (Blueprint $table) {
-            $table->integer('comment_id');
+            $table->renameColumn('post_id', 'reactiontable_id');
+            $table->char('reactiontable_type', 250);
         });
     }
 
@@ -26,7 +27,8 @@ class AddColumnInReactions extends Migration
     public function down()
     {
         Schema::table('reactions', function (Blueprint $table) {
-            $table->dropColumn('comment_id');
+            $table->renameColumn('reactiontable_id', 'post_id');
+            $table->dropColumn('reactiontable_type');
         });
     }
 }

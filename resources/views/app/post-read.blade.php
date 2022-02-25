@@ -41,23 +41,19 @@
             <form action="{{route('reactions.store')}}" method="POST">
                 @csrf
                 @method('POST')
-                <input type="hidden" name="type" value="like">
-                <input type="hidden" name="post_id" value="{{$post->id}}">
-                <input type="hidden" name="comment_id" value="-1">
+                <input type="hidden" name="type" value="like_post">
+                <input type="hidden" name="reaction_table_type" value="App\Models\Post">
+                <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
                 <button type="submit" class="btn btn-primary">Like</button>
             </form>
-            <h5>({{ count($reactions->ofType('like')->get()) }})</h5>
+            <h5>({{ count($reactions->get()) }})</h5>
         </div>
-        @php
-        $reactions= $post->reactions();
-        @endphp
         <div class="col-3">
             <form action="{{route('reactions.destroy', -1)}}" method="POST">
                 @csrf
                 @method('DELETE')
-                <input type="hidden" name="type" value="unlike">
-                <input type="hidden" name="post_id" value="{{$post->id}}">
-                <input type="hidden" name="comment_id" value="-1">
+                <input type="hidden" name="type" value="like_post">
+                <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
                 <button class="btn btn-primary">Unlike</button>
             </form>
         </div>
@@ -116,36 +112,30 @@
                             </div>
                         </div>
                         </div>
-                        
                         <!-- begin reaction -->
                         <div class="row">
                             @php
-                            $reactions= $post->reactions();
+                            $reactions= $comment->reactions();
                             @endphp
                             <div class="col-3">
                                 <form action="{{route('reactions.store')}}" method="POST">
                                     @csrf
                                     @method('POST')
-                                    <input type="hidden" name="type" value="like">
-                                    <input type="hidden" name="post_id" value="{{$post->id}}">
-                                    <input type="hidden" name="comment_id" value="-1">
+                                    <input type="hidden" name="type" value="like_comment">
+                                    <input type="hidden" name="reaction_table_type" value="App\Models\Comment">
+                                    <input type="hidden" name="reaction_table_id" value="{{$comment->id}}">
                                     <button type="submit" class="btn btn-primary">Like</button>
                                 </form>
-                                <h5>({{ count($reactions->ofType('like')->get()) }})</h5>
+                                <h5>({{ count($reactions->get()) }})</h5>
                             </div>
-                            @php
-                            $reactions= $post->reactions();
-                            @endphp
                             <div class="col-3">
-                                <form action="{{route('reactions.store')}}" method="POST">
+                                <form action="{{route('reactions.destroy', -1)}}" method="POST">
                                     @csrf
-                                    @method('POST')
-                                    <input type="hidden" name="type" value="unlike">
-                                    <input type="hidden" name="post_id" value="{{$post->id}}">
-                                    <input type="hidden" name="comment_id" value="-1">
+                                    @method('DELETE')
+                                    <input type="hidden" name="type" value="like_comment">
+                                    <input type="hidden" name="reaction_table_id" value="{{$comment->id}}">
                                     <button class="btn btn-primary">Unlike</button>
                                 </form>
-                                <h5>({{ count($reactions->ofType('unlike')->get()) }})</h5>
                             </div>
                         </div>
                         <!-- end reaction -->
@@ -195,6 +185,34 @@
                                                         </form>
                                                     </div>
                                                 </div>
+                                                 <!-- begin reaction -->
+                                                <div class="row">
+                                                    @php
+                                                    $reaction_replies = $reply->reactions();
+                                                   
+                                                    @endphp
+                                                    <div class="col-3">
+                                                        <form action="{{route('reactions.store')}}" method="POST">
+                                                            @csrf
+                                                            @method('POST')
+                                                            <input type="hidden" name="type" value="like_comment">
+                                                            <input type="hidden" name="reaction_table_type" value="App\Models\Comment">
+                                                            <input type="hidden" name="reaction_table_id" value="{{$reply->id}}">
+                                                            <button type="submit" class="btn btn-primary">Like</button>
+                                                        </form>
+                                                        <h5>({{ count($reaction_replies->get()) }})</h5>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <form action="{{route('reactions.destroy', -1)}}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="hidden" name="type" value="like_comment">
+                                                            <input type="hidden" name="reaction_table_id" value="{{$reply->id}}">
+                                                            <button class="btn btn-primary">Unlike</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- end reaction -->
                                             </div>
                                         </div>
                                     </div>
