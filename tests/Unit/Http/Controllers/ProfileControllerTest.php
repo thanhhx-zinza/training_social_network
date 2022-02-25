@@ -114,5 +114,4 @@ class ProfileControllerTest extends TestCase
         $response = $this->call('GET', '/profile/show');
         $this->assertEquals(200, $response->getStatusCode());
     }
-
 }

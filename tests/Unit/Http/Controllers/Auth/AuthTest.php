@@ -55,7 +55,6 @@ class AuthTest extends TestCase
             'password' => '12345678',
         ]);
         $response->assertStatus(302);
-       // $response->assertRedirect('/profile/edit');
     }
 
     /**
@@ -138,7 +137,7 @@ class AuthTest extends TestCase
         $response = $this->post('register', [
             '_token' => csrf_token(),
             'email' => "abcd@gmail.com",
-            "name" =>  "Teo",
+            "name" => "Teo",
             'password' => '12345678',
         ]);
         $response->assertStatus(302);

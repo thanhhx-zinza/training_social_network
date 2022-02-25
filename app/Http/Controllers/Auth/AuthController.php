@@ -33,8 +33,8 @@ class AuthController extends Controller
             $address = $this->currentUser()->profile->address;
             $gender = $this->currentUser()->profile->gender;
             $birthDay = $this->currentUser()->profile->birthday;
-            $phoneNumber = $this->currentUser()->profile->phone_number;
-            if (empty($firstName) || empty($lastName) || empty($address) || empty($gender) || empty($birthDay) || empty($phoneNumber)) {
+            $phone = $this->currentUser()->profile->phone_number;
+            if (empty($firstName) || empty($lastName) || empty($address) || empty($gender) || empty($birthDay) || empty($phone)) {
                 return redirect()->route('profile.edit');
             } else {
                 return redirect()->route('home.index');
