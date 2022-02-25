@@ -61,9 +61,6 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-<<<<<<< HEAD
-        if (!$user->save()) {
-=======
         if ($user->save()) {
             Auth::login($user);
             Profile::create([
@@ -77,7 +74,6 @@ class AuthController extends Controller
             ]);
             return redirect()->route('home.index');
         } else {
->>>>>>> Fix register
             return back()->withInput();
         }
         Auth::login($user);

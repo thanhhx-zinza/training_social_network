@@ -35,20 +35,6 @@ class AuthTest extends TestCase
     {
         Session::start();
         $user = User::orderBy('id', 'desc')->first();
-<<<<<<< HEAD
-        $faker = Factory::create();
-        $profile = [
-            'user_id' => User::orderBy('id', 'desc')->first()->id,
-            'first_name' => $faker->name,
-            'last_name' => $faker->name,
-            'address' => $faker->address,
-            'gender' => $faker->randomElement(['male', 'female']),
-            'birthday' => $faker->datetime(),
-            'phone_number' => '0982048209',
-        ];
-        $new = profile::create($profile);
-=======
->>>>>>> Fix register
         $response = $this->post('/login', [
             '_token' => csrf_token(),
             'email' => $user->email,
@@ -58,75 +44,18 @@ class AuthTest extends TestCase
         $response->assertRedirect("/");
     }
 
-<<<<<<< HEAD
-    /**
-     * Test login without profile
-     *
-     * @dataProvider provider
-     */
-    public function testLoginWithoutProfile($first_name, $last_name, $phone_number, $birthday)
-=======
     public function testLoginWithoutProfile()
->>>>>>> Fix register
     {
         Session::start();
         $user = User::orderBy('id', 'desc')->first();
-<<<<<<< HEAD
-        $profile = [
-            'user_id' => User::orderBy('id', 'desc')->first()->id,
-            'first_name' => $faker->name,
-            'last_name' => $faker->name,
-            'address' => $faker->address,
-            'phone_number' => $faker->phonenumber,
-            'gender' => $faker->randomElement(['male', 'female']),
-            'birthday' => $faker->datetime()
-        ];
-        $new = profile::create($profile);
-        $profile = $user->profile;
-        $profile->first_name = $first_name;
-        $profile->last_name = $last_name;
-        $profile->phone_number = $phone_number;
-        $profile->birthday = $birthday;
-        $profile->save();
-=======
         $this->be($user);
->>>>>>> Fix register
         $response = $this->post('/login', [
             '_token' => csrf_token(),
             'email' => "abc98@gmail.com",
             'password' => '12345678',
         ]);
         $response->assertStatus(302);
-<<<<<<< HEAD
-        $response->assertRedirect('/profile/edit');
-    }
-
-    public function provider()
-    {
-        $faker = Factory::create();
-        $profile = [
-            'first_name' => $faker->name,
-            'last_name' => $faker->name,
-            'phone_number' => $faker->phonenumber,
-            'birthday' => $faker->datetime()
-        ];
-        $profilez = array($profile, $profile, $profile);
-        $profilez[0]['first_name'] = '';
-        $profilez[1]['last_name'] = '';
-        $profilez[2]['phone_number'] = '';
-        $result = array();
-        $a = array();
-        for ($i = 0; $i <= 2; $i++) {
-            $a = array();
-            foreach ($profilez[$i] as $x => $x_value) {
-                array_push($a, $x_value);
-            }
-            array_push($result, $a);
-        }
-        return $result;
-=======
        // $response->assertRedirect('/profile/edit');
->>>>>>> Fix register
     }
 
     /**
