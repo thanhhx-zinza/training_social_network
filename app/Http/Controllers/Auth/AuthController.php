@@ -28,27 +28,16 @@ class AuthController extends Controller
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
-            if (Auth::User()->profile == null) {
-                Profile::create([
-                    'user_id' => Auth::User()->id,
-                    'first_name' => '',
-                    'last_name' => '',
-                    'phone_number' => '',
-                    'gender' => '',
-                    'birthday' => '1900-01-01',
-                    'address' => ''
-                ]);
+            $firstName = $this->currentUser()->profile->first_name;
+            $lastName = $this->currentUser()->profile->last_name;
+            $address = $this->currentUser()->profile->address;
+            $gender = $this->currentUser()->profile->gender;
+            $birthDay = $this->currentUser()->profile->birthday;
+            $phoneNumber = $this->currentUser()->profile->phone_number;
+            if (empty($firstName) || empty($lastName) || empty($address) || empty($gender) || empty($birthDay) || empty($phoneNumber)) {
                 return redirect()->route('profile.edit');
             } else {
-                if (Auth::User()->profile->first_name == ''
-                || Auth::User()->profile->last_name == ''
-                || Auth::User()->profile->phone_number == ''
-                || Auth::User()->profile->birthday == ''
-                ) {
-                    return redirect()->route('profile.edit');
-                } else {
-                    return view('welcome');
-                }
+                return redirect()->route('home.index');
             }
         } else {
             return back()->withInput();
@@ -72,7 +61,23 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+<<<<<<< HEAD
         if (!$user->save()) {
+=======
+        if ($user->save()) {
+            Auth::login($user);
+            Profile::create([
+                'user_id' => $this->currentUser()->id,
+                'first_name' => '',
+                'last_name' => '',
+                'phone_number' => '',
+                'gender' => '',
+                'birthday' => '1900-01-01',
+                'address' => ''
+            ]);
+            return redirect()->route('home.index');
+        } else {
+>>>>>>> Fix register
             return back()->withInput();
         }
         Auth::login($user);
