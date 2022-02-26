@@ -20,6 +20,13 @@ class Profile extends Model
         'phone_number',
     ];
 
+    private static $genders = ['male', 'female', 'other'];
+
+    public function getGenders()
+    {
+        return self::$genders;
+    }
+
     public function user()
     {
         return $this->hasOne(User::class);

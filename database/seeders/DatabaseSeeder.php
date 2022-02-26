@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Comment;
-use App\Models\Profile;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,13 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        /**
+         * Model seeder create users. posts. setting, profiles, relations
+         */
         $this->call([
-            UserSeeder::class,
-            PostSeeder::class,
-            CommentSeeder::class,
-            ProfileSeeder::class,
-            SettingSeeder::class,
-            RelationSeeder::class
+            ModelSeeder::class,
         ]);
     }
 }

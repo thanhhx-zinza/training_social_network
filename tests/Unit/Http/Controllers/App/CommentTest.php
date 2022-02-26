@@ -55,10 +55,11 @@ class CommentTest extends TestCase
 
     public function testUpdateSuccess()
     {
-        $user = User::first();
+        $comment = Comment::first();
+        $user = $comment->user;
         $this->be($user);
         Session::start();
-        $response = $this->put('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id, [
+        $response = $this->put('/posts/'.$comment->post_id.'/comments/'.$comment->id, [
             '_token' => csrf_token(),
             'content' => 'thank you everyone',
         ]);

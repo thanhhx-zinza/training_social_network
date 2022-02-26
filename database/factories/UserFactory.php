@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Setting;
+use App\Models\Profile;
 
 class UserFactory extends Factory
 {
@@ -43,6 +45,19 @@ class UserFactory extends Factory
             return [
                 'email_verified_at' => null,
             ];
+        });
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            Setting::factory()->create(['user_id' => $user->id]);
+            Profile::factory()->create(['user_id' => $user->id]);
         });
     }
 }
