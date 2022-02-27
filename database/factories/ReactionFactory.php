@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Post;
 
-class CommentFactory extends Factory
+class ReactionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,10 +19,9 @@ class CommentFactory extends Factory
         $post = Post::isPublic()->inRandomOrder()->first();
         return [
             'user_id' => $user->id,
-            'post_id' => $post->id,
-            'content' => $this->faker->text(250),
-            'previous_id' => -1,
-            'level' => 1,
+            'reactiontable_id' => $post->id,
+            'reactiontable_type' => 'App\Models\Post',
+            'type' => 'like',
         ];
     }
 }

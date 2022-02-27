@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Relation;
+use App\Models\Reaction;
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
@@ -23,7 +24,10 @@ class ModelSeeder extends Seeder
             ->has(
                 Post::factory()
                     ->count(10)
-                    ->has(Comment::factory()->count(5))
+                    ->has(
+                        Comment::factory()->count(5)->has(Reaction::factory()->count(5))
+                    )
+                    ->has(Reaction::factory()->count(10))
             )
             ->create();
 

@@ -52,7 +52,7 @@ class ReactionTest extends TestCase
             '_token' => csrf_token(),
             'reaction_table_id' => $post->id,
             'reaction_table_type' => 'App\Models\Post',
-            'type' => 'like_post'
+            'type' => 'like'
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/posts');
@@ -68,7 +68,7 @@ class ReactionTest extends TestCase
             '_token' => csrf_token(),
             'reaction_table_id' => $comment->id,
             'reaction_table_type' => 'App\Models\Comment',
-            'type' => 'like_comment'
+            'type' => 'like'
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/posts');
@@ -82,13 +82,13 @@ class ReactionTest extends TestCase
         $post = Post::orderBy('id', 'desc')->first();
         $reaction = $user->reactions()->create([
             'reactiontable_id' => $post->id,
-            'type' => 'like_post',
+            'type' => 'like',
             'reactiontable_type' => 'App\Models\Post',
         ]);
         $response = $this->delete('/reactions/' . $reaction->id, [
             '_token' => csrf_token(),
             'reaction_table_id' => $post->id,
-            'type' => 'like_post'
+            'type' => 'like'
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/posts');

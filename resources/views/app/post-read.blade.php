@@ -41,7 +41,7 @@
             <form action="{{route('reactions.store')}}" method="POST">
                 @csrf
                 @method('POST')
-                <input type="hidden" name="type" value="like_post">
+                <input type="hidden" name="type" value="like">
                 <input type="hidden" name="reaction_table_type" value="App\Models\Post">
                 <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
                 <button type="submit" class="btn btn-primary">Like</button>
@@ -52,7 +52,7 @@
             <form action="{{route('reactions.destroy', -1)}}" method="POST">
                 @csrf
                 @method('DELETE')
-                <input type="hidden" name="type" value="like_post">
+                <input type="hidden" name="type" value="like">
                 <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
                 <button class="btn btn-primary">Unlike</button>
             </form>
@@ -126,7 +126,7 @@
                                 <form action="{{route('reactions.store')}}" method="POST">
                                     @csrf
                                     @method('POST')
-                                    <input type="hidden" name="type" value="like_comment">
+                                    <input type="hidden" name="type" value="like">
                                     <input type="hidden" name="reaction_table_type" value="App\Models\Comment">
                                     <input type="hidden" name="reaction_table_id" value="{{$comment->id}}">
                                     <button type="submit" class="btn btn-primary">Like</button>
@@ -137,7 +137,7 @@
                                 <form action="{{route('reactions.destroy', -1)}}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <input type="hidden" name="type" value="like_comment">
+                                    <input type="hidden" name="type" value="like">
                                     <input type="hidden" name="reaction_table_id" value="{{$comment->id}}">
                                     <button class="btn btn-primary">Unlike</button>
                                 </form>
@@ -201,13 +201,13 @@
                                                 <div class="row">
                                                     @php
                                                     $reaction_replies = $reply->reactions();
-                                                   
+
                                                     @endphp
                                                     <div class="col-3">
                                                         <form action="{{route('reactions.store')}}" method="POST">
                                                             @csrf
                                                             @method('POST')
-                                                            <input type="hidden" name="type" value="like_comment">
+                                                            <input type="hidden" name="type" value="like">
                                                             <input type="hidden" name="reaction_table_type" value="App\Models\Comment">
                                                             <input type="hidden" name="reaction_table_id" value="{{$reply->id}}">
                                                             <button type="submit" class="btn btn-primary">Like</button>
@@ -218,7 +218,7 @@
                                                         <form action="{{route('reactions.destroy', -1)}}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <input type="hidden" name="type" value="like_comment">
+                                                            <input type="hidden" name="type" value="like">
                                                             <input type="hidden" name="reaction_table_id" value="{{$reply->id}}">
                                                             <button class="btn btn-primary">Unlike</button>
                                                         </form>
