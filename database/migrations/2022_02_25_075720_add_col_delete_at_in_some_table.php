@@ -17,6 +17,7 @@ class AddColDeleteAtInSomeTable extends Migration
             $table->softDeletes();
         });
         Schema::table('users', function (Blueprint $table) {
+            $table->dropUnique('users_email_unique');
             $table->softDeletes();
         });
     }
@@ -32,6 +33,7 @@ class AddColDeleteAtInSomeTable extends Migration
             $table->dropSoftDeletes();
         });
         Schema::table('users', function (Blueprint $table) {
+            $table->string('email')->nullable(false)->unique()->change();
             $table->dropSoftDeletes();
         });
     }

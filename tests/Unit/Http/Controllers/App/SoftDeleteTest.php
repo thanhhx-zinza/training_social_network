@@ -16,22 +16,30 @@ class SoftDeleteTest extends TestCase
 
     public function testSoftDeleteSuccess()
     {
+        $response = $this->get('/register');
         Session::start();
+        $faker = Factory::create();
         $this->post('/register', [
             '_token' => csrf_token(),
-            'name' => 'name',
-            'email' => 'laivanA@gmail.com',
-            'password' => '12345678',
+            'name' => $faker->name,
+            'email' => $faker->email,
+            'password' => $faker->name,
         ]);
         $user = User::orderBy('id', 'desc')->first();
-        User::onlyTrashed($user->id);
+        $user->delete();
+        $newUser = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => $user->password,
+        ];
         $response = $this->post('/register', [
             '_token' => csrf_token(),
-            'name' => 'name',
-            'email' => 'laivanA@gmail.com',
-            'password' => '12345678',
+            'name' => $newUser['name'],
+            'email' => $newUser['email'],
+            'password' => $newUser['password'],
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
+        $this->assertDatabaseHas('users', $newUser);
     }
 }
