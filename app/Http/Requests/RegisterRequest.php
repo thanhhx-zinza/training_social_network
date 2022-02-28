@@ -25,12 +25,12 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'bail|required|max:20',
+            'name' => 'required',
             'email' => [
                 'required',
                 Rule::unique('users')->whereNull('deleted_at'),
             ],
-            'password' => 'bail|required|min:8',
+            'password' => 'required',
         ];
     }
 }

@@ -19,27 +19,30 @@ class SoftDeleteTest extends TestCase
         $response = $this->get('/register');
         Session::start();
         $faker = Factory::create();
-        $this->post('/register', [
-            '_token' => csrf_token(),
+        $arr = [
             'name' => $faker->name,
             'email' => $faker->email,
             'password' => $faker->name,
+        ];
+        $this->post('/register', [
+            '_token' => csrf_token(),
+            'name' => $arr['name'],
+            'email' => $arr['email'],
+            'password' => $arr['password'],
         ]);
         $user = User::orderBy('id', 'desc')->first();
         $user->delete();
-        $newUser = [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => $user->password,
-        ];
+        $this->assertDatabaseHas('users', ['email' => $arr['email']]);
+        $this->assertDatabaseMissing('users', ['email' => $arr['email'], 'deleted_at' => null]);
+
         $response = $this->post('/register', [
             '_token' => csrf_token(),
-            'name' => $newUser['name'],
-            'email' => $newUser['email'],
-            'password' => $newUser['password'],
+            'name' => $arr['name'],
+            'email' => $arr['email'],
+            'password' => $arr['password'],
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/');
-        $this->assertDatabaseHas('users', $newUser);
+        $this->assertDatabaseHas('users', ['email' => $arr['email'], 'deleted_at' => null]);
     }
 }
