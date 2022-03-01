@@ -48,7 +48,7 @@ class AuthController extends Controller
                 ) {
                     return redirect()->route('profile.edit');
                 } else {
-                    return view('home.index');
+                    return redirect()->route('home.index');
                 }
             }
         } else {

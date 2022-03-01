@@ -43,7 +43,7 @@ class AuthTest extends TestCase
             'password' => 12345678,
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/profile/edit");
+        $response->assertRedirect("/");
     }
 
     public function testLoginWithoutProfile()

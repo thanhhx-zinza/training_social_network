@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             CommentSeeder::class,
             ProfileSeeder::class,
-            SettingSeeder::class
+            SettingSeeder::class,
+            RelationSeeder::class
         ]);
     }
 }
