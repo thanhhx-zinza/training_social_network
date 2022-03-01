@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
+use App\Models\Profile;
 
 class ProfileFactory extends Factory
 {
@@ -14,15 +14,14 @@ class ProfileFactory extends Factory
      */
     public function definition()
     {
-        $user = User::inRandomOrder()->first();
         return [
-            'user_id' => $user->id,
-            'first_name' => 'first_name',
-            'last_name' => 'last_name',
-            'address' => 'address',
-            'gender' => 'gender',
-            'birthday' => '1990-01-01',
-            'phone_number' => '123456789'
-        ];
+            'user_id' => 1,
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'address' => $this->faker->address(),
+            'gender' => array_rand(array_flip(Profile::getGenders())),
+            'birthday' => $this->faker->dateTime(),
+            'phone_number' => $this->faker->e164PhoneNumber(),
+    ];
     }
 }

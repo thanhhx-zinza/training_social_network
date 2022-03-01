@@ -3,9 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
 
-class PostFactory extends Factory
+class SettingFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -14,12 +13,10 @@ class PostFactory extends Factory
      */
     public function definition()
     {
-        $user = User::inRandomOrder()->first();
         return [
-            'user_id' => $user->id,
-            'content' => $this->faker->text(240),
-            'audience' => 'public',
-            'display' => 1,
+            'user_id' => 1,
+            'is_noti' => rand(0, 1),
+            'is_add_friend' => rand(0, 1),
         ];
     }
 }

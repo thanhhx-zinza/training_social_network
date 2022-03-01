@@ -12,7 +12,7 @@ class ReactionController extends Controller
 {
     public function store(Request $request)
     {
-        if ($request->type == 'like_post') {
+        if ($request->reaction_table_type == 'App\Models\Post') {
             $reactions = Post::isPublic()->find($request->reaction_table_id)->reactions();
         } else {
             $reactions = Comment::find($request->reaction_table_id)->reactions();
@@ -34,7 +34,7 @@ class ReactionController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        if ($request->type == 'like_post') {
+        if ($request->type == 'like') {
             $reactions = Post::isPublic()->find($request->reaction_table_id)->reactions();
         } else {
             $reactions = Comment::find($request->reaction_table_id)->reactions();

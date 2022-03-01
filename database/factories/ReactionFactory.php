@@ -4,8 +4,9 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Post;
 
-class PostFactory extends Factory
+class ReactionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -15,11 +16,12 @@ class PostFactory extends Factory
     public function definition()
     {
         $user = User::inRandomOrder()->first();
+        $post = Post::isPublic()->inRandomOrder()->first();
         return [
             'user_id' => $user->id,
-            'content' => $this->faker->text(240),
-            'audience' => 'public',
-            'display' => 1,
+            'reactiontable_id' => $post->id,
+            'reactiontable_type' => 'App\Models\Post',
+            'type' => 'like',
         ];
     }
 }

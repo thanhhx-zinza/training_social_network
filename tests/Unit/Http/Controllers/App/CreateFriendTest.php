@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\App;
 
-use App\Models\Comment;
+use App\Models\Relation;
 use App\Models\Setting;
 use Tests\TestCase;
 use App\Models\User;
@@ -61,14 +61,13 @@ class CreateFriendTest extends TestCase
     public function testResponRequestAddFriendSuccess()
     {
         Session::start();
-        $response = $this->get("/relations/requests");
-        $userId = User::orderBy("id", "desc")->first()->id;
         $user = User::first();
         $this->be($user);
-        $response = $this->post("/relations/".$userId, [
-            "type" => "Accept",
+        $response = $this->get("/relations/requests");
+        $relation = Relation::where('friend_id', $user->id)->where('type', 'request')->first();
+        $response = $this->patch("/relations/".$relation->user_id, [
+            "type" => "accept",
             '_token' => csrf_token(),
-            "_method" => "PATCH",
         ]);
         $response->assertStatus(302);
         $response->assertRedirect("/relations/requests");

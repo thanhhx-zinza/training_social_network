@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Post;
 
 class CommentFactory extends Factory
 {
@@ -15,11 +16,11 @@ class CommentFactory extends Factory
     public function definition()
     {
         $user = User::inRandomOrder()->first();
-        $post = User::inRandomOrder()->first();
+        $post = Post::isPublic()->inRandomOrder()->first();
         return [
             'user_id' => $user->id,
             'post_id' => $post->id,
-            'content' => 'Hello world',
+            'content' => $this->faker->text(250),
             'previous_id' => -1,
             'level' => 1,
         ];
