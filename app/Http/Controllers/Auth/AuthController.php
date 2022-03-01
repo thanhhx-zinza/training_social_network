@@ -28,9 +28,9 @@ class AuthController extends Controller
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
-            if (Auth::User()->profile == null) {
+            if ($this->currentUser()->profile == null) {
                 Profile::create([
-                    'user_id' => Auth::User()->id,
+                    'user_id' => $this->currentUser()->id,
                     'first_name' => '',
                     'last_name' => '',
                     'phone_number' => '',
@@ -40,14 +40,15 @@ class AuthController extends Controller
                 ]);
                 return redirect()->route('profile.edit');
             } else {
-                if (Auth::User()->profile->first_name == ''
-                || Auth::User()->profile->last_name == ''
-                || Auth::User()->profile->phone_number == ''
-                || Auth::User()->profile->birthday == ''
+                $user = $this->currentUser()->profile;
+                if ($user->first_name == ''
+                || $user->last_name == ''
+                || $user->phone_number == ''
+                || $user->birthday == ''
                 ) {
                     return redirect()->route('profile.edit');
                 } else {
-                    return view('welcome');
+                    return redirect()->route('home.index');
                 }
             }
         } else {

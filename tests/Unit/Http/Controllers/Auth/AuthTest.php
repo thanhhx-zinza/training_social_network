@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Faker\Factory;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
+use Hash;
 
 class AuthTest extends TestCase
 {
@@ -34,84 +35,34 @@ class AuthTest extends TestCase
     public function testAuthenticateSuccess()
     {
         Session::start();
-        $user = User::orderBy('id', 'desc')->first();
+        $user = User::first();
         $faker = Factory::create();
-        $profile = [
-            'user_id' => User::orderBy('id', 'desc')->first()->id,
-            'first_name' => $faker->name,
-            'last_name' => $faker->name,
-            'address' => $faker->address,
-            'gender' => $faker->randomElement(['male', 'female']),
-            'birthday' => $faker->datetime(),
-            'phone_number' => '0982048209',
-        ];
-        $new = profile::create($profile);
         $response = $this->post('/login', [
             '_token' => csrf_token(),
             'email' => $user->email,
-            'password' => '12345678',
+            'password' => 12345678,
         ]);
-        $response->assertOk();
+        $response->assertStatus(302);
+        $response->assertRedirect("/");
     }
 
-    /**
-     * Test login without profile
-     *
-     * @dataProvider provider
-     */
-    public function testLoginWithoutProfile($first_name, $last_name, $phone_number, $birthday)
+    public function testLoginWithoutProfile()
     {
         Session::start();
         $faker = Factory::create();
-        $user = User::orderBy('id', 'desc')->first();
-        $profile = [
-            'user_id' => User::orderBy('id', 'desc')->first()->id,
-            'first_name' => $faker->name,
-            'last_name' => $faker->name,
-            'address' => $faker->address,
-            'phone_number' => $faker->phonenumber,
-            'gender' => $faker->randomElement(['male', 'female']),
-            'birthday' => $faker->datetime()
+        $data = [
+            'name' => $faker->name,
+            'password' => Hash::make(12345678),
+            'email' => $faker->email,
         ];
-        $new = profile::create($profile);
-        $profile = $user->profile;
-        $profile->first_name = $first_name;
-        $profile->last_name = $last_name;
-        $profile->phone_number = $phone_number;
-        $profile->birthday = $birthday;
-        $profile->save();
+        $user = User::insert($data);
         $response = $this->post('/login', [
             '_token' => csrf_token(),
-            'email' => $user->email,
+            'email' => User::orderBy('id', 'DESC')->first()->email,
             'password' => '12345678',
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/profile/edit');
-    }
-
-    public function provider()
-    {
-        $faker = Factory::create();
-        $profile = [
-            'first_name' => $faker->name,
-            'last_name' => $faker->name,
-            'phone_number' => $faker->phonenumber,
-            'birthday' => $faker->datetime()
-        ];
-        $profilez = array($profile, $profile, $profile);
-        $profilez[0]['first_name'] = '';
-        $profilez[1]['last_name'] = '';
-        $profilez[2]['phone_number'] = '';
-        $result = array();
-        $a = array();
-        for ($i = 0; $i <= 2; $i++) {
-            $a = array();
-            foreach ($profilez[$i] as $x => $x_value) {
-                array_push($a, $x_value);
-            }
-            array_push($result, $a);
-        }
-        return $result;
+        $response->assertRedirect("/profile/edit");
     }
 
     /**

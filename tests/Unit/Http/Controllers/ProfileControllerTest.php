@@ -114,11 +114,4 @@ class ProfileControllerTest extends TestCase
         $response = $this->call('GET', '/profile/show');
         $this->assertEquals(200, $response->getStatusCode());
     }
-
-    public function testEdit()
-    {
-        $this->be(User::orderby('id', 'desc')->first());
-        $response = $this->call('GET', '/profile/edit');
-        $this->assertEquals(200, $response->getStatusCode());
-    }
 }
