@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, $post_id)
+    public function store(CommentRequest $request, $post_id)
     {
         $post = Post::isPublic()->find($post_id);
         if (!$post) {
@@ -35,7 +36,7 @@ class CommentController extends Controller
         return view('app.comment.edit', ['comment' => $comment, 'post' => $post]);
     }
 
-    public function update(Request $request, $post_id, $comment_id)
+    public function update(CommentRequest $request, $post_id, $comment_id)
     {
         $post = Post::isPublic()->find($post_id);
         if (!$post) {

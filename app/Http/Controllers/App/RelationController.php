@@ -50,12 +50,16 @@ class RelationController extends Controller
     public function getRequests()
     {
         $requestRelations = $this->currentUser()->requestingRelations()
-            ->where('type', 'request')
+            ->wherePivot('type', 'request')
             ->select('user_id')
             ->get();
+        $arr = [];
+        foreach ($requestRelations as $item) {
+            $arr[] = $item->user_id;
+        }
         $requestUsers = [];
         if ($requestRelations->count() >= 0) {
-            $requestUsers = User::whereIn('id', $requestRelations)->paginate($this->paginationNum);
+            $requestUsers = User::whereIn('id', $arr)->paginate($this->paginationNum);
         } else {
             return redirect('error');
         }

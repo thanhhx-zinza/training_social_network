@@ -71,8 +71,13 @@
             <input type="hidden" value="1" name="level">
             <input type="hidden" value="-1" name="previous_id">
             <textarea name="content" class="form-control" rows="3" require="required" placeholder="Input content(*)"></textarea>
+            @error('content')
+            <small>
+                <div class="text-danger my-3">{{ $message }}</div>
+            </small>
+            @enderror
         </div>
-        <button type="submit" class="btn btn-primary">send comment</button>
+        <button type="submit" class="btn btn-primary my-3">send comment</button>
     </form>
 <!-- end post comment -->
 
@@ -148,6 +153,11 @@
                                 <input type="hidden" value="{{$comment->id}}" name="previous_id">
                                 <input type="hidden" value="2" name="level">
                                 <textarea name="content" class="form-control" rows="3" require="required" placeholder="Input content(*)"></textarea>
+                                @error('content')
+                                <small>
+                                    <div class="text-danger my-3">{{ $message }}</div>
+                                </small>
+                                @enderror
                             </div>
                             <button type="submit" class="btn btn-primary">send reply</button>
                         </form>
@@ -169,7 +179,9 @@
                                         <div class="col-9">
                                             <div class="media-body">
                                                 <h4 class="media-heading">{{$reply->user->profile->first_name}}</h4>
-                                                <div class="row">{{$reply->content}}</div>
+                                                <div class="row">
+                                                    {{$reply->content}}
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-2">
                                                         <form action="{{route('posts.comments.edit',[$post->id, $reply->id])}}" method="GET" class="col-2">

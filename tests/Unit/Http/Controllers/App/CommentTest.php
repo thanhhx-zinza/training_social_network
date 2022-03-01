@@ -101,7 +101,9 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->delete('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id);
+        $response = $this->delete('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id, [
+            '_token' => csrf_token(),
+        ]);
         $response->assertStatus(302);
     }
 }
