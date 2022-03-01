@@ -13,11 +13,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        /**
-         * Model seeder create users. posts. setting, profiles, relations
-         */
         $this->call([
-            ModelSeeder::class,
+            UserSeeder::class,
+            PostSettingProfileSeeder::class,
+            CommentReactionSeeder::class,
+            ReactionSeeder::class,
+            RelationSeeder::class,
         ]);
     }
 }
