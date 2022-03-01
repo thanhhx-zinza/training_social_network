@@ -332,7 +332,7 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $response = $this->delete('posts/-1', [
-            '_token' => csrf_token()
+            '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/error');
@@ -364,7 +364,7 @@ class PostTest extends TestCase
         Session::start();
         $post = Post::first();
         $response = $this->delete('posts/'.$post->id, [
-            '_token' => csrf_token()
+            '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
@@ -375,13 +375,14 @@ class PostTest extends TestCase
      */
     public function testDestroySuccess()
     {
+        Session::start();
         $user = User::first();
         $this->be($user);
         $post = Post::where('user_id', '=', $user->id)->first();
-        $response = $this->delete('posts/'.$post->id);
+        $response = $this->delete('posts/'.$post->id, [
+            '_token' => csrf_token(),
+        ]);
         $postDeleted = Post::where('id', $post->id)->onlyTrashed()->first();
-       // dd($postDeleted);
-        $this->assertTrue($postDeleted->deleted_at != null);
         $response->assertStatus(302);
         $response->assertRedirect('/posts');
     }

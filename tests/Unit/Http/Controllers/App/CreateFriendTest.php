@@ -36,15 +36,15 @@ class CreateFriendTest extends TestCase
             'email' => $faker->email,
         ];
         $userId = User::insertGetId($data);
-        $setting =  Setting::insert([
+        $setting = Setting::insert([
             'is_noti' => 1,
             'is_add_friend' => 1,
-            "user_id" => $userId
+            "user_id" => $userId,
         ]);
         $user = User::first();
         $this->be($user);
         $response = $this->post("/relations/".$userId, [
-            '_token' => csrf_token()
+            '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
         $response->assertRedirect("/relations");
@@ -62,13 +62,13 @@ class CreateFriendTest extends TestCase
     {
         Session::start();
         $response = $this->get("/relations/requests");
-        $userId = User::orderBy("id","desc")->first()->id;
+        $userId = User::orderBy("id", "desc")->first()->id;
         $user = User::first();
         $this->be($user);
         $response = $this->post("/relations/".$userId, [
             "type" => "Accept",
             '_token' => csrf_token(),
-            "_method" => "PATCH"
+            "_method" => "PATCH",
         ]);
         $response->assertStatus(302);
         $response->assertRedirect("/relations/requests");
@@ -78,13 +78,13 @@ class CreateFriendTest extends TestCase
     {
         Session::start();
         $response = $this->get("/relations/requests");
-        $userId = User::orderBy("id","desc")->first()->id;
+        $userId = User::orderBy("id", "desc")->first()->id;
         $user = User::first();
         $this->be($user);
         $response = $this->post("/relations/".$userId, [
             "type" => "Nothing",
             '_token' => csrf_token(),
-            "_method" => "PATCH"
+            "_method" => "PATCH",
         ]);
         $response->assertStatus(302);
         $response->assertRedirect("/error");
