@@ -18,8 +18,8 @@ class RelationSeeder extends Seeder
         $userFirst = User::orderBy("id", "asc")->first();
         $userLast = User::orderBy("id", "desc")->first();
         Relation::insert([
-         ["user_id" => $userLast->id, "friend_id" => $userFirst->id, "type" => "request"],
-         ["friend_id" => $userLast->id, "user_id" => $userFirst->id, "type" => "friend"],
+            ["user_id" => $userLast->id, "friend_id" => $userFirst->id, "type" => "request"],
+            ["friend_id" => $userLast->id, "user_id" => $userFirst->id, "type" => "friend"],
         ]);
     }
 }
