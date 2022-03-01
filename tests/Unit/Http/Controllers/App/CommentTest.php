@@ -92,8 +92,8 @@ class CommentTest extends TestCase
     {
         $user = User::first();
         $this->be($user);
-        Session::start();
-        $response = $this->get('/posts/' . Post::first()->id . '/comments/' . Comment::first()->id . '/edit');
+        $comment = Comment::where('user_id', $user->id)->first();
+        $response = $this->get('/posts/'.$comment->post_id.'/comments/'.$comment->id.'/edit');
         $response->assertStatus(200);
     }
 
