@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\QueryException;
+use PDOException;
 
 class Handler extends ExceptionHandler
 {
@@ -34,8 +36,14 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            return response()->view('app.errors.404', [], 404);
+        });
+        $this->renderable(function (QueryException $e, $request) {
+            return back()->withError(['query-fail' => $e->getMessage()])->withInput();
+        });
+        $this->renderable(function (PDOException $e, $request) {
+            return response()->view('app.errors.500', [], 500);
         });
     }
 }

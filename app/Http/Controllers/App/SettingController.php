@@ -15,10 +15,7 @@ class SettingController extends Controller
     public function index()
     {
         $setting = $this->currentUser()->setting;
-        if ($setting) {
-            return view('app.setting', ['setting' => $setting]);
-        }
-        return redirect('/error');
+        return view('app.setting', ['setting' => $setting]);
     }
 
     /**
@@ -31,13 +28,10 @@ class SettingController extends Controller
     {
         $isNoti = ($request->isNoti && $request->isNoti === 'on') ? 1 : 0;
         $isAddFriend = ($request->isAddFriend && $request->isAddFriend === 'on') ? 1 : 0;
-        $setting = $this->currentUser()->setting()->update([
+        $this->currentUser()->setting()->update([
             'is_noti' => $isNoti,
             'is_add_friend' => $isAddFriend,
         ]);
-        if ($setting) {
-            return redirect('/settings');
-        }
-        return redirect('/error');
+        return redirect('/settings');
     }
 }

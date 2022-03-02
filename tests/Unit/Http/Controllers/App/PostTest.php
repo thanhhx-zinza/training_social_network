@@ -100,7 +100,7 @@ class PostTest extends TestCase
             'audience' => $audience,
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/posts');
     }
 
     /**
@@ -165,8 +165,7 @@ class PostTest extends TestCase
             'content' => 'Hello wolrd',
             'audience' => 'kkk',
         ]);
-        $response->assertStatus(302);
-        $response->assertRedirect('/posts/create');
+        $response->assertStatus(400);
     }
 
     /**
@@ -177,8 +176,7 @@ class PostTest extends TestCase
         $user = User::first();
         $this->be($user);
         $response = $this->get('posts/-1/edit');
-        $response->assertStatus(302);
-        $response->assertRedirect('/error');
+        $response->assertStatus(404);
     }
 
     /**
@@ -281,8 +279,7 @@ class PostTest extends TestCase
             'content' => 'hello',
             'audience' => 'kk',
         ]);
-        $response->assertStatus(302);
-        $response->assertRedirect('/error');
+        $response->assertStatus(404);
     }
 
     /**
@@ -300,8 +297,7 @@ class PostTest extends TestCase
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'public',
         ]);
-        $response->assertStatus(302);
-        $response->assertRedirect('/posts/'.$post->id.'/edit');
+        $response->assertStatus(400);
     }
 
      /**
@@ -319,8 +315,7 @@ class PostTest extends TestCase
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'kkkk',
         ]);
-        $response->assertStatus(302);
-        $response->assertRedirect('/posts/'.$post->id.'/edit');
+        $response->assertStatus(400);
     }
 
     /**
@@ -334,8 +329,7 @@ class PostTest extends TestCase
         $response = $this->delete('posts/-1', [
             '_token' => csrf_token(),
         ]);
-        $response->assertStatus(302);
-        $response->assertRedirect('/error');
+        $response->assertStatus(404);
     }
 
     /**
@@ -352,8 +346,7 @@ class PostTest extends TestCase
             'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
             'audience' => 'public',
         ]);
-        $response->assertStatus(302);
-        $response->assertRedirect('error');
+        $response->assertStatus(400);
     }
 
     /**

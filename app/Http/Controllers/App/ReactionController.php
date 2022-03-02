@@ -6,29 +6,30 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
-use App\Models\Reaction;
+use App\Exceptions\ErrorException;
 
 class ReactionController extends Controller
 {
     public function store(Request $request)
     {
+        $type = ['App\Models\Post', 'App\Models\Comment'];
+        if (!in_array($request->reaction_table_type, $type)) {
+            throw new ErrorException();
+        }
         if ($request->reaction_table_type == 'App\Models\Post') {
-            $reactions = Post::isPublic()->find($request->reaction_table_id)->reactions();
+            $reactions = Post::isPublic()->findOrFail($request->reaction_table_id)->reactions();
         } else {
-            $reactions = Comment::find($request->reaction_table_id)->reactions();
+            $reactions = Comment::findOrFail($request->reaction_table_id)->reactions();
         }
         $reactions = $reactions->likeUser($this->currentUser()->id)->get();
-        if (count($reactions)) {
-            return redirect()->route('error');
+        if ($reactions->count()) {
+            throw new ErrorException();
         }
-        $reaction = $this->currentUser()->reactions()->create([
+        $this->currentUser()->reactions()->create([
             'reactiontable_id' => $request->reaction_table_id,
             'reactiontable_type' => $request->reaction_table_type,
-            'type' => $request->type
+            'type' => $request->type,
         ]);
-        if (!$reaction) {
-            return redirect()->route('error');
-        }
         return redirect()->route('posts.index');
     }
 
@@ -41,13 +42,11 @@ class ReactionController extends Controller
         }
         $reactions = $reactions->likeUser($this->currentUser()->id)->get();
         if (!count($reactions)) {
-            return redirect()->route('error');
+            throw new ErrorException();
         }
         $id = $reactions[0]->id;
-        $reaction = $this->currentUser()->reactions->find($id);
-        if (!$reaction || !$reaction->delete()) {
-            return redirect()->route('error');
-        }
+        $reaction = $this->currentUser()->reactions()->findOrFail($id);
+        $reaction->delete();
         return redirect()->route('posts.index');
     }
 }
