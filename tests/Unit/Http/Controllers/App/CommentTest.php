@@ -42,7 +42,7 @@ class CommentTest extends TestCase
         $user = User::first();
         $this->be($user);
         Session::start();
-        $response = $this->post('/posts/' . Post::first()->id . '/comments', [
+        $response = $this->post('/posts/'.Post::first()->id.'/comments', [
             '_token' => csrf_token(),
             'post_id' => Post::first()->id,
             'previous_id' => -1,

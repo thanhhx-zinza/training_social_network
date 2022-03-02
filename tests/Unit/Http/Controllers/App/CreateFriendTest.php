@@ -85,7 +85,6 @@ class CreateFriendTest extends TestCase
             '_token' => csrf_token(),
             "_method" => "PATCH",
         ]);
-        $response->assertStatus(302);
-        $response->assertRedirect("/error");
+        $response->assertStatus(400);
     }
 }

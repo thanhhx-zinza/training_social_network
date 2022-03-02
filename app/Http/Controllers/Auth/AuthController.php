@@ -69,22 +69,17 @@ class AuthController extends Controller
      */
     public function registerAccount(RegisterRequest $request)
     {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        if (!$user->save()) {
-            return back()->withInput();
-        }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
         Auth::login($user);
         $user->setting()->create([
             'is_noti' => 1,
             'is_add_friend' => 1,
         ]);
-        if ($user->setting) {
-            return redirect(route('home.index'));
-        }
-        return redirect('/error');
+        return redirect()->route('home.index');
     }
 
     /**

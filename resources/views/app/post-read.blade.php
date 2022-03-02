@@ -8,7 +8,7 @@
         <div class="row mt-2">
             <div class="col-1"></div>
             <div class="col-3">
-                <p class="m-0 fw-normal">{{ $userName }}</p>
+                <p class="m-0 fw-normal">{{ $user->name }}</p>
                 <select class="form-select form-select-sm" name="audience" aria-label="Default select example" disabled>
                     <option value="{{ $post->audience }}">
                         {{ $post->audience }}

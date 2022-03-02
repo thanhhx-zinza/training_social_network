@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Valuestore\Valuestore;
+use App\Exceptions\ErrorException;
 
 class RelationController extends Controller
 {
@@ -29,22 +30,19 @@ class RelationController extends Controller
             ->openAdd()
             ->whereNotIn('id', $arr)
             ->paginate($this->paginationNum);
-        if (count($users) >= 0) {
-            return view('app.relations-list', ['userList' => $users, 'action' => 'add-friend']);
-        }
-        return redirect('error');
+        return view('app.relations-list', ['userList' => $users, 'action' => 'add-friend']);
     }
 
     public function addFriend($friendId)
     {
         if (!$this->currentUser()->isFriendable($friendId)) {
-            return redirect('error');
+            return back()->withInput();
         }
         $this->currentUser()->addFriend($friendId);
         if ($this->currentUser()->isAddSuccess($friendId)) {
             return redirect()->route('relations.get_add_friend_list');
         }
-        return redirect('error');
+        throw new ErrorException();
     }
 
     public function getRequests()
@@ -52,15 +50,8 @@ class RelationController extends Controller
         $requestRelations = $this->currentUser()->requestingRelations()
             ->wherePivot('type', 'request')
             ->get();
-        if ($requestRelations->count() >= 0) {
-            $requestUsers = User::whereIn('id', $requestRelations->pluck(['id']))->paginate($this->paginationNum);
-        } else {
-            return redirect('error');
-        }
-        if ($requestUsers->count() >= 0) {
-            return view('app.relations-list', ['userList' => $requestUsers, 'action' => 'requests']);
-        }
-        return redirect('error');
+        $requestUsers = User::whereIn('id', $requestRelations->pluck(['id']))->paginate($this->paginationNum);
+        return view('app.relations-list', ['userList' => $requestUsers, 'action' => 'requests']);
     }
 
     public function responseRequest($userId, Request $request)
@@ -68,23 +59,19 @@ class RelationController extends Controller
         $type = isset($request->type) ? strtolower($request->type) : '';
         $arr = ['accept', 'decline'];
         if (!in_array($type, $arr) || !$this->currentUser()->isRequestedBy($userId)) {
-            return redirect('error');
+            throw new ErrorException();
         }
         $relation = $this->currentUser()->getRequestingRelation($userId);
         if ($relation == null) {
-            return redirect('error');
+            throw new ErrorException();
         }
         if ($type == 'accept') {
-            $relation->type = 'friend';
-            if ($relation->save()) {
-                return redirect(route('relations.get_requests'));
-            }
-            return redirect('error');
+            $relation->update([
+                'type' => 'friend',
+            ]);
         } else {
-            if ($relation->delete()) {
-                return redirect(route('relations.get_requests'));
-            }
-            return redirect('error');
+            $relation->delete();
         }
+        return redirect(route('relations.get_requests'));
     }
 }

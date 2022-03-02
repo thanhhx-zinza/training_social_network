@@ -21,6 +21,7 @@ class CommentController extends Controller
             'level' => $request->level
         ]);
         if (!$newComment) {
+            dd("hello world");
             return redirect()->route('error');
         }
         return redirect()->route('posts.index');
