@@ -49,4 +49,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
     Route::resource('reactions', ReactionController::class);
+
+    Route::post('profile/upload', [ ProfileController::class, 'upload' ])->name('profile.upload');
 });

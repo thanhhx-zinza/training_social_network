@@ -13,11 +13,25 @@ class ProfileController extends Controller
         $profile = $this->currentUser()->profile;
         return view('profile.index', ['profiles' => $profile]);
     }
+
     public function edit()
     {
         $profile = $this->currentUser()->profile;
         return view('profile.edit', ['profiles' => $profile]);
     }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+        ]);
+        $imageName = time().'.'.$request->image->extension();
+        $request->image->storeAs('images', $imageName);
+        return back()
+            ->with('success', 'You have successfully upload image.')
+            ->with('image', $imageName);
+    }
+
     public function update(ProfileValidate $request)
     {
         $this->currentUser()->profile()->update([
