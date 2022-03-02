@@ -5,7 +5,7 @@
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         </form>
     </div>
-    <div class="col-6">
+    <div class="col-5">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">
@@ -27,7 +27,7 @@
             </li>
         </ul>
     </div>
-    <div class="col-3">
+    <div class="col-4 d-flex">
         @if (Auth::user() != null)
             <span></span>
             <div class="dropdown">
@@ -46,6 +46,17 @@
                     </li>
                 </ul>
             </div>
+            <div class="dropdown">
+                <div class="btn dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-bell"></i> Thông báo (1)
+                </div>
+                <ul style="width: 100%eactionOb" class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <li>
+                        Day la thong bao
+                    </li>
+                </ul>
+            </div>
+            
         @else
             <span>Hello world</span>
         @endif
