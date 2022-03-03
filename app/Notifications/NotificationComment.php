@@ -6,8 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Auth;
 
-class NotificationComment extends Notification
+class NotificationComment extends Notification 
 {
     use Queueable;
 
@@ -45,8 +46,8 @@ class NotificationComment extends Notification
     {
         return [
             'action' => "comment",
-            'users_id_from' => $this->comment->post_id,
-            "data" => "Có một người vừa bình luận vào bài viết của bạn với nội dung ".$this->comment->content
+            'id_from' => $this->comment->post_id,
+            "data" => Auth::user()->name." just comment post for you with ".$this->comment->content
           ];
     }
 }

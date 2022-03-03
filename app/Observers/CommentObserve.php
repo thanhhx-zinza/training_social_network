@@ -15,7 +15,7 @@ class CommentObserve
      */
     public function created(Comment $comment)
     {
-        $comment->notify(new NotificationComment($comment)); 
+        $comment->notify(new NotificationComment($comment));
     }
 
     /**

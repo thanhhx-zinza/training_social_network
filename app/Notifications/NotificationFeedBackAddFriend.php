@@ -8,20 +8,19 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Auth;
 
-class NotificationReaction extends Notification
+class NotificationFeedBackAddFriend extends Notification
 {
     use Queueable;
 
-    private $reaction;
-
+    private $feedback;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($reaction)
+    public function __construct($feedback)
     {
-        $this->reaction = $reaction;
+        $this->feedback = $feedback;
     }
 
     /**
@@ -57,10 +56,30 @@ class NotificationReaction extends Notification
      */
     public function toDatabase($notifiable)
     {
-        return [
-            'action' => $this->reaction->type,
-            'id_from' => $this->reaction->reactiontable_id,
-            "data" => Auth::user()->name." just like you "
-          ];
+       // dd($this->feedback);
+      if($this->feedback){
+        if ($this->feedback->typeNoti == "accept") {
+            return [
+                'action' => $this->feedback->typeNoti,
+                'id_from' => $this->feedback->user_id,
+                "data" => Auth::user()->name." just accept addfriend",
+                "notifiable_id" => random_int(100000, 999999),
+            ];
+        } elseif($this->feedback->typeNoti == "reject") {
+            return [
+                'action' => $this->feedback->typeNoti,
+                'id_from' => $this->feedback->user_id,
+                "data" => Auth::user()->name." just reject addfriend",
+                "notifiable_id" => random_int(100000, 999999),
+            ];
+        } else {
+            return [
+                'action' => $this->feedback->typeNoti,
+                'id_from' => $this->feedback->friend_id,
+                "data" => Auth::user()->name." just send addfriend",
+                "notifiable_id" => random_int(100000, 999999),
+            ];
+        }
+      }
     }
 }

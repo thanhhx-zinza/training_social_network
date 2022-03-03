@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use App\Models\Comment;
 use App\Models\Reaction;
+use App\Models\Relation;
+use App\Models\User;
 use App\Observers\CommentObserve;
+use App\Observers\FriendObserve;
 use App\Observers\ReactionObserve;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
@@ -28,8 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-         Paginator::useBootstrap();
+        Paginator::useBootstrap();
         Comment::observe(CommentObserve::class);
         Reaction::observe(ReactionObserve::class);
+        Relation::observe(FriendObserve::class);
     }
 }

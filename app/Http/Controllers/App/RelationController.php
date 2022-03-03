@@ -4,9 +4,12 @@ namespace App\Http\Controllers\App;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\NotificationFeedBackAddFriend;
+use App\Notifications\NotificationRequireFriend;
 use Illuminate\Http\Request;
 use Spatie\Valuestore\Valuestore;
 use App\Exceptions\ErrorException;
+use Illuminate\Notifications\Notification;
 
 class RelationController extends Controller
 {

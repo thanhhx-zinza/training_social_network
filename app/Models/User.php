@@ -43,19 +43,19 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function requestedRelations()
     {
-        return $this->belongsToMany(User::class, 'relations', 'user_id', 'friend_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'relations', 'user_id', 'friend_id')->using(Relation::class)->withTimestamps();
     }
 
     public function requestingRelations()
     {
-        return $this->belongsToMany(User::class, 'relations', 'friend_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'relations', 'friend_id', 'user_id')->using(Relation::class)->withTimestamps();
     }
-
+    //lay ra tat ca cac thang duoc minh gui di
     public function requestedUsers()
     {
         return $this->requestedRelations()->wherePivot('type', 'request')->get();
     }
-
+    //lay ra tat ca cac thang user gui request den minh
     public function requestingUsers()
     {
         return $this->requestingRelations()->wherePivot('type', 'request')->get();
@@ -67,6 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->merge($this->requestingRelations()->wherePivot('type', 'friend')->get());
     }
 
+    //lay ra tat ca cac request ma minh gui di cho cac thang khac
     public function requestUsers()
     {
         return $this->requestedUsers()->merge($this->requestingUsers());

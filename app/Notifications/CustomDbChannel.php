@@ -3,7 +3,7 @@ namespace App\Notifications;
 
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
-
+use Str;
 class CustomDbChannel
 {
 
@@ -12,12 +12,12 @@ class CustomDbChannel
     $data = $notification->toDatabase($notifiable);
     return $notifiable->routeNotificationFor('database')->create([
         'users_id_to' => Auth::id(),
-        'users_id_from'=> $data['users_id_from'],
+        'id_from'=> $data['id_from'],
         "action" => $data['action'],
         'type' => get_class($notification),
         'data' => $data,
         'read_at' => null,
+        "notifiable_id" => $data['notifiable_id'],
     ]);
   }
-
 }

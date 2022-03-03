@@ -52,11 +52,10 @@
                 </div>
                 <ul style="width: 100%eactionOb" class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                     <li>
-                        Day la thong bao
+                        Day la thong baoa
                     </li>
                 </ul>
             </div>
-            
         @else
             <span>Hello world</span>
         @endif
