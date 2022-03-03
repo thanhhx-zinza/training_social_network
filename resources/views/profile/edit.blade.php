@@ -10,6 +10,7 @@
       </ul>
     </div>
  @endif
+ <img src="{{ asset('storage/images/'.$profile->avatar) }}">
  <form action="{{ route('profile.upload') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="row">
@@ -25,28 +26,28 @@
   <form method = "POST" action="{{route('profile.update')}}">
   <div class="mb-3">
     <label for="formGroupExampleInput" class="form-label">First Name</label>
-    <input type="text" class="form-control" name="first_name" value="{{$profiles->first_name ?? ""}}">
+    <input type="text" class="form-control" name="first_name" value="{{$profile->first_name ?? ""}}">
   </div>
   @csrf
  
   <div class="mb-3">
     <label for="formGroupExampleInput2" class="form-label">Last Name</label>
-    <input type="text" class="form-control" name="last_name" value="{{$profiles->last_name ?? ""}}">
+    <input type="text" class="form-control" name="last_name" value="{{$profile->last_name ?? ""}}">
   </div>
   <div class="mb-3">
     <label for="formGroupExampleInput" class="form-label">Phone number</label>
-    <input type="text" class="form-control" name="phone_number" value="{{$profiles->phone_number ?? ""}}">
+    <input type="text" class="form-control" name="phone_number" value="{{$profile->phone_number ?? ""}}">
   </div>
   <div class="mb-3">
     <label for="formGroupExampleInput2" class="form-label">Address</label>
-    <input type="text" class="form-control" name="address" value="{{old("address", $profiles->address ?? "")}}">
+    <input type="text" class="form-control" name="address" value="{{old("address", $profile->address ?? "")}}">
   </div>
   <div class="mb-3">
     <label for="formGroupExampleInput2"  class="form-label">Gender</label>
     <select class="form-select mb-3" name = "gender" aria-label="Default select example">
-      @if(!empty($profiles->gender))
-      <option {{ $profiles->gender == 1 ? "selected" : ""}} value="1">Male</option>
-      <option {{ $profiles->gender == 2 ? "selected" : ""}} value="2">FeMale</option>
+      @if(!empty($profile->gender))
+      <option {{ $profile->gender == 1 ? "selected" : ""}} value="1">Male</option>
+      <option {{ $profile->gender == 2 ? "selected" : ""}} value="2">FeMale</option>
       @else
       <option  value="1">Male</option>
       <option  value="2">FeMale</option>
@@ -55,7 +56,7 @@
   </div>
   <div class="mb-3">
     <label for="formGroupExampleInput2" class="form-label">Birthday</label>
-    <input type="date" class="form-control" name="birthday" value ="{{$profiles->birthday ?? ""}}">
+    <input type="date" class="form-control" name="birthday" value ="{{$profile->birthday ?? ""}}">
   </div>
   <div class="mb-3">
   <button type="submit" class="btn btn-primary">Save Profile</button>
