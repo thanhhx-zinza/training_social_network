@@ -22,11 +22,7 @@ class ReactionTest extends TestCase
         parent::setup();
         Session::start();
         $faker = Factory::create();
-        $this->newUser = User::create([
-            'name' => $faker->name(),
-            'email' => $faker->email(),
-            'password' => $faker->name(),
-        ]);
+        $this->newUser = User::factory()->count(1)->create();
         $user = User::orderBy('id', 'desc')->first();
         $this->newPost = $user->posts()->create([
             'content' => $faker->name,

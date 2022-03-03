@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $users = User::factory()->count(100)->unverified()->make();
+        $users = User::factory()->count(100)->make();
         User::upsert($users->toArray(), ['id']);
     }
 }

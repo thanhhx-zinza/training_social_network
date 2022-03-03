@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\App\PostController;
 use App\Http\Controllers\App\HomeController;
 use App\Http\Controllers\App\RelationController;
@@ -33,7 +34,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
-    Route::resource('posts.comments', CommentController::class);
+    Route::get('/email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+
+    Route::resource('posts.comments', CommentController::class)->middleware('verified');
 
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
@@ -45,9 +50,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/relations/requests', [RelationController::class, 'getRequests'])->name('relations.get_requests');
     Route::patch('/relations/{relation}', [RelationController::class, 'responseRequest'])->name('relations.response_request');
 
-    Route::resource('posts', PostController::class);
+    Route::resource('posts', PostController::class)->middleware('verified');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
+
     Route::resource('reactions', ReactionController::class);
 });

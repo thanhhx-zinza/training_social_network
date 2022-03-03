@@ -33,7 +33,13 @@ services:
       - ./docker-dev/web/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
       - ./docker/supervisor/:/etc/supervisor.d/
       - composer_caches:/app/vendor
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 1025:1025
+      - 8025:8025
 volumes:
   composer_caches:
   mysql-data:
-  
