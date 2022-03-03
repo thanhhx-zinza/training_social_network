@@ -14,26 +14,26 @@
         <div class="d-flex fs-5 justify-content-center my-3 text-center">
             <label class="col-3">Last Name : </label> 
             <div class="col-7">
-                {{ $profiles->last_name ?? "Cập nhật ngay"}}
+                {{ $profile->last_name ?? "Cập nhật ngay"}}
             </div>
         </div>
         <div class="d-flex fs-5 justify-content-center my-3 text-center">
             <label class="col-3">First Name : </label> 
             <div class="col-7">
-                {{ $profiles->first_name ?? "Cập nhật ngay"}}
+                {{ $profile->first_name ?? "Cập nhật ngay"}}
             </div>
         </div>
         <div class="d-flex fs-5 justify-content-center my-3 text-center">
             <label class="col-3">Address: </label> 
             <div class="col-7">
-                {{ $profiles->address ?? "Cập nhật ngay"}}
+                {{ $profile->address ?? "Cập nhật ngay"}}
             </div>
         </div>
         <div class="d-flex fs-5 justify-content-center my-3 text-center">
             <label class="col-3">Gender: </label> 
-            @if(!empty($profiles->gender))
+            @if(!empty($profile->gender))
             <div class="col-7">
-                {{ $profiles->gender == 1 ? "Male" : "Female"}}
+                {{ $profile->gender == 1 ? "Male" : "Female"}}
             </div>
             @else
             <div class="col-7">
@@ -44,13 +44,13 @@
         <div class="d-flex fs-5 justify-content-center my-3 text-center">
             <label class="col-3">Birtday: </label> 
             <div class="col-7">
-                {{ $profiles->birthday ?? "Cập nhật ngay"}}
+                {{ $profile->birthday ?? "Cập nhật ngay"}}
             </div>
         </div>
         <div class="d-flex fs-5 justify-content-center my-3 text-center">
             <label class="col-3">Phone Number: </label> 
             <div class="col-7">
-                {{ $profiles->phone_number ?? "Cập nhật ngay"}}
+                {{ $profile->phone_number ?? "Cập nhật ngay"}}
             </div>
         </div>
     </div>
