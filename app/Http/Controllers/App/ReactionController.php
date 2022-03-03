@@ -10,6 +10,16 @@ use App\Exceptions\ErrorException;
 
 class ReactionController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('verified');
+    }
+
     public function store(Request $request)
     {
         $type = ['App\Models\Post', 'App\Models\Comment'];

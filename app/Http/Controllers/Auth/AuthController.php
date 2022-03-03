@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Profile;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -75,6 +76,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         Auth::login($user);
+        event(new Registered($user));
         $user->setting()->create([
             'is_noti' => 1,
             'is_add_friend' => 1,
