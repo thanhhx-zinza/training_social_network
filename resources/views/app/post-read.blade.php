@@ -1,7 +1,10 @@
 @extends('app-layout.layout')
-
 @section('title', 'Social Network')
 <!-- begin post -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+
+   
+<body id="main">
 @section('main')
     @foreach ($posts as $post)
     <div class="row rounded-3 shadow m-5">
@@ -31,34 +34,17 @@
             <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3" disabled>{{ $post->content }}</textarea>
         </div>
 <!-- end post -->
-
+    @php
+    $reactions= $post->reactions();
+    $id = 'post' . $post->id;
+    $reaction_table_id = $post->id;
+    $reaction_table_type = 'App\Models\Post';
+    @endphp
     <!-- begin reaction -->
-    <div class="row">
-        @php
-        $reactions= $post->reactions();
-        @endphp
-        <div class="col-3">
-            <form action="{{route('reactions.store')}}" method="POST">
-                @csrf
-                @method('POST')
-                <input type="hidden" name="type" value="like">
-                <input type="hidden" name="reaction_table_type" value="App\Models\Post">
-                <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
-                <button type="submit" class="btn btn-primary">Like</button>
-            </form>
-            <h5>({{ count($reactions->get()) }})</h5>
-        </div>
-        <div class="col-3">
-            <form action="{{route('reactions.destroy', -1)}}" method="POST">
-                @csrf
-                @method('DELETE')
-                <input type="hidden" name="type" value="like">
-                <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
-                <button class="btn btn-primary">Unlike</button>
-            </form>
-        </div>
+    <div id="{{$id}}">
+    @include('app.reaction')
     </div>
-    <!-- end reaction -->
+
 
 <!-- begin post comment -->
 <div class="container">
@@ -118,31 +104,17 @@
                         </div>
                         </div>
                         <!-- begin reaction -->
-                        <div class="row">
-                            @php
-                            $reactions= $comment->reactions();
-                            @endphp
-                            <div class="col-3">
-                                <form action="{{route('reactions.store')}}" method="POST">
-                                    @csrf
-                                    @method('POST')
-                                    <input type="hidden" name="type" value="like">
-                                    <input type="hidden" name="reaction_table_type" value="App\Models\Comment">
-                                    <input type="hidden" name="reaction_table_id" value="{{$comment->id}}">
-                                    <button type="submit" class="btn btn-primary">Like</button>
-                                </form>
-                                <h5>({{ count($reactions->get()) }})</h5>
-                            </div>
-                            <div class="col-3">
-                                <form action="{{route('reactions.destroy', -1)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="hidden" name="type" value="like">
-                                    <input type="hidden" name="reaction_table_id" value="{{$comment->id}}">
-                                    <button class="btn btn-primary">Unlike</button>
-                                </form>
-                            </div>
+                        @php
+                        $reactions= $comment->reactions();
+                        $id = 'comment' . $comment->id;
+                        $reaction_table_id = $comment->id;
+                        $reaction_table_type = 'App\Models\Comment';
+                        @endphp
+                        
+                        <div id="{{$id}}">
+                        @include('app.reaction')
                         </div>
+                        
                         <!-- end reaction -->
                         <form action="{{ route('posts.comments.store', $post->id) }}" method="POST">
                             @csrf
@@ -198,32 +170,17 @@
                                                     </div>
                                                 </div>
                                                  <!-- begin reaction -->
-                                                <div class="row">
-                                                    @php
-                                                    $reaction_replies = $reply->reactions();
-
-                                                    @endphp
-                                                    <div class="col-3">
-                                                        <form action="{{route('reactions.store')}}" method="POST">
-                                                            @csrf
-                                                            @method('POST')
-                                                            <input type="hidden" name="type" value="like">
-                                                            <input type="hidden" name="reaction_table_type" value="App\Models\Comment">
-                                                            <input type="hidden" name="reaction_table_id" value="{{$reply->id}}">
-                                                            <button type="submit" class="btn btn-primary">Like</button>
-                                                        </form>
-                                                        <h5>({{ count($reaction_replies->get()) }})</h5>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <form action="{{route('reactions.destroy', -1)}}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <input type="hidden" name="type" value="like">
-                                                            <input type="hidden" name="reaction_table_id" value="{{$reply->id}}">
-                                                            <button class="btn btn-primary">Unlike</button>
-                                                        </form>
-                                                    </div>
+                                                @php
+                                                $reactions= $reply->reactions();
+                                                $id = 'comment' . $reply->id;
+                                                $reaction_table_id = $reply->id;
+                                                $reaction_table_type = 'App\Models\Reply';
+                                                @endphp
+                                                
+                                                <div id="{{$id}}">
+                                                @include('app.reaction')
                                                 </div>
+                                                
                                                 <!-- end reaction -->
                                             </div>
                                         </div>
@@ -246,3 +203,28 @@
 
 {{ $posts->links()}}
 @endsection
+</body>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $(document).on('submit', 'form', function(e) {
+        e.preventDefault();
+        name = $(this).attr('name');
+        $.ajax({
+          url: $(this).attr('action'),
+          type:$(this).attr('method'),
+          data:$(this).serialize(),
+          success:function(res) {
+              console.log(name);
+            $('#'+name).html(res);
+            console.log(res);
+            alert('suc');
+          },
+          error: function (request, error) {
+            console.log(error);
+            alert('false');
+        }
+         });
+        });
+        })
+
+      </script>
