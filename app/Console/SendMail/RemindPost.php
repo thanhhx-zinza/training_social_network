@@ -12,9 +12,9 @@ class RemindPost
 {
     public function __invoke()
     {
-        $posts = Post::distinct()->select('user_id')->get();
+        $postUserIds = Post::distinct()->select('user_id')->get();
         $users = User::where('created_at', Carbon::now()->subDays(30))
-            ->whereNotIn('id', $posts)
+            ->whereNotIn('id', $postUserIds)
             ->get();
         foreach ($users as $user) {
             Mail::to($user->email)->send(new Remind);

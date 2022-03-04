@@ -27,9 +27,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(new RegisteredUsers)->dailyAt('18:00');
-        $schedule->call(new RemindVerifyEmail)->daily();
-        $schedule->call(new RemindPost)->daily();
+        $schedule->call(new RegisteredUsers)->dailyAt('18:00')->timezone('Asia/Ho_Chi_Minh')->onOneServer();
+        $schedule->call(new RemindVerifyEmail)->daily()->onOneServer();
+        $schedule->call(new RemindPost)->daily()->onOneServer();
     }
 
     /**
