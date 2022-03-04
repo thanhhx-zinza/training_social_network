@@ -43,4 +43,9 @@ class Comment extends Model
     {
         return $this->morphOne(Notification::class, 'notifiable');
     }
+
+    public function scopeNewestComment($query)
+    {
+        $query->orderBy('created_at', 'desc');
+    }
 }

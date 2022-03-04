@@ -20,7 +20,8 @@
         <button type="submit" class="btn btn-primary my-3">send comment</button>
     </form>
     <?php
-        $comments = $post->comments()->ofLevel(1)->get();
+        $comments = $post->comments()->ofLevel(1)->newestComment()->paginate(2);
+        // dd($comments);
     ?>
     <!-- begin comments -->
     <h3>Comments of post ({{count($comments)}})</h3>
@@ -72,7 +73,7 @@
                         <!-- end reaction -->
                         <!-- begin rep -->
                         <div>
-                            @include('app.reply');
+                            @include('app.reply')
                         </div>
                         <!-- end rep -->
                     </div>

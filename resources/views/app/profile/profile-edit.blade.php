@@ -9,12 +9,18 @@
             </div>
             <div class="modal-body p-0">
                 <div class="row">
+                    <?php
+                        $avatarPath = '';
+                        if (Auth::user()->profile->avatar) {
+                            $avatarPath = asset('storage/images/'.Auth::user()->profile->avatar);
+                        }
+                    ?>
                     <div class="col-12 text-center mt-3">
                         <img
                             class="shadow-sm rounded-circle"
                             width="100px"
                             height="100px"
-                            src="{{ asset('storage/images/'.Auth::user()->profile->avatar) }}"
+                            src="{{$avatarPath}}"
                             alt="Avatar"
                             id="avatar"
                         >
