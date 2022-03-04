@@ -56,28 +56,24 @@ class NotificationFeedBackAddFriend extends Notification
      */
     public function toDatabase($notifiable)
     {
-       // dd($this->feedback);
       if($this->feedback){
         if ($this->feedback->typeNoti == "accept") {
             return [
                 'action' => $this->feedback->typeNoti,
                 'id_from' => $this->feedback->user_id,
                 "data" => Auth::user()->name." just accept addfriend",
-                "notifiable_id" => random_int(100000, 999999),
             ];
         } elseif($this->feedback->typeNoti == "reject") {
             return [
                 'action' => $this->feedback->typeNoti,
                 'id_from' => $this->feedback->user_id,
                 "data" => Auth::user()->name." just reject addfriend",
-                "notifiable_id" => random_int(100000, 999999),
             ];
         } else {
             return [
                 'action' => $this->feedback->typeNoti,
                 'id_from' => $this->feedback->friend_id,
                 "data" => Auth::user()->name." just send addfriend",
-                "notifiable_id" => random_int(100000, 999999),
             ];
         }
       }

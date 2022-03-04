@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Auth;
 
-class NotificationComment extends Notification 
+class NotificationComment extends Notification
 {
     use Queueable;
 
@@ -44,9 +44,10 @@ class NotificationComment extends Notification
      */
     public function toDatabase($notifiable)
     {
+        dd($this->comment);
         return [
             'action' => "comment",
-            'id_from' => $this->comment->post_id,
+            'user_id_from' => $this->comment->id_from,
             "data" => Auth::user()->name." just comment post for you with ".$this->comment->content
           ];
     }

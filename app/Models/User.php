@@ -3,13 +3,12 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Notification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
     use HasFactory;
     use SoftDeletes;
 
@@ -92,7 +91,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $query->whereRelation('setting', 'is_add_friend', 1);
     }
-
     /**
      * Check user is exist in db or not
      */
@@ -137,5 +135,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendRemindVerifyEmailNotification()
     {
         $this->notify(new RemindVerifyEmail);
+    }
+    
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
     }
 }

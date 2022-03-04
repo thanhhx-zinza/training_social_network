@@ -17,7 +17,7 @@ class CustomDbChannel
         'type' => get_class($notification),
         'data' => $data,
         'read_at' => null,
-        "notifiable_id" => $data['notifiable_id'],
+        //"notifiable_id" => random_int(100000, 999999),
     ]);
   }
 }

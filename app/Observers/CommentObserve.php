@@ -3,9 +3,11 @@
 namespace App\Observers;
 
 use App\Models\Comment;
+use App\Models\Post;
+use App\Observers\Observer;
 use App\Notifications\NotificationComment;
-
-class CommentObserve
+use Auth;
+class CommentObserve extends Observer
 {
     /**
      * Handle the Comment "created" event.
@@ -15,7 +17,15 @@ class CommentObserve
      */
     public function created(Comment $comment)
     {
-        $comment->notify(new NotificationComment($comment));
+        if ($this->checkSettingNotifi()) {
+            $idUserFrom = Post::find($comment->post_id)->user_id;
+            $comment->notification()->create([
+                'users_id_to' => Auth::id(),
+                'user_id_from'=> $idUserFrom,
+                "action" => "comment",
+                "data" => Auth::user()->name." just comment post for you with ".$comment->content,
+            ]);
+        }
     }
 
     /**

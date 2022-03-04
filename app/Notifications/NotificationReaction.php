@@ -58,9 +58,7 @@ class NotificationReaction extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'action' => $this->reaction->type,
-            'id_from' => $this->reaction->reactiontable_id,
-            "data" => Auth::user()->name." just like you "
+            
           ];
     }
 }

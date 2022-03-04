@@ -4,8 +4,10 @@ namespace App\Observers;
 
 use App\Models\Relation;
 use App\Notifications\NotificationFeedBackAddFriend;
+use Auth;
+use App\Observers\Observer;
 
-class FriendObserve
+class FriendObserve extends Observer
 {
     /**
      * Handle the Relation "created" event.
@@ -15,9 +17,17 @@ class FriendObserve
      */
     public function created(Relation $relation)
     {
-        //dd($relation);
-        $relation->typeNoti = "require";
-        $relation->notify(new NotificationFeedBackAddFriend($relation));
+        if ($this->checkSettingNotifi()) {
+            $relation->notification()->create([
+                'action' => "require",
+                'users_id_to' => Auth::id(),
+                "data" => Auth::user()->name." just send addfriend",
+                'user_id_from' => $relation->friend_id,
+                "notiable_id" => $relation->id,
+            ]);
+        }
+
+       // $relation->notify(new NotificationFeedBackAddFriend($relation));
     }
 
     public function saved(Relation $relation)

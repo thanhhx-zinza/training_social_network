@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
+use App\Models\Notification;
 
 class Comment extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
     use SoftDeletes;
 
     public function post()
@@ -38,6 +38,11 @@ class Comment extends Model
     }
 
     protected $fillable = [
-        'user_id', 'previous_id', 'level', 'post_id', 'content',
+        'user_id', 'previous_id', 'level', 'post_id', 'content',"id"
     ];
+
+    public function notification()
+    {
+        return $this->morphOne(Notification::class, 'notifiable');
+    }
 }
