@@ -15,8 +15,5 @@ composer dump-autoload --optimize --no-interaction
 # Start services
 php artisan serve --port=8080 --host=0.0.0.0
 
-# Running the scheduler locally
-php artisan schedule:work
-
 # Finally call command issued to the docker service
 exec "$@"
