@@ -48,12 +48,31 @@
             </div>
             <div class="dropdown">
                 <div class="btn dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-bell"></i> Thông báo (1)
+                    <i class="bi bi-bell"></i> Thông báo ({{ !empty($notifications) ? $notifications->count() : 0 }})
                 </div>
-                <ul style="width: 100%eactionOb" class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                <ul style="width: 100%;" class="dropdown-menu" data-spy="scroll"  data-offset="0"> 
+                    @if (!empty($notifications) && $notifications->count() > 0)
+                        @foreach ($notifications as $noti)
+                            @if ($noti->action == "accept")
+
+                            <li class="border-bottom p-2">
+                                <a class="text text-black text-decoration-none" href="{{ route("relations.myfriend") }}"> {{ $noti->data }} </a>
+                           </li>
+                            @elseif($noti->action == "require")
+                            <li class="border-bottom p-2">
+                                <a class="text text-black text-decoration-none" href="{{ route("relations.get_requests") }}"> {{ $noti->data }} </a>
+                           </li>
+                           @else
+                           <li class="border-bottom p-2">
+                                <a class="text text-black text-decoration-none" href="{{ route("post.showDetailNotiPost",["action" => $noti->action, "id" => $noti->notifiable_id]) }}"> {{ $noti->data }} </a>
+                            </li>
+                            @endif
+                        @endforeach
+                    @else
                     <li>
-                        Day la thong baoa
-                    </li>
+                        No Notification
+                    </li> 
+                    @endif
                 </ul>
             </div>
         @else

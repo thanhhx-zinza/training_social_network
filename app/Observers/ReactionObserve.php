@@ -2,10 +2,11 @@
 
 namespace App\Observers;
 
-use App\Observers\Observer;
 use App\Models\Reaction;
+use App\Models\User;
 use Auth;
-class ReactionObserve extends Observer
+
+class ReactionObserve
 {
     /**
      * Handle the Reaction "created" event.
@@ -15,13 +16,17 @@ class ReactionObserve extends Observer
      */
     public function created(Reaction $reaction)
     {
-        if ($this->checkSettingNotifi()) {
-            $reaction->notification()->create([
-                'users_id_to' => Auth::id(),
-                'user_id_from'=> $reaction->user_id,
-                "action" => $reaction->type,
-                "data" => Auth::user()->name." just like you ",
-            ]);
+        $userRequest = User::find($reaction->user_id);
+        if ($userRequest) {
+            $isNoti = $userRequest->setting()->get()->toArray();
+            if ($isNoti[0]['is_noti'] == 1) {
+                $reaction->notification()->create([
+                    'users_id_to' => Auth::id(),
+                    'user_id_from' => $reaction->user_id,
+                    "action" => $reaction->type,
+                    "data" => Auth::user()->name." just like you ",
+                ]);
+            }
         }
     }
     /**

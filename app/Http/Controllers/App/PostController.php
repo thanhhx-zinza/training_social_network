@@ -4,8 +4,10 @@ namespace App\Http\Controllers\App;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Exceptions\ErrorException;
+use App\Models\Reaction;
 
 class PostController extends Controller
 {

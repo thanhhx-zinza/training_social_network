@@ -3,11 +3,11 @@
 namespace App\Observers;
 
 use App\Models\Relation;
+use App\Models\User;
 use App\Notifications\NotificationFeedBackAddFriend;
 use Auth;
-use App\Observers\Observer;
 
-class FriendObserve extends Observer
+class FriendObserve
 {
     /**
      * Handle the Relation "created" event.
@@ -17,35 +17,39 @@ class FriendObserve extends Observer
      */
     public function created(Relation $relation)
     {
-        if ($this->checkSettingNotifi()) {
-            $relation->notification()->create([
-                'action' => "require",
-                'users_id_to' => Auth::id(),
-                "data" => Auth::user()->name." just send addfriend",
-                'user_id_from' => $relation->friend_id,
-                "notiable_id" => $relation->id,
-            ]);
+        $userRequest = User::find($relation->friend_id);
+        if ($userRequest) {
+            $isNoti = $userRequest->setting()->get()->toArray();
+            if ($isNoti[0]['is_noti'] == 1) {
+                $relation->id = $relation->getIdRequestAddFriend();
+                $relation->notification()->create([
+                    'action' => "require",
+                    'users_id_to' => Auth::id(),
+                    "data" => Auth::user()->name." just send addfriend",
+                    'user_id_from' => $relation->friend_id,
+                    "notifiable_id" => $relation->getIdRequestAddFriend(),
+                ]);
+            }
         }
-
-       // $relation->notify(new NotificationFeedBackAddFriend($relation));
     }
 
-    public function saved(Relation $relation)
-    {
-        $relation->typeNoti = "accept";
-        $relation->notify(new NotificationFeedBackAddFriend($relation));
-    }
-    /**
-     * Handle the Relation "updated" event.
-     *
-     * @param  \App\Models\Relation  $relation
-     * @return void
-     */
     public function updated(Relation $relation)
     {
-        //
+        $userRequest = User::find($relation->user_id);
+        $isNoti = $userRequest->setting()->get()->toArray();
+        if ($isNoti[0]['is_noti'] == 1) {
+            $relation->id = $relation->getIdRequestAddFriend();
+            if ($relation->isDirty('type')) {
+                $relation->notification()->create([
+                'action' => "accept",
+                "data" => Auth::user()->name." just accept addfriend",
+                'users_id_to' => Auth::id(),
+                'user_id_from' => $relation->user_id,
+                "notifiable_id" => $relation->getIdRequestAddFriend(),
+                ]);
+            }
+        }
     }
-
     /**
      * Handle the Relation "deleted" event.
      *
@@ -54,10 +58,21 @@ class FriendObserve extends Observer
      */
     public function deleted(Relation $relation)
     {
-        $relation->typeNoti = 'reject';
-        $relation->notify(new NotificationFeedBackAddFriend($relation));
+        $userRequest = User::find($relation->user_id);
+        if ($userRequest) {
+            $isNoti = $userRequest->setting()->get()->toArray();
+            if ($isNoti[0]['is_noti'] == 1) {
+                $relation->id = $relation->getIdRequestAddFriend();
+                $relation->notification()->create([
+                'action' => "reject",
+                "data" => Auth::user()->name." just reject addfriend",
+                'users_id_to' => Auth::id(),
+                'user_id_from' => $relation->user_id,
+                "notifiable_id" => $relation->getIdRequestAddFriend(),
+                ]);
+            }
+        }
     }
-
     /**
      * Handle the Relation "restored" event.
      *

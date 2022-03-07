@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\App\PostController;
 use App\Http\Controllers\App\HomeController;
+use App\Http\Controllers\App\NotifiController;
 use App\Http\Controllers\App\RelationController;
 use App\Http\Controllers\App\SettingController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('posts', PostController::class)->middleware('verified');
 
+    Route::get('/relations/myfriend', [RelationController::class, 'listMyFriend'])->name('relations.myfriend');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
 
