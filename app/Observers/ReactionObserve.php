@@ -8,25 +8,29 @@ use Auth;
 
 class ReactionObserve
 {
+    protected $user;
+    function __construct(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * Handle the Reaction "created" event.
      *
      * @param  \App\Models\Reaction  $reaction
      * @return void
      */
-    public function created(Reaction $reaction)
+    public function saved(Reaction $reaction)
     {
-        $userRequest = User::find($reaction->user_id);
-        if ($userRequest) {
-            $isNoti = $userRequest->setting()->get()->toArray();
-            if ($isNoti[0]['is_noti'] == 1) {
-                $reaction->notification()->create([
-                    'users_id_to' => Auth::id(),
-                    'user_id_from' => $reaction->user_id,
-                    "action" => $reaction->type,
-                    "data" => Auth::user()->name." just like you ",
-                ]);
-            }
+        $userRequest = $this->user->find($reaction->user_id);
+        if (!$userRequest) return;
+        $isNoti = $userRequest->setting()->get()->toArray();
+        if ($isNoti[0]['is_noti'] == 1) {
+            $reaction->notification()->create([
+                'users_id_to' => Auth::id(),
+                'user_id_from' => $reaction->user_id,
+                "action" => $reaction->type,
+                "data" => Auth::user()->name." just like you ",
+            ]);
         }
     }
     /**

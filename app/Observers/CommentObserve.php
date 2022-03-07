@@ -10,6 +10,13 @@ use Auth;
 
 class CommentObserve
 {
+    protected $post;
+    protected $user;
+    function __construct(Post $post, User $user)
+    {
+        $this->post = $post;
+        $this->user = $user;
+    }
     /**
      * Handle the Comment "created" event.
      *
@@ -23,18 +30,17 @@ class CommentObserve
 
     public function saved(Comment $comment)
     {
-        $idUserPost = Post::find($comment->post_id)->user_id;
-        $userRequest = User::find($idUserPost);
-        if ($userRequest) {
-            $isNoti = $userRequest->setting()->get()->toArray();
-            if ($isNoti[0]['is_noti'] == 1) {
-                $comment->notification()->create([
-                    'users_id_to' => Auth::id(),
-                    'user_id_from' => $idUserPost,
-                    "action" => "comment",
-                    "data" => Auth::user()->name." just comment post for you with ".$comment->content,
-                ]);
-            }
+        $idUserPost = $this->post->find($comment->post_id)->user_id;
+        $userRequest = $this->user->find($idUserPost);
+        if (!$userRequest) return ;
+        $isNoti = $userRequest->setting()->get()->toArray();
+        if ($isNoti[0]['is_noti'] == 1) {
+            $comment->notification()->create([
+                'users_id_to' => Auth::id(),
+                'user_id_from' => $idUserPost,
+                "action" => "comment",
+                "data" => Auth::user()->name." just comment post for you with ".$comment->content,
+            ]);
         }
     }
     /**
