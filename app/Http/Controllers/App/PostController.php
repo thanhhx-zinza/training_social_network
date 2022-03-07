@@ -66,6 +66,12 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 
+    public function show(Post $post)
+    {
+        $post->audience = Post::getAudienceValue($post->audience);
+        return view("app.detail-post", compact("post"));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -9,16 +9,16 @@
             <div class="col-3">
                 <p class="m-0 fw-normal">{{ Auth::user()->name }}</p>
                 <select class="form-select form-select-sm" name="audience" aria-label="Default select example" disabled>
-                    <option value="{{ $detailPost[0]->audience }}">
-                        {{ $detailPost[0]->audience }}
+                    <option value="{{ $post->audience }}">
+                        {{ $post->audience }}
                     </option>
                 </select>
             </div>
             <div class="col-5"></div>
             <div class="col-3 text-end">
-                <a class="btn btn-primary btn-sm" href="{{ route('posts.edit', ['post' => $detailPost[0]->id]) }}" role="button">Edit</a>
+                <a class="btn btn-primary btn-sm" href="{{ route('posts.edit', ['post' => $post->id]) }}" role="button">Edit</a>
                 <div class="col-2">
-                    <form action="{{ route('posts.destroy', ['post' => $detailPost[0]->id]) }}" method="POST" class="col-2">
+                    <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST" class="col-2">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-primary">Delete</button>
@@ -27,14 +27,14 @@
             </div>
         </div>
         <div class="row my-3 mx-1">
-            <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3" disabled>{{ $detailPost[0]->content }}</textarea>
+            <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3" disabled>{{ $post->content }}</textarea>
         </div>
 <!-- end post -->
 
     <!-- begin reaction -->
     <div class="row">
         @php
-        $reactions= $detailPost[0]->reactions();
+        $reactions= $post->reactions();
         @endphp
         <div class="col-3">
             <form action="{{route('reactions.store')}}" method="POST">
@@ -42,7 +42,7 @@
                 @method('POST')
                 <input type="hidden" name="type" value="like">
                 <input type="hidden" name="reaction_table_type" value="App\Models\Post">
-                <input type="hidden" name="reaction_table_id" value="{{$detailPost[0]->id}}">
+                <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
                 <button type="submit" class="btn btn-primary">Like</button>
             </form>
             <h5>({{ count($reactions->get()) }})</h5>
@@ -52,7 +52,7 @@
                 @csrf
                 @method('DELETE')
                 <input type="hidden" name="type" value="like">
-                <input type="hidden" name="reaction_table_id" value="{{$detailPost[0]->id}}">
+                <input type="hidden" name="reaction_table_id" value="{{$post->id}}">
                 <button class="btn btn-primary">Unlike</button>
             </form>
         </div>
@@ -62,7 +62,7 @@
 <!-- begin post comment -->
 <div class="container">
     <h3>comment this post</h3>
-    <form action="{{route('posts.comments.store', $detailPost[0]->id)}}" method="POST">
+    <form action="{{route('posts.comments.store', $post->id)}}" method="POST">
         @csrf
         @method('POST')
         <div class="form-group">
@@ -81,7 +81,7 @@
 <!-- end post comment -->
 
 <?php
-    $comments = $detailPost[0]->comments()->ofLevel(1)->get();
+    $comments = $post->comments()->ofLevel(1)->get();
 ?>
 
 <!-- begin comments -->
@@ -101,14 +101,14 @@
                             <div class="col-9">{{$comment->content}}</div>
                             <div class="col-3">
                             <div class="row">
-                                <form action="{{route('posts.comments.edit', [$detailPost[0]->id, $comment->id])}}" method="GET" class="col-2">
+                                <form action="{{route('posts.comments.edit', [$post->id, $comment->id])}}" method="GET" class="col-2">
                                     @csrf
                                     @method('GET')
                                     <button type="submit" class="btn btn-primary">Edit</button>
                                 </form>
                             </div>
                             <div class="row">
-                                <form action="{{route('posts.comments.destroy',[$detailPost[0]->id, $comment->id])}}" method="POST" class="col-2">
+                                <form action="{{route('posts.comments.destroy',[$post->id, $comment->id])}}" method="POST" class="col-2">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-primary">Delete</button>
@@ -143,12 +143,12 @@
                             </div>
                         </div>
                         <!-- end reaction -->
-                        <form action="{{ route('posts.comments.store', $detailPost[0]->id) }}" method="POST">
+                        <form action="{{ route('posts.comments.store', $post->id) }}" method="POST">
                             @csrf
                             @method('POST')
                             <div class="form-group">
                                 <label for="">Content of reply</label>
-                                <input type="hidden" value="{{$detailPost[0]->id}}" name="post_id">
+                                <input type="hidden" value="{{$post->id}}" name="post_id">
                                 <input type="hidden" value="{{$comment->id}}" name="previous_id">
                                 <input type="hidden" value="2" name="level">
                                 <textarea name="content" class="form-control" rows="3" require="required" placeholder="Input content(*)"></textarea>
@@ -183,13 +183,13 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-2">
-                                                        <form action="{{route('posts.comments.edit',[$detailPost[0]->id, $reply->id])}}" method="GET" class="col-2">
+                                                        <form action="{{route('posts.comments.edit',[$post->id, $reply->id])}}" method="GET" class="col-2">
                                                             @method('GET')
                                                             <button type="submit" class="btn btn-primary">Edit</button>
                                                         </form>
                                                     </div>
                                                     <div class="col-3">
-                                                        <form action="{{route('posts.comments.destroy', [$detailPost[0]->id, $reply->id])}}" method="POST" class="col-2">
+                                                        <form action="{{route('posts.comments.destroy', [$post->id, $reply->id])}}" method="POST" class="col-2">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-primary">Delete</button>
@@ -200,7 +200,6 @@
                                                 <div class="row">
                                                     @php
                                                     $reaction_replies = $reply->reactions();
-
                                                     @endphp
                                                     <div class="col-3">
                                                         <form action="{{route('reactions.store')}}" method="POST">

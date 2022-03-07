@@ -90,6 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $query->whereRelation('setting', 'is_add_friend', 1);
     }
+
     /**
      * Check user is exist in db or not
      */
