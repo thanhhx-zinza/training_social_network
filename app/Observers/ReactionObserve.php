@@ -9,7 +9,7 @@ use Auth;
 class ReactionObserve
 {
     protected $user;
-    function __construct(User $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }
@@ -19,18 +19,19 @@ class ReactionObserve
      * @param  \App\Models\Reaction  $reaction
      * @return void
      */
-    public function saved(Reaction $reaction)
+    public function created(Reaction $reaction)
     {
         $userRequest = $this->user->find($reaction->user_id);
-        if (!$userRequest) return;
-        $isNoti = $userRequest->setting()->get()->toArray();
-        if ($isNoti[0]['is_noti'] == 1) {
-            $reaction->notification()->create([
-                'users_id_to' => Auth::id(),
-                'user_id_from' => $reaction->user_id,
-                "action" => $reaction->type,
-                "data" => Auth::user()->name." just like you ",
-            ]);
+        if ($userRequest) {
+            $isNoti = $userRequest->setting()->get()->toArray();
+            if ($isNoti[0]['is_noti'] == 1) {
+                $reaction->notification()->create([
+                    'users_id_to' => Auth::id(),
+                    'user_id_from' => $reaction->user_id,
+                    "action" => $reaction->type,
+                    "data" => Auth::user()->name." just like you ",
+                ]);
+            }
         }
     }
     /**
