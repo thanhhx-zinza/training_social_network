@@ -4,7 +4,7 @@
         @endphp
         @if (!count($reaction))
         <div class="col-3">
-        <form name="{{$id}}" action="{{route('reactions.store')}}" method="POST">
+        <form name="{{$id}}" class="formAjax" action="{{route('reactions.store')}}" method="POST">
                 @csrf
                 @method('POST')
                 <input type="hidden" value="{{$id}}" name="name">
@@ -16,7 +16,8 @@
             <h5 id="reaction">({{ count($reactions->get()) }})</h5>
         </div>
         @else
-            <form class="unlike" name="{{$id}}" action="{{route('reactions.destroy', $reaction[0]->id)}}" method="POST">
+        <div class="col-3">
+            <form class="formAjax" name="{{$id}}" action="{{route('reactions.destroy', $reaction[0]->id)}}" method="POST">
                 @csrf
                 @method('DELETE')
                 <input type="hidden" value="{{$id}}" name="name">
