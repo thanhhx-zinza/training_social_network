@@ -41,9 +41,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('posts.comments', CommentController::class)->middleware('verified');
 
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'getProfile'])->name('profile.get_profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('profile/upload', [ ProfileController::class, 'upload' ])->name('profile.upload');
 
     Route::get('/relations', [RelationController::class, 'getAddFriendList'])->name('relations.get_add_friend_list');

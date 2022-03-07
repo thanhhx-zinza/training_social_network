@@ -30,28 +30,166 @@
     </div>
     <div class="col-4 d-flex">
         @if (Auth::user() != null)
-            <span></span>
-            <div class="dropdown">
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ Auth::user()->email }}
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <a class="dropdown-item" href="{{ route('profile.show') }}">Profile</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('settings.index') }}">Settings</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('auth.logout') }}">Logout</a>
-                    </li>
-                </ul>
+            <!--Show profile-->
+            <button type="button" class="btn btn-sm p-0" id="btn-show-profile" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <img class="rounded-circle" src="{{ asset('storage/images/'.Auth::user()->profile->avatar) }}" width="40px" height="40px">
+            </button>
+            <div class="modal fade" id="show-profile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Profile</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-0">
+                            <div class="row">
+                                <div class="col-12 text-center mt-3">
+                                    <img
+                                        class="shadow-sm rounded-circle"
+                                        width="100px"
+                                        height="100px"
+                                        src="{{ asset('storage/images/'.Auth::user()->profile->avatar) }}"
+                                        alt="Avatar"
+                                    >
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Last Name:</label>
+                                        <div class="col-8">
+                                            <p class="fw-bold" id="last-name-text"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 text-end">First Name:</label>
+                                        <div class="col-8">
+                                            <p class="fw-bold" id="first-name-text"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Address:</label>
+                                        <div class="col-8">
+                                            <p class="fw-bold" id="address-text"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Gender:</label>
+                                        <div class="col-8">
+                                            <p class="fw-bold" id="gender-text"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Birthday:</label>
+                                        <div class="col-8">
+                                            <p class="fw-bold" id="birthday-text"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Phone:</label>
+                                        <div class="col-8">
+                                            <p class="fw-bold" id="phone-text"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="dropdown">
+
+            <!--Edit profile-->
+            <button type="button" class="btn" id="btn-edit-profile">Edit</button>
+            <div class="modal fade" id="edit-profile" tabindex="-1"aria-hidden="true">
+                <div class="modal-dialog">
+                    <form class="modal-content" method="get">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-0">
+                            <div class="row">
+                                <div class="col-12 text-center mt-3">
+                                    <img
+                                        class="shadow-sm rounded-circle"
+                                        width="100px"
+                                        height="100px"
+                                        src="{{ asset('storage/images/'.Auth::user()->profile->avatar) }}"
+                                        alt="Avatar"
+                                    >
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Last Name:</label>
+                                        <div class="col-8">
+                                            <input type="text" name="lastname" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <label class="col-3 text-end">First Name:</label>
+                                        <div class="col-8">
+                                            <input type="text" name="firstname" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Address:</label>
+                                        <div class="col-8">
+                                            <input type="text" name="address" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Gender:</label>
+                                        <div class="col-8">
+                                            <input type="text" name="gender" class="form-control" id="gender-input" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Birthday:</label>
+                                        <div class="col-8">
+                                            <input type="text" name="birthday" class="form-control" id="birthday-input" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <label class="col-3 text-end">Phone:</label>
+                                        <div class="col-8">
+                                            <input type="text" name="phone" class="form-control" id="phone-input" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <a class="text-black w-20 text-decoration-none" href="{{ route('auth.logout') }}">Logout</a>
+        <div class="dropdown">
                 <div class="btn dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-bell"></i> Thông báo ({{ $notifications->count() }})
                 </div>
-                <ul style="width: 100%;" class="dropdown-menu" data-spy="scroll"  data-offset="0"> 
+                <ul style="width: 100%;" class="dropdown-menu" data-spy="scroll"  data-offset="0">
                     @if (!empty($notifications) && $notifications->count() > 0)
                         @foreach ($notifications as $noti)
                             @if ($noti->action == "accept")
@@ -86,3 +224,44 @@
         @endif
     </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#btn-show-profile").click(function() {
+        $.ajax({
+            url: "{{ route('profile.get_profile') }}",
+            type: 'GET',
+            success: function(res) {
+                $('#show-profile #last-name-text').text(res.last_name)
+                $('#show-profile #first-name-text').text(res.first_name)
+                $('#show-profile #address-text').text(res.address)
+                $('#show-profile #gender-text').text(res.gender)
+                $('#show-profile #birthday-text').text(res.birthday)
+                $('#show-profile #phone-text').text(res.phone_number)
+                $("#show-profile").modal('show')
+            },
+            error: function(request, error) {
+                alert('false')
+            }
+        });
+    });
+    $("#btn-edit-profile").click(function() {
+        $.ajax({
+            url: "{{ route('profile.get_profile') }}",
+            type: 'GET',
+            success: function(res) {
+                $("#edit-profile input[name='lastname']").val(res.last_name)
+                $('#edit-profile #first-name-input').val(res.first_name)
+                $('#edit-profile #address-input').val(res.address)
+                $('#edit-profile #gender-input').val(res.gender)
+                $('#edit-profile #birthday-input').val(res.birthday)
+                $('#edit-profile #phone-input').val(res.phone_number)
+                $("#edit-profile").modal('show')
+            },
+            error: function(request, error) {
+                alert('false')
+            }
+        });
+        $("#edit-profile").modal('show')
+    });
+})
+</script>

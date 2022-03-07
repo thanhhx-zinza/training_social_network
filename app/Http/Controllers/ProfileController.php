@@ -4,20 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ProfileValidate;
-use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function show()
+    public function getProfile()
     {
         $profile = $this->currentUser()->profile;
-        return view('profile.index', ['profile' => $profile]);
-    }
-
-    public function edit()
-    {
-        $profile = $this->currentUser()->profile;
-        return view('profile.edit', ['profile' => $profile]);
+        return response()->json($profile, 200);
     }
 
     public function upload(Request $request)

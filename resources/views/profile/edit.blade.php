@@ -10,8 +10,9 @@
       </ul>
     </div>
  @endif
- <img src="{{ asset('storage/images/'.$profile->avatar) }}">
- <form action="{{ route('profile.upload') }}" method="POST" enctype="multipart/form-data">
+
+ <img class="shadow rounded-circle mx-auto d-block" src="{{ asset('storage/images/'.$profile->avatar) }}" width="200px" height="200px">
+ <form class="mt-3" action="{{ route('profile.upload') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="row">
         <div class="col-md-6">
@@ -29,7 +30,7 @@
     <input type="text" class="form-control" name="first_name" value="{{$profile->first_name ?? ""}}">
   </div>
   @csrf
- 
+
   <div class="mb-3">
     <label for="formGroupExampleInput2" class="form-label">Last Name</label>
     <input type="text" class="form-control" name="last_name" value="{{$profile->last_name ?? ""}}">
