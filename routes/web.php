@@ -54,11 +54,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class)->middleware('verified');
 
     Route::get('/relations/myfriend', [RelationController::class, 'listMyFriend'])->name('relations.myfriend');
-<<<<<<< HEAD
-=======
-    Route::resource('posts', PostController::class);
-    Route::get('/show-notification-post/{action}/{id}', [PostController::class, 'showPost'])->name('post.showPost');
->>>>>>> Fix statement code
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
 
