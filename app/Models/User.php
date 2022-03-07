@@ -132,4 +132,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Reaction::class);
     }
+
+    public function sendRemindVerifyEmailNotification()
+    {
+        $this->notify(new RemindVerifyEmail);
+    }
 }
