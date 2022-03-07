@@ -136,7 +136,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new RemindVerifyEmail);
     }
-    
+
     public function notifications()
     {
         return $this->hasMany(Notification::class, "user_id_from", "id");
