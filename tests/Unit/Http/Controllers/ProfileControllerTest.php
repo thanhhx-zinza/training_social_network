@@ -23,6 +23,7 @@ class ProfileControllerTest extends TestCase
     protected function setUp() : void
     {
         parent::setup();
+        $this->markTestSkipped('The MySQLi extension is not available.');
         Session::start();
         $faker = Factory::create();
         User::create([

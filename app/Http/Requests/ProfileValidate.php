@@ -24,10 +24,11 @@ class ProfileValidate extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
             'birthday' => 'required',
-            'phone_number' => 'required',
+            'phone' => 'required',
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ];
     }
 }

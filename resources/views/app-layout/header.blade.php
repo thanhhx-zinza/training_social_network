@@ -111,7 +111,7 @@
             <div class="modal fade" id="edit-profile" tabindex="-1"aria-hidden="true">
                 <div class="modal-dialog">
                     <form class="modal-content" method="get">
-                        @csrf
+                        @method('PUT')
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -125,7 +125,16 @@
                                         height="100px"
                                         src="{{ asset('storage/images/'.Auth::user()->profile->avatar) }}"
                                         alt="Avatar"
+                                        id="avatar"
                                     >
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <div class="col-2"></div>
+                                        <div class="col-8">
+                                            <input type="file" name="avatar" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-12 mt-3">
                                     <div class="row">
@@ -155,7 +164,7 @@
                                     <div class="row">
                                         <label class="col-3 text-end">Gender:</label>
                                         <div class="col-8">
-                                            <input type="text" name="gender" class="form-control" id="gender-input" required>
+                                            <input type="text" name="gender" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +172,7 @@
                                     <div class="row">
                                         <label class="col-3 text-end">Birthday:</label>
                                         <div class="col-8">
-                                            <input type="text" name="birthday" class="form-control" id="birthday-input" required>
+                                            <input type="text" name="birthday" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +180,7 @@
                                     <div class="row">
                                         <label class="col-3 text-end">Phone:</label>
                                         <div class="col-8">
-                                            <input type="text" name="phone" class="form-control" id="phone-input" required>
+                                            <input type="text" name="phone" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -242,26 +251,46 @@ $(document).ready(function() {
             error: function(request, error) {
                 alert('false')
             }
-        });
-    });
+        })
+    })
     $("#btn-edit-profile").click(function() {
         $.ajax({
             url: "{{ route('profile.get_profile') }}",
             type: 'GET',
             success: function(res) {
                 $("#edit-profile input[name='lastname']").val(res.last_name)
-                $('#edit-profile #first-name-input').val(res.first_name)
-                $('#edit-profile #address-input').val(res.address)
-                $('#edit-profile #gender-input').val(res.gender)
-                $('#edit-profile #birthday-input').val(res.birthday)
-                $('#edit-profile #phone-input').val(res.phone_number)
+                $("#edit-profile input[name='firstname']").val(res.first_name)
+                $("#edit-profile input[name='address']").val(res.address)
+                $("#edit-profile input[name='gender']").val(res.gender)
+                $("#edit-profile input[name='birthday']").val(res.birthday)
+                $("#edit-profile input[name='phone']").val(res.phone_number)
                 $("#edit-profile").modal('show')
             },
             error: function(request, error) {
                 alert('false')
             }
-        });
-        $("#edit-profile").modal('show')
-    });
+        })
+    })
+    $("#edit-profile form").submit(function(event) {
+        event.preventDefault()
+        var formData = new FormData(this)
+        $.ajax({
+            url: "{{ route('profile.update') }}",
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(res) {
+                $("#edit-profile").modal('hide')
+                alert(res.message)
+            },
+            error: function(request, error) {
+                alert('Update fail')
+            }
+        })
+    })
 })
 </script>
