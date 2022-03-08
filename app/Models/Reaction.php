@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Notification;
 
 class Reaction extends Model
 {
@@ -37,4 +38,9 @@ class Reaction extends Model
     protected $fillable = [
         'user_id', 'reactiontable_id', 'reactiontable_type', 'type',
     ];
+
+    public function notification()
+    {
+        return $this->morphOne(Notification::class, 'notifiable');
+    }
 }

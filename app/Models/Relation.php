@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\Notification;
 
-class Relation extends Model
+class Relation extends Pivot
 {
     use HasFactory;
 
@@ -14,7 +16,16 @@ class Relation extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'friend_id', 'type',
-    ];
+    protected $table = "relations";
+    protected $fillable = ['friend_id', 'type', 'id'];
+
+    public function notification()
+    {
+        return $this->morphOne(Notification::class, "notifiable");
+    }
+
+    public function scopeGetIdRequestAddFriend($query)
+    {
+        return $query->orderBy("id", 'desc')->where("type", "request")->first()->id;
+    }
 }

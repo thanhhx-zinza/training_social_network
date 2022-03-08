@@ -4,8 +4,10 @@ namespace App\Http\Controllers\App;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Exceptions\ErrorException;
+use App\Models\Reaction;
 
 class PostController extends Controller
 {
@@ -62,6 +64,12 @@ class PostController extends Controller
             'display' => 1,
         ]);
         return redirect()->route('posts.index');
+    }
+
+    public function show(Post $post)
+    {
+        $post->audience = Post::getAudienceValue($post->audience);
+        return view("app.detail-post", compact("post"));
     }
 
     /**

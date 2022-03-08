@@ -4,9 +4,12 @@ namespace App\Http\Controllers\App;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\NotificationFeedBackAddFriend;
+use App\Notifications\NotificationRequireFriend;
 use Illuminate\Http\Request;
 use Spatie\Valuestore\Valuestore;
 use App\Exceptions\ErrorException;
+use Illuminate\Notifications\Notification;
 
 class RelationController extends Controller
 {
@@ -73,5 +76,11 @@ class RelationController extends Controller
             $relation->delete();
         }
         return redirect(route('relations.get_requests'));
+    }
+
+    public function getMyFriends()
+    {
+        $friends = $this->currentUser()->friends();
+        return view("app.friend-list", compact("friends"));
     }
 }

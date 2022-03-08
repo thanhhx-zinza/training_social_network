@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Notification;
 
 class Comment extends Model
 {
@@ -36,7 +37,10 @@ class Comment extends Model
         $query->where('level', $level);
     }
 
-    protected $fillable = [
-        'user_id', 'previous_id', 'level', 'post_id', 'content',
-    ];
+    protected $fillable = ['user_id', 'previous_id', 'level', 'post_id', 'content', 'id'];
+
+    public function notification()
+    {
+        return $this->morphOne(Notification::class, 'notifiable');
+    }
 }

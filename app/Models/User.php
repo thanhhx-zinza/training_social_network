@@ -3,13 +3,12 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Notification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
     use HasFactory;
     use SoftDeletes;
 
@@ -43,12 +42,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function requestedRelations()
     {
-        return $this->belongsToMany(User::class, 'relations', 'user_id', 'friend_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'relations', 'user_id', 'friend_id')->using(Relation::class)->withTimestamps();
     }
 
     public function requestingRelations()
     {
-        return $this->belongsToMany(User::class, 'relations', 'friend_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'relations', 'friend_id', 'user_id')->using(Relation::class)->withTimestamps();
     }
 
     public function requestedUsers()
@@ -136,5 +135,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendRemindVerifyEmailNotification()
     {
         $this->notify(new RemindVerifyEmail);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, "user_id_from", "id");
     }
 }
