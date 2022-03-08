@@ -1,7 +1,6 @@
 @extends('app-layout.layout')
 @section('title', 'Social Network')
 <!-- begin post -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <body id="main">
 @section('main')
     @foreach ($posts as $post)
@@ -51,7 +50,6 @@
 @endforeach
 
 {{ $posts->links()}}
-@endsection
 </body>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -63,7 +61,6 @@
                 type:$(this).attr('method'),
                 data:$(this).serialize(),
                 success:function(res) {
-                    console.log(res);
                     $('#' + name).html(res);
                 },
                 error: function (request, error) {
@@ -73,3 +70,4 @@
         });
     });
 </script>
+@endsection

@@ -1,7 +1,6 @@
 @extends('app-layout.layout')
 
 @section('title', 'Social Network')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <!-- begin post -->
 <body id="main">
 @section('main')
@@ -43,13 +42,12 @@
     @endphp
     <!-- begin reaction -->
         <div id="{{$id}}">
-        @include('app.reaction')
+            @include('app.reaction')
         </div>
         <div id="{{$cmt}}">
             @include('app.comment');
         </div>
     </div>
-@endsection
 </body>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -70,3 +68,4 @@
         });
     });
 </script>
+@endsection
