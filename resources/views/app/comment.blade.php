@@ -21,8 +21,8 @@
     </form>
 
     <?php
-    $comments = $post->comments()->ofLevel(1)->get();
-?>
+        $comments = $post->comments()->ofLevel(1)->get();
+    ?>
 
 <!-- begin comments -->
     <h3>Comments of post ({{count($comments)}})</h3>
@@ -68,11 +68,11 @@
                         $reaction_table_id = $comment->id;
                         $reaction_table_type = 'App\Models\Comment';
                         @endphp
-                        
+
                         <div id="{{$id}}">
                         @include('app.reaction')
                         </div>
-                        
+
                         <!-- end reaction -->
                         <form class="formAjax" name="{{$cmt}}" action="{{ route('posts.comments.store', $post->id) }}" method="POST">
                             @csrf
