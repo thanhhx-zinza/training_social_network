@@ -35,6 +35,11 @@ class Reaction extends Model
         $query->where('user_id', $user_id);
     }
 
+    public function scopeGetReactions($query, $reaction_table_id, $reaction_table_type)
+    {
+        $query->where('reactiontable_id', $reaction_table_id)->where('reactiontable_type', $reaction_table_type);
+    }
+
     protected $fillable = [
         'user_id', 'reactiontable_id', 'reactiontable_type', 'type',
     ];

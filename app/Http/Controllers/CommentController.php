@@ -10,10 +10,7 @@ class CommentController extends Controller
 {
     public function store(CommentRequest $request, $post_id)
     {
-        $post = Post::isPublic()->find($post_id);
-        if (!$post) {
-            return redirect()->route('error');
-        }
+        $post = Post::isPublic()->findOrFail($post_id);
         $newComment = $this->currentUser()->comments()->create([
             'post_id' => $post->id,
             'previous_id' => $request->previous_id,
@@ -21,49 +18,46 @@ class CommentController extends Controller
             'level' => $request->level
         ]);
         if (!$newComment) {
-            dd("hello world");
-            return redirect()->route('error');
+            throw new ErrorException();
         }
-        return redirect()->route('posts.index');
+        return view('app.comment', [
+            'post' => $post,
+            'user' => $this->currentUser(),
+        ]);
     }
 
     public function edit($post_id, $comment_id)
     {
-        $comment = $this->currentUser()->comments->find($comment_id);
-        if (!$comment) {
-            return redirect()->route('error');
-        }
-        $post = Post::find($post_id);
-        return view('app.comment.edit', ['comment' => $comment, 'post' => $post]);
+        $comment = $this->currentUser()->comments()->findOrFail($comment_id);
+        $post = Post::isPublic()->findOrFail($post_id);
+        return view('app.comment.edit', [
+            'comment' => $comment,
+            'post' => $post
+        ]);
     }
 
     public function update(CommentRequest $request, $post_id, $comment_id)
     {
-        $post = Post::isPublic()->find($post_id);
-        if (!$post) {
-            return redirect()->route('error');
-        }
-        $comment = $this->currentUser()->comments->find($comment_id);
-        if (!$comment) {
-            return redirect()->route('error');
-        }
+        $comment = $this->currentUser()->comments()->findOrFail($comment_id);
         $comment->content = $request->content;
-        if (!$comment->save()) {
-            return redirect()->route('error');
+        if (!($comment->save())) {
+            throw new ErrorException();
         }
-        return redirect()->route('posts.index');
+        $post = Post::isPublic()->findOrFail($post_id);
+        return view('app.comment', [
+            'post' => $post,
+            'user' => $this->currentUser(),
+        ]);
     }
 
     public function destroy($post_id, $comment_id)
     {
-        $post = Post::isPublic()->find($post_id);
-        if (!$post) {
-            return redirect()->route('error');
-        }
-        $comment = $this->currentUser()->comments->find($comment_id);
-        if (!$comment || !$comment->delete()) {
-            return redirect()->route('error');
-        }
-        return redirect()->route("posts.index");
+        $post = Post::isPublic()->findOrFail($post_id);
+        $comment = $this->currentUser()->comments()->findOrFail($comment_id);
+        $comment->delete();
+        return view('app.comment', [
+            'post' => $post,
+            'user' => $this->currentUser(),
+        ]);
     }
 }
