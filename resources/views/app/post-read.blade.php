@@ -2,8 +2,6 @@
 @section('title', 'Social Network')
 <!-- begin post -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-
-   
 <body id="main">
 @section('main')
     @foreach ($posts as $post)
@@ -56,26 +54,22 @@
 @endsection
 </body>
 <script type="text/javascript">
-        $(document).ready(function() {
-            $(document).on('submit', '.formAjax', function(e) {
-        e.preventDefault();
-        name = $(this).attr('name');
-        $.ajax({
-          url: $(this).attr('action'),
-          type:$(this).attr('method'),
-          data:$(this).serialize(),
-          success:function(res) {
-              console.log(name);
-            $('#'+name).html(res);
-            console.log(res);
-            alert('suc');
-          },
-          error: function (request, error) {
-            console.log(error);
-            alert('false');
-        }
-         });
+    $(document).ready(function() {
+        $(document).on('submit', '.formAjax', function(e) {
+            e.preventDefault();
+            name = $(this).attr('name');
+            $.ajax({
+                url: $(this).attr('action'),
+                type:$(this).attr('method'),
+                data:$(this).serialize(),
+                success:function(res) {
+                    console.log(res);
+                    $('#' + name).html(res);
+                },
+                error: function (request, error) {
+                    $('#main').html(error);
+                }
+            });
         });
-        })
-
-      </script>
+    });
+</script>

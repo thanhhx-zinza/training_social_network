@@ -138,13 +138,11 @@
                                                 $reactions= $reply->reactions();
                                                 $id = 'comment' . $reply->id;
                                                 $reaction_table_id = $reply->id;
-                                                $reaction_table_type = 'App\Models\Reply';
+                                                $reaction_table_type = 'App\Models\Comment';
                                                 @endphp
-                                                
                                                 <div id="{{$id}}">
                                                 @include('app.reaction')
                                                 </div>
-                                                
                                                 <!-- end reaction -->
                                             </div>
                                         </div>

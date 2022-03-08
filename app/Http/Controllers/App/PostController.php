@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Exceptions\ErrorException;
 use App\Models\Reaction;
+use phpDocumentor\Reflection\Types\This;
 
 class PostController extends Controller
 {
@@ -69,7 +70,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->audience = Post::getAudienceValue($post->audience);
-        return view("app.detail-post", compact("post"));
+        return view("app.detail-post", ['post' => $post, 'user' => $this->currentUser()]);
     }
 
     /**

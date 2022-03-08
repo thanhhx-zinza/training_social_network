@@ -24,6 +24,18 @@ class ReactionController extends Controller
     public function store(Request $request)
     {
         $type = ['App\Models\Post', 'App\Models\Comment'];
+        if (!in_array($request->reaction_table_type, $type)) {
+            throw new ErrorException();
+        }
+        if ($request->reaction_table_type == 'App\Models\Post') {
+            $reactions = Post::isPublic()->findOrFail($request->reaction_table_id)->reactions();
+        } else {
+            $reactions = Comment::findOrFail($request->reaction_table_id)->reactions();
+        }
+        $reactions = $reactions->likeUser($this->currentUser()->id)->get();
+        if ($reactions->count()) {
+            throw new ErrorException();
+        }
         $this->currentUser()->reactions()->create([
             'reactiontable_id' => $request->reaction_table_id,
             'reactiontable_type' => $request->reaction_table_type,
@@ -36,13 +48,29 @@ class ReactionController extends Controller
             'id' => $request->name,
             'reaction_table_id' => $request->reaction_table_id,
             'reaction_table_type' => $request->reaction_table_type,
-            ]);
+        ]);
     }
 
     public function destroy(Request $request, $id)
     {
+        $type = ['App\Models\Post', 'App\Models\Comment'];
+        if (!in_array($request->reaction_table_type, $type)) {
+            throw new ErrorException();
+        }
+        if ($request->reaction_table_type == 'App\Models\Post') {
+            $reactions = Post::isPublic()->findOrFail($request->reaction_table_id)->reactions();
+        } else {
+            $reactions = Comment::findOrFail($request->reaction_table_id)->reactions();
+        }
+        $reactions = $reactions->likeUser($this->currentUser()->id)->get();
+        if (!count($reactions)) {
+            throw new ErrorException();
+        }
+        $id = $reactions[0]->id;
         $reaction = $this->currentUser()->reactions()->findOrFail($id);
-        $reaction->delete();
+        if (!$reaction->delete()) {
+            throw new ErrorException();
+        }
         $reactions = Reaction::getReactions($request->reaction_table_id, $request->reaction_table_type);
         return view('app.reaction', [
             'reactions' => $reactions,
@@ -50,6 +78,6 @@ class ReactionController extends Controller
             'id' => $request->name,
             'reaction_table_id' => $request->reaction_table_id,
             'reaction_table_type' => $request->reaction_table_type,
-            ]);
+        ]);
     }
 }
