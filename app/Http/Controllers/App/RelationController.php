@@ -78,7 +78,7 @@ class RelationController extends Controller
         return redirect(route('relations.get_requests'));
     }
 
-    public function listMyFriend()
+    public function getMyFriends()
     {
         $friends = $this->currentUser()->friends();
         return view("app.friend-list", compact("friends"));

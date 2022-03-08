@@ -22,18 +22,18 @@ class NotificationComposer
             foreach ($notifications as $noti) {
                 $noti->idPost = "";
                 if ($noti->action == "comment") {
-                    $detailPost = $post->isExitsCommentInPost($noti->notifiable_id)->toArray();
-                    if ($detailPost) {
+                    $detailPost = $post->getPostIsExitComment($noti->notifiable_id);
+                    if (!empty($detailPost)) {
                         $noti->idPost = $detailPost;
                     }
                 } elseif ($noti->action == "like") {
-                    $detailPost = $post->isExitsReactionInPost($noti->notifiable_id)->toArray();
-                    if ($detailPost) {
+                    $detailPost = $post->getPostIsExitReaction($noti->notifiable_id);
+                    if (!empty($detailPost)) {
                         $noti->idPost = $detailPost;
                     }
                 }
             }
-            $view->with('notifications', $notifications->toArray());
+            $view->with('notifications', $notifications);
         }
     }
 }

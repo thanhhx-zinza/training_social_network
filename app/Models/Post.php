@@ -74,17 +74,17 @@ class Post extends Model
 
     protected $fillable = ['user_id', 'content', 'display', 'audience'];
 
-    public function isExitsCommentInPost($id)
+    public function getPostIsExitComment($id)
     {
         return $this->whereHas("comments", function ($query) use ($id) {
             $query->where("id", $id);
-        })->get();
+        })->first();
     }
 
-    public function isExitsReactionInPost($id)
+    public function getPostIsExitReaction($id)
     {
         return $this->whereHas("reactions", function ($query) use ($id) {
             $query->where("id", $id);
-        })->get();
+        })->first();
     }
 }

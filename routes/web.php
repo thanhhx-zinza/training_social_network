@@ -53,7 +53,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('posts', PostController::class)->middleware('verified');
 
-    Route::get('/relations/myfriend', [RelationController::class, 'listMyFriend'])->name('relations.myfriend');
+    Route::get('/relations/myfriend', [RelationController::class, 'getMyFriends'])->name('relations.myfriend');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
 
