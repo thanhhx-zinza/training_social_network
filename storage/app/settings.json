@@ -1,1 +1,4 @@
-{"relation_pagination":9}
+{
+    "relation_pagination": 9,
+    "post_pagination": 5
+}
