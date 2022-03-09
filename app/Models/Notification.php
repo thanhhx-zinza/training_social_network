@@ -11,10 +11,15 @@ class Notification extends Model
 
     protected $table = "notices";
 
-    protected $fillable = ['users_id_to', 'user_id_from', 'data', 'action', 'notifiable_id', 'notifiable_type'];
+    protected $fillable = ["id",'users_id_to', 'user_id_from', 'data', 'action', 'notifiable_id', 'notifiable_type','read_at'];
 
     public function notifiable()
     {
         return $this->morphTo();
+    }
+    
+    public function scopeGetNotices($query, $idNotifiable)
+    {
+        return $query->where("notifiable_id", $idNotifiable)->first();
     }
 }

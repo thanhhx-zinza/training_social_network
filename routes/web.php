@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\App\PostController;
 use App\Http\Controllers\App\HomeController;
-use App\Http\Controllers\App\NotifiController;
+use App\Http\Controllers\App\NotificationController;
 use App\Http\Controllers\App\RelationController;
 use App\Http\Controllers\App\SettingController;
 use App\Http\Controllers\ProfileController;
@@ -34,7 +34,7 @@ Route::get('/error', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
-
+    Route::get('/detail-notices/{action}/{id}', [NotificationController::class, 'detailNotices'])->name('notices.detailNotices');
     Route::get('/email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');

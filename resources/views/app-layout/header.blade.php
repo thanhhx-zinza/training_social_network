@@ -36,6 +36,7 @@
             <div class="btn dropdown-toggle p-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-bell"></i> Thông báo ({{ $notifications->count() }})
             </div>
+<<<<<<< HEAD
             <ul style="width: 100%;" class="dropdown-menu" data-spy="scroll"  data-offset="0">
                 @if (!empty($notifications) && $notifications->count() > 0)
                     @foreach ($notifications as $noti)
@@ -66,5 +67,34 @@
                 @endif
             </ul>
         </div>
+=======
+            <div class="dropdown">
+                <div class="btn dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-bell"></i> Thông báo ({{ $notifications->count() }})
+                </div>
+                <ul style="width: 100%;" class="dropdown-menu" data-spy="scroll"  data-offset="0"> 
+                    @if (!empty($notifications) && $notifications->count() > 0)
+                        @foreach ($notifications as $noti)
+                            @if ($noti->action == "reject")
+                                <li class="border-bottom p-2">
+                                    <a class="text text-black text-decoration-none"> {{ $noti->data }} </a>
+                                </li>
+                            @else
+                                <li class="border-bottom p-2">
+                                    <a class="text text-black text-decoration-none" href="{{ route("notices.detailNotices",["action"=> $noti->action, "id"=>$noti->notifiable_id]) }}"> {{ $noti->data }} </a>
+                                </li>
+                           @endif
+                        @endforeach
+                    @else
+                    <li>
+                        No Notification
+                    </li>
+                    @endif
+                </ul>
+            </div>
+        @else
+            <span>Hello world</span>
+        @endif
+>>>>>>> done task send email if unread noti
     </div>
 </div>

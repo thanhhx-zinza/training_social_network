@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\SendMail\RegisteredUsers;
 use App\Console\SendMail\RemindVerifyEmail;
 use App\Console\SendMail\RemindPost;
+use App\Console\SendMail\UnreadNoticeEmail;
 
 class Kernel extends ConsoleKernel
 {
@@ -40,6 +41,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(new RegisteredUsers)->dailyAt('18:00')->name('registered_user')->withoutOverlapping();
         $schedule->call(new RemindVerifyEmail)->daily()->name('remind_verify_email')->withoutOverlapping();
         $schedule->call(new RemindPost)->daily()->name('remind_post')->withoutOverlapping();
+        $schedule->call(new UnreadNoticeEmail)->daily()->name('unread_notices_email')->withoutOverlapping();
     }
 
     /**
