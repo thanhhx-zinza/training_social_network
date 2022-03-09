@@ -22,20 +22,38 @@ class ReactionObserve
      */
     public function created(Reaction $reaction)
     {
-        $userRequest = $this->user->find($reaction->user_id);
-        if (empty($userRequest)) {
-            return;
+        if ($reaction->reactiontable_type == "App\Models\Post") {
+            $userRequest = $this->user->getUserFromPost($reaction->reactiontable_id);
+            if (empty($userRequest)) {
+                return;
+            }
+            $isNoti = $userRequest->setting()->first();
+            if ($isNoti->is_noti != 1) {
+                return;
+            }
+            $reaction->notification()->create([
+                'users_id_to' => Auth::id(),
+                'user_id_from' => $userRequest->id,
+                "action" => $reaction->type,
+                "data" => Auth::user()->name." just like post for you ",
+            ]);
         }
-        $isNoti = $userRequest->setting()->first();
-        if ($isNoti->is_noti != 1) {
-            return;
+        if ($reaction->reactiontable_type == "App\Models\Comment") {
+            $userRequest = $this->user->getUserFromComment($reaction->reactiontable_id);
+            if (empty($userRequest)) {
+                return;
+            }
+            $isNoti = $userRequest->setting()->first();
+            if ($isNoti->is_noti != 1) {
+                return;
+            }
+            $reaction->notification()->create([
+                'users_id_to' => Auth::id(),
+                'user_id_from' => $userRequest->id,
+                "action" => $reaction->type,
+                "data" => Auth::user()->name." just like comment for you ",
+            ]);
         }
-        $reaction->notification()->create([
-            'users_id_to' => Auth::id(),
-            'user_id_from' => $reaction->user_id,
-            "action" => $reaction->type,
-            "data" => Auth::user()->name." just like you ",
-        ]);
     }
     /**
      * Handle the Reaction "updated" event.
