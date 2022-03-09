@@ -18,6 +18,7 @@ class Profile extends Model
         'gender',
         'birthday',
         'phone_number',
+        'avatar',
     ];
 
     private static $genders = ['male', 'female', 'other'];

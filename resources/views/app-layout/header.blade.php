@@ -29,60 +29,42 @@
         </ul>
     </div>
     <div class="col-4 d-flex">
-        @if (Auth::user() != null)
-            <span></span>
-            <div class="dropdown">
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ Auth::user()->email }}
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <a class="dropdown-item" href="{{ route('profile.show') }}">Profile</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('settings.index') }}">Settings</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('auth.logout') }}">Logout</a>
-                    </li>
-                </ul>
+        @include('app.profile.profile-show')
+        @include('app.profile.profile-edit')
+        <a class="text-black w-20 text-decoration-none mt-2" href="{{ route('auth.logout') }}">Logout</a>
+        <div class="dropdown mt-2 ms-2">
+            <div class="btn dropdown-toggle p-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-bell"></i> Thông báo ({{ $notifications->count() }})
             </div>
-            <div class="dropdown">
-                <div class="btn dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-bell"></i> Thông báo ({{ $notifications->count() }})
-                </div>
-                <ul style="width: 100%;" class="dropdown-menu" data-spy="scroll"  data-offset="0"> 
-                    @if (!empty($notifications) && $notifications->count() > 0)
-                        @foreach ($notifications as $noti)
-                            @if ($noti->action == "accept")
-                            <li class="border-bottom p-2">
-                                <a class="text text-black text-decoration-none" href="{{ route("relations.myfriend") }}"> {{ $noti->data }} </a>
-                           </li>
-                            @elseif($noti->action == "require")
-                            <li class="border-bottom p-2">
-                                <a class="text text-black text-decoration-none" href="{{ route("relations.get_requests") }}"> {{ $noti->data  }} </a>
-                           </li>
-                           @elseif($noti->action == "comment" || $noti->action == "like")
-                           <li class="border-bottom p-2">
-                               @if(!empty($noti->idPost) && $noti->idPost->user_id == $noti->user_id_from)
-                                <a class="text text-black text-decoration-none" href="{{ route("posts.show", ["post" => $noti->idPost->id ]) }}"> {{ $noti->data }} </a>
-                                @endif
-                            </li>
-                            @else
-                            <li class="border-bottom p-2">
-                                 <a class="text text-black text-decoration-none"> {{ $noti->data }} </a>
-                             </li>
+            <ul style="width: 100%;" class="dropdown-menu" data-spy="scroll"  data-offset="0">
+                @if (!empty($notifications) && $notifications->count() > 0)
+                    @foreach ($notifications as $noti)
+                        @if ($noti->action == "accept")
+                        <li class="border-bottom p-2">
+                            <a class="text text-black text-decoration-none" href="{{ route("relations.myfriend") }}"> {{ $noti->data }} </a>
+                        </li>
+                        @elseif($noti->action == "require")
+                        <li class="border-bottom p-2">
+                            <a class="text text-black text-decoration-none" href="{{ route("relations.get_requests") }}"> {{ $noti->data  }} </a>
+                        </li>
+                        @elseif($noti->action == "comment" || $noti->action == "like")
+                        <li class="border-bottom p-2">
+                            @if(!empty($noti->idPost) && $noti->idPost->user_id == $noti->user_id_from)
+                            <a class="text text-black text-decoration-none" href="{{ route("posts.show", ["post" => $noti->idPost->id ]) }}"> {{ $noti->data }} </a>
                             @endif
-                        @endforeach
-                    @else
-                    <li>
-                        No Notification
-                    </li>
-                    @endif
-                </ul>
-            </div>
-        @else
-            <span>Hello world</span>
-        @endif
+                        </li>
+                        @else
+                        <li class="border-bottom p-2">
+                                <a class="text text-black text-decoration-none"> {{ $noti->data }} </a>
+                            </li>
+                        @endif
+                    @endforeach
+                @else
+                <li>
+                    No Notification
+                </li>
+                @endif
+            </ul>
+        </div>
     </div>
 </div>
