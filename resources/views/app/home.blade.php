@@ -10,13 +10,17 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var currentPage = 1
+    var disable = false
     getFriendPosts(currentPage)
 
     $(window).scroll(function() {
-        let position = Math.floor($(document).innerHeight() - $(window).scrollTop() - $(window).innerHeight())
-        if (position <= 0) {
-            currentPage++
-            getFriendPosts(currentPage)
+        if (!disable) {
+            let position = Math.floor($(document).innerHeight() - $(window).scrollTop() - $(window).innerHeight())
+            if (position <= 0) {
+                currentPage++
+                getFriendPosts(currentPage)
+                disable = true
+            }
         }
     })
 
@@ -27,6 +31,7 @@ $(document).ready(function() {
             success: function(res) {
                 if (res.message == null) {
                     $('#home-content #home-post').append(res)
+                    disable = false
                 }
             },
             error: function(request, error) {
