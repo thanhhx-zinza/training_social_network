@@ -12,6 +12,7 @@ class PostController extends Controller
 {
     private $audiences = [];
     private $paginationNum = 0;
+    private $levelParent = 1;
 
     public function __construct()
     {
@@ -37,6 +38,8 @@ class PostController extends Controller
         return view('app.post-read', [
             'posts' => $postList,
             'user' => $this->currentUser(),
+            'paginationNum' => $this->paginationNum,
+            'levelParent' => $this->levelParent
         ]);
     }
 
@@ -72,7 +75,12 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->audience = Post::getAudienceValue($post->audience);
-        return view("app.detail-post", ['post' => $post, 'user' => $this->currentUser()]);
+        return view("app.detail-post", [
+            'post' => $post,
+            'user' => $this->currentUser(),
+            'paginationNum' => $this->paginationNum,
+            'levelParent' => $this->levelParent,
+        ]);
     }
 
     /**

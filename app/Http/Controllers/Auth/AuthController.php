@@ -39,7 +39,7 @@ class AuthController extends Controller
                     'birthday' => '1900-01-01',
                     'address' => ''
                 ]);
-                return redirect()->route('profile.edit');
+                return redirect()->route('home.index');
             } else {
                 $user = $this->currentUser()->profile;
                 if ($user->first_name == ''
@@ -47,7 +47,7 @@ class AuthController extends Controller
                 || $user->phone_number == ''
                 || $user->birthday == ''
                 ) {
-                    return redirect()->route('profile.edit');
+                    return redirect()->route('home.index');
                 } else {
                     return redirect()->route('home.index');
                 }

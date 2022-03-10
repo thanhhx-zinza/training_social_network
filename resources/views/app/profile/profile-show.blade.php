@@ -1,5 +1,16 @@
+<?php
+    $avatarPath = '';
+    if (Auth::user()->profile->avatar) {
+        $avatarPath = asset('storage/images/'.Auth::user()->profile->avatar);
+    }
+?>
 <button type="button" class="btn btn-sm p-0" id="btn-show-profile" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    <img class="rounded-circle" src="{{ asset('storage/images/'.Auth::user()->profile->avatar) }}" width="40px" height="40px">
+    <img
+        class="rounded-circle"
+        src="{{ $avatarPath }}"
+        width="40px"
+        height="40px"
+    >
 </button>
 <div class="modal fade" id="show-profile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
