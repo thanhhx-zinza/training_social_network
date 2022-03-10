@@ -14,5 +14,12 @@
     <div class="row my-3 mx-1">
         <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3" disabled>{{ $post->content }}</textarea>
     </div>
+    @php
+        $reactions = $post->reactions();
+        $id = 'post'.$post->id;
+        $reaction_table_id = $post->id;
+        $reaction_table_type = 'App\Models\Post';
+    @endphp
+    @include('app.reaction')
 </div>
 @endforeach

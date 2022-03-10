@@ -137,7 +137,7 @@ class PostController extends Controller
         $friendPosts = Post::whereIn('user_id', $friendIds)
             ->isPublic()
             ->newestPosts()
-            ->with('profile')
+            ->with(['profile', 'reactions'])
             ->paginate($this->paginationNum);
         if ($friendPosts->count() > 0) {
             foreach ($friendPosts as $row) {
