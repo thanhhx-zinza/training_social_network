@@ -18,8 +18,8 @@ class Notification extends Model
         return $this->morphTo();
     }
 
-    public function scopeGetNotices($query, $idNotifiable)
+    public function scopeGetNotices($query, $idNotices)
     {
-        return $query->where("notifiable_id", $idNotifiable)->first();
+        return $query->where("id", $idNotices)->first();
     }
 }

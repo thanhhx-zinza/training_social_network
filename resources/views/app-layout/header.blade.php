@@ -45,7 +45,7 @@
                             </li>
                         @else
                             <li class="border-bottom p-2">
-                                <a class="text text-black text-decoration-none" href="{{ route("notices.detailNotices",["action"=> $noti->action, "id"=>$noti->notifiable_id]) }}"> {{ $noti->data }} </a>
+                                <a class="text text-black text-decoration-none" href="{{ route("notices.show", ["notice"=>$noti->id]) }}"> {{ $noti->data }} </a>
                             </li>
                         @endif
                     @endforeach

@@ -5,4 +5,4 @@
 @endforeach
 Thanks,<br>
 {{ config('app.name') }}
-@endcomponent 
+@endcomponent
