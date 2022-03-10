@@ -87,4 +87,9 @@ class Post extends Model
             $query->where("id", $id);
         })->first();
     }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class, 'user_id', 'user_id');
+    }
 }

@@ -4,19 +4,21 @@ namespace App\Http\Controllers\App;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
-use App\Models\Comment;
 use App\Models\Post;
 use App\Exceptions\ErrorException;
-use App\Models\Reaction;
-use phpDocumentor\Reflection\Types\This;
+use Spatie\Valuestore\Valuestore;
 
 class PostController extends Controller
 {
     private $audiences = [];
+    private $paginationNum = 0;
 
     public function __construct()
     {
+        $this->middleware('verified');
         $this->audiences = Post::getAudiences();
+        $settings = Valuestore::make(storage_path('app/settings.json'));
+        $this->paginationNum = $settings->get('post_pagination', 0);
     }
 
     /**
@@ -26,7 +28,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $postList = $this->currentUser()->posts()->newestPosts()->paginate(5);
+        $postList = $this->currentUser()->posts()->newestPosts()->paginate($this->paginationNum);
         if ($postList->count() > 0) {
             foreach ($postList as $row) {
                 $row->audience = Post::getAudienceValue($row->audience);
@@ -122,5 +124,27 @@ class PostController extends Controller
         }
         $post->delete();
         return redirect(route("posts.index"));
+    }
+
+    /**
+     * Display a listing of friends's posts
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getFriendPosts()
+    {
+        $friendIds = $this->currentUser()->friends()->pluck(['id']);
+        $friendPosts = Post::whereIn('user_id', $friendIds)
+            ->isPublic()
+            ->newestPosts()
+            ->with(['profile', 'reactions'])
+            ->paginate($this->paginationNum);
+        if ($friendPosts->count() > 0) {
+            foreach ($friendPosts as $row) {
+                $row->audience = Post::getAudienceValue($row->audience);
+            }
+            return view('app.post.posts', ['posts' => $friendPosts]);
+        }
+        return response()->json(['message' => 'Max'], 200);
     }
 }
