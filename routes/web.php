@@ -10,6 +10,7 @@ use App\Http\Controllers\App\SettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\App\ReactionController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,5 +58,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
 
+    Route::get('/detail-notices/{action}/{id}', [NotificationController::class, 'detailNotices'])->name('notices.detailNotices');
     Route::resource('reactions', ReactionController::class);
 });
