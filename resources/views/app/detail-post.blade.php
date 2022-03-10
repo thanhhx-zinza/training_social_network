@@ -39,9 +39,7 @@
             $reaction_table_type = 'App\Models\Post';
         ?>
         <!-- begin reaction -->
-        <div id="{{$id}}">
-            @include('app.reaction')
-        </div>
+        @include('app.reaction')
         <h3>comment this post</h3>
         <?php
             $cmt = $post->id . 'post';
@@ -70,29 +68,10 @@
         <!-- begin comments -->
         <h3>Comments of post ({{count($comments)}})</h3>
         <div id="ad">
-                @include('app.detail-post-comment')
+            <div id="{{$cmt}}">@include('app.detail-post-comment')</div>
         </div>
         <div id="page_last"></div>
     </div>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $(document).on('submit', '.formAjax', function(e) {
-                e.preventDefault();
-                name = $(this).attr('name');
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type:$(this).attr('method'),
-                    data:$(this).serialize(),
-                    success:function(res) {
-                        $('#' + name).html(res);
-                    },
-                    error: function (request, error) {
-                        $('#main').html(error);
-                    }
-                });
-            });
-        });
-    </script>
     <script>
         if (!page) {
             var page=1;
