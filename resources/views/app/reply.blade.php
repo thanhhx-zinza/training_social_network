@@ -1,4 +1,4 @@
-<form class="formAjax" name="{{$cmt}}" action="{{ route('posts.comments.store', $post->id) }}" method="POST">
+<form class="formAjax" name="{{$id}}" action="{{ route('posts.comments.store', $post->id) }}" method="POST">
     @csrf
     @method('POST')
     <div class="form-group">
@@ -47,7 +47,7 @@
                                     </form>
                                 </div>
                                 <div class="row">
-                                    <form class="formAjax" name="{{$cmt}}" action="{{route('posts.comments.destroy',[$post->id, $reply->id])}}" method="POST" class="col-2">
+                                    <form class="formAjax" name="{{$id}}" action="{{route('posts.comments.destroy',[$post->id, $reply->id])}}" method="POST" class="col-2">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-primary">Delete</button>

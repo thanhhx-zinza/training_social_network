@@ -3,6 +3,7 @@
 <!-- begin post -->
 <div id="main">
     @section('main')
+
         @foreach ($posts as $post)
             <div class="row rounded-3 shadow m-5">
                 <div class="row mt-2">
@@ -37,35 +38,38 @@
                     $cmt = $post->id . 'post';
                     $reaction_table_id = $post->id;
                     $reaction_table_type = 'App\Models\Post';
+                    $comments = $post->comments()->ofLevel($levelParent)->get();
                 ?>
                 <!-- begin reaction -->
                 <div id="{{$id}}">
                     @include('app.reaction')
                 </div>
+                <h3>comment this post</h3>
+                <form class="formAjax" name="{{$cmt}}" action="{{route('posts.comments.store', $post->id)}}" method="POST">
+                    @csrf
+                    @method('POST')
+                    <div class="form-group">
+                        <label for="">Content of comment</label>
+                        <input type="hidden" value="1" name="level">
+                        <input type="hidden" value="-1" name="previous_id">
+                        <textarea name="content" class="form-control" rows="3" require="required" placeholder="Input content(*)"></textarea>
+                        @error('content')
+                            <small>
+                                <div class="text-danger my-3">{{ $message }}</div>
+                            </small>
+                        @enderror
+                    </div>
+                    <button type="submit" class="btn btn-primary my-3">send comment</button>
+                </form>
+                <?php
+                    $comments = $post->comments()->ofLevel($levelParent)->get();
+                ?>
+                <h3>Comments of post ({{count($comments)}})</h3>
                 <div id="{{$cmt}}">
                     @include('app.comment');
                 </div>
             </div>
         @endforeach
         {{ $posts->links()}}
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $(document).on('submit', '.formAjax', function(e) {
-                    e.preventDefault();
-                    name = $(this).attr('name');
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type:$(this).attr('method'),
-                        data:$(this).serialize(),
-                        success:function(res) {
-                            $('#' + name).html(res);
-                        },
-                        error: function (request, error) {
-                            $('#main').html(error);
-                        }
-                    });
-                });
-            });
-        </script>
     @endsection
 </div>

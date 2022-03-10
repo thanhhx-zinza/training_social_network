@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use Spatie\Valuestore\Valuestore;
 
 class CommentController extends Controller
 {
+    private $paginationNum = 0;
+    private $levelParent = 1;
+
+    public function __construct()
+    {
+        $settings = Valuestore::make(storage_path('app/settings.json'));
+        $this->paginationNum = $settings->get('post_pagination', 0);
+    }
+
     public function store(CommentRequest $request, $post_id)
     {
         $post = Post::isPublic()->findOrFail($post_id);
@@ -23,6 +32,8 @@ class CommentController extends Controller
         return view('app.comment', [
             'post' => $post,
             'user' => $this->currentUser(),
+            'paginationNum' => $this->paginationNum,
+            'levelParent' => $this->levelParent
         ]);
     }
 
@@ -47,6 +58,8 @@ class CommentController extends Controller
         return view('app.comment', [
             'post' => $post,
             'user' => $this->currentUser(),
+            'paginationNum' => $this->paginationNum,
+            'levelParent' => $this->levelParent
         ]);
     }
 
@@ -58,6 +71,8 @@ class CommentController extends Controller
         return view('app.comment', [
             'post' => $post,
             'user' => $this->currentUser(),
+            'paginationNum' => $this->paginationNum,
+            'levelParent' => $this->levelParent
         ]);
     }
 }

@@ -38,12 +38,13 @@
             $reaction_table_id = $post->id;
             $reaction_table_type = 'App\Models\Post';
         ?>
-        <!-- begin reaction -->
         @include('app.reaction')
-        <h3>comment this post</h3>
         <?php
-            $cmt = $post->id . 'post';
+            $comments = $post->comments()->ofLevel($levelParent)->newestComment()->paginate($paginationNum);
+            $num = $comments->lastPage();
         ?>
+        <div id="num" value="{{$num}}"></div>
+        <h3>comment this post</h3>
         <form class="formAjax" name="{{$cmt}}" action="{{route('posts.comments.store', $post->id)}}" method="POST">
             @csrf
             @method('POST')
@@ -61,14 +62,11 @@
             <button type="submit" class="btn btn-primary my-3">send comment</button>
         </form>
         <?php
-            $comments = $post->comments()->ofLevel(1)->newestComment()->paginate(2);
-            $num = $comments->lastPage();
+            $comments = $post->comments()->ofLevel($levelParent)->get();
         ?>
-        <div id="num" value="{{$num}}"></div>
-        <!-- begin comments -->
         <h3>Comments of post ({{count($comments)}})</h3>
         <div id="ad">
-            <div id="{{$cmt}}">@include('app.detail-post-comment')</div>
+            <div id="{{$cmt}}">@include('app.comment')</div>
         </div>
         <div id="page_last"></div>
     </div>
