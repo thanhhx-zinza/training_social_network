@@ -82,7 +82,7 @@ class NoticesController extends Controller
         }
     }
 
-    public function redirectToNoticesDetail($markRead, $redirect)
+    private function redirectToNoticesDetail($markRead, $redirect)
     {
         if (!empty($markRead->read_at)) {
             return redirect($redirect);
