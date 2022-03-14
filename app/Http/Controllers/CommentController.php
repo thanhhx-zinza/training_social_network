@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentRequest;
+use App\Jobs\GetPointPost;
 use App\Models\Post;
 use Spatie\Valuestore\Valuestore;
 
@@ -29,6 +30,7 @@ class CommentController extends Controller
         if (!$newComment) {
             throw new ErrorException();
         }
+        GetPointPost::dispatch($post_id, 'comment');
         return view('app.comment', [
             'post' => $post,
             'user' => $this->currentUser(),
