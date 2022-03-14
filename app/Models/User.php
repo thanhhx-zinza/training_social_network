@@ -143,4 +143,25 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Notification::class, "user_id_from", "id");
     }
+    
+    public function scopeGetUserFromPost($query, $id)
+    {
+        return $query->whereHas("posts", function ($subQuery) use ($id) {
+            $subQuery->where("id", $id);
+        })->first();
+    }
+
+    public function scopeGetUserFromComment($query, $id)
+    {
+        return $query->whereHas("comments", function ($subQuery) use ($id) {
+            $subQuery->where("id", $id);
+        })->first();
+    }
+
+    public function scopeGetNoticesUnRead($query)
+    {
+        return $query->whereHas("notifications", function ($subQuery) {
+            $subQuery->whereNull("read_at");
+        })->get();
+    }
 }

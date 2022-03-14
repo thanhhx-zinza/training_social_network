@@ -10,6 +10,7 @@ use App\Http\Controllers\App\SettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\App\ReactionController;
+use App\Http\Controllers\NoticesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/relations/myfriend', [RelationController::class, 'getMyFriends'])->name('relations.myfriend');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
-
     Route::resource('reactions', ReactionController::class);
+    Route::resource('notices', NoticesController::class);
 });
