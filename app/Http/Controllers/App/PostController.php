@@ -116,7 +116,7 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    
+
     public function update(PostRequest $request, Post $post)
     {
         if (!Post::checkAudience($request->audience)
@@ -159,8 +159,10 @@ class PostController extends Controller
             throw new ErrorException();
         }
         $images = json_decode($post->images);
-        foreach ($images as $image) {
-            Storage::delete('images-post/'.$image);
+        if (!empty($image)) {
+            foreach ($images as $image) {
+                Storage::delete('images-post/'.$image);
+            }
         }
         $post->delete();
         return redirect(route("posts.index"));
