@@ -159,7 +159,7 @@ class PostController extends Controller
             throw new ErrorException();
         }
         $images = json_decode($post->images);
-        if (!empty($image)) {
+        if (!empty($images)) {
             foreach ($images as $image) {
                 Storage::delete('images-post/'.$image);
             }
