@@ -10,9 +10,11 @@ use App\Exceptions\ErrorException;
 use App\Jobs\GetPointPost;
 use App\Models\Reaction;
 use phpDocumentor\Reflection\Types\This;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class ReactionController extends Controller
 {
+    use DispatchesJobs;
     /**
      * Create a new controller instance.
      *
@@ -33,7 +35,7 @@ class ReactionController extends Controller
             GetPointPost::dispatch($request->reaction_table_id, 'like');
             $reactions = Post::isPublic()->findOrFail($request->reaction_table_id)->reactions();
         } else {
-            GetPointPost::dispatch(Comment::findOrFail($request->reaction_table_id)->post()->first()->id, 'like');
+            GetPointPost::dispatch(Comment::findOrFail($request->reaction_table_id)->post()->id, 'like');
             $reactions = Comment::findOrFail($request->reaction_table_id)->reactions();
         }
         $reactions = $reactions->likeUser($this->currentUser()->id)->get();
