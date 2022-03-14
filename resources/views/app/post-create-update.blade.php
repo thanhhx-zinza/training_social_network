@@ -50,6 +50,24 @@
                 </div>
             </div>
         @endif
+        <div class="row mt-3 mx-1">
+            <label for="Image" class="form-label">Images</label>
+            <input class="form-control" type="file" multiple name="images[]" id="formFile" onchange="preview()">
+        </div>
+        @if(isset($post))
+            @php
+            $images = json_decode($post->images);
+            @endphp
+            @if (is_array($images))
+                <div class="flex-wrap overflow-hidden h-100 p-3 w-100">
+                    @foreach ($images as $image)
+                        <div class="w-100 p-3">
+                            <img  id="frame" class="w-100" src="{{ asset('/storage/images-post/'.$image) }}"/>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        @endif
         <div class="row my-3">
             <div class="col-10"></div>
             <div class="col-2">
@@ -62,3 +80,4 @@
 
 
 @endsection
+
