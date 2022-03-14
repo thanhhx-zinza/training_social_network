@@ -52,7 +52,7 @@
         @endif
         <div class="row mt-3 mx-1">
             <label for="Image" class="form-label">Images</label>
-            <input class="form-control" type="file" multiple name="images[]" id="formFile" onchange="preview()">
+            <input class="form-control" type="file" multiple name="images[]">
         </div>
         @if(isset($post))
             @php
@@ -77,7 +77,4 @@
             </div>
         </div>
     </form>
-
-
 @endsection
-
