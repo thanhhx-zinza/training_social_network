@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Notification;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
     use HasFactory;
     use SoftDeletes;
@@ -143,7 +144,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Notification::class, "user_id_from", "id");
     }
-    
+
     public function scopeGetUserFromPost($query, $id)
     {
         return $query->whereHas("posts", function ($subQuery) use ($id) {
@@ -163,5 +164,25 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->whereHas("notifications", function ($subQuery) {
             $subQuery->whereNull("read_at");
         })->get();
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
