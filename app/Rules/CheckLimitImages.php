@@ -23,11 +23,11 @@ class CheckLimitImages implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute = null, $value = null)
+    public function passes($attribute, $value)
     {
-        $imageUpNew = $this->data->images;
+        $imageUpNew = $value;
         $imageOld = $this->data->preloaded;
-        if (isset($imageUpNew) && isset($imageOld)) {
+        if (isset($imageUpNew) && isset($imageOld) && isset($attribute)) {
             $length = count($imageOld) + count($imageUpNew);
         } else {
             $length = (!empty($imageOld) ? count($imageOld) : 0) + (!empty($imageUpNew) ? count($imageUpNew) : 0);
