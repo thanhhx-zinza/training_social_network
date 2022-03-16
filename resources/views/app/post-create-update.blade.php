@@ -50,24 +50,10 @@
                 </div>
             </div>
         @endif
-        <div class="row mt-3 mx-1">
-            <label for="Image" class="form-label">Images</label>
-            <input class="form-control" type="file" multiple name="images[]">
+        <div class="input-field">
+            <label class="active">Photos</label>
+            <div class="input-images-1" style="padding-top: .5rem;"></div>
         </div>
-        @if(isset($post))
-            @php
-            $images = json_decode($post->images);
-            @endphp
-            @if (is_array($images))
-                <div class="flex-wrap overflow-hidden h-100 p-3 w-100">
-                    @foreach ($images as $image)
-                        <div class="w-100 p-3">
-                            <img  id="frame" class="w-100" src="{{ asset('/storage/images-post/'.$image) }}"/>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        @endif
         <div class="row my-3">
             <div class="col-10"></div>
             <div class="col-2">
@@ -78,3 +64,23 @@
         </div>
     </form>
 @endsection
+@push('scripts')
+
+    <script>
+       $('.input-images-1').imageUploader();
+    </script>
+        @if(isset($post) && !empty(json_decode($post->images)))
+<script>
+    const images =  {!! $post->images !!}
+    const arr = [];
+    for (const property in images) {
+        arr.push({id: property, src: 'http://localhost:8080/storage/images-post/'+images[property]});
+    }
+    $('.input-images-1').imageUploader({
+        preloaded: [
+            ...arr
+        ]
+    });
+    </script>
+        @endif
+@endpush

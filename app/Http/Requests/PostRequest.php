@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\CheckLimitImages;
+use Illuminate\Http\Request;
 
 class PostRequest extends FormRequest
 {
@@ -21,19 +23,13 @@ class PostRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
             'content' => 'bail|required|max:240',
             'audience' => 'bail|required|alpha',
             "images.*" => "image|mimes:jpeg,png,jpg|max:5120",
-        ];
-    }
-
-    public function message()
-    {
-        return [
-            "images.max" => "Max size image 5MB",
+            "images" => [new CheckLimitImages($request)],
         ];
     }
 }

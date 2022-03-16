@@ -72,7 +72,7 @@ class PostController extends Controller
                 $image->storeAs('images-post', $imageName, 'public');
                 array_push($arrImages, $imageName);
             }
-            $images = json_encode($arrImages);
+            $images = json_encode($arrImages, JSON_FORCE_OBJECT);
         }
         $this->currentUser()->posts()->create([
             'content' => $request->content,
@@ -120,22 +120,29 @@ class PostController extends Controller
     public function update(PostRequest $request, Post $post)
     {
         if (!Post::checkAudience($request->audience)
-            || $post->user_id !== $this->currentUser()->id
+        || $post->user_id !== $this->currentUser()->id
         ) {
             throw new ErrorException();
         }
-        if ($request->hasFile('images')) {
-            $images = json_decode($post->images);
-            foreach ($images as $image) {
-                Storage::delete('images-post/'.$image);
+        if ($request->hasFile('images') || count($request->preloaded) < count(json_decode($post->images, true))) {
+            $imageOld = json_decode($post->images, true);
+            if (!empty($imageOld)) {
+                $data = $this->handleImageOld($request->images, $imageOld, $request->preloaded);
+                foreach ($data['imageNew'] as $image) {
+                    if (!in_array($image, $data['imageOld'])) {
+                        array_push($data['imageOld'], $image);
+                    }
+                }
+                $images = json_encode($data['imageOld']);
+            } else {
+                $arrImages = [];
+                foreach ($request->images as $image) {
+                    $imageName = uniqid().'.'.$image->extension();
+                    $image->storeAs('images-post', $imageName, 'public');
+                    array_push($arrImages, $imageName);
+                }
+                $images = json_encode($arrImages);
             }
-            $arrImages = [];
-            foreach ($request->images as $image) {
-                $imageName = uniqid().'.'.$image->extension();
-                $image->storeAs('images-post', $imageName, 'public');
-                array_push($arrImages, $imageName);
-            }
-            $images = json_encode($arrImages);
         } else {
             $images = $post->images;
         }
@@ -145,6 +152,41 @@ class PostController extends Controller
             "images" => $images
         ]);
         return redirect()->route('posts.index');
+    }
+
+    private function handleImageOld($imageNew, $imageOld, $arrImageDeleted)
+    {
+        $imageDeleted = [];
+        $arrImages = [];
+        $arrTemp = [];
+        if (isset($imageNew) && count($imageNew) > 0) {
+            foreach ($imageNew as $image) {
+                $imageName = uniqid().'.'.$image->extension();
+                $image->storeAs('images-post', $imageName, 'public');
+                array_push($arrImages, $imageName);
+            }
+        }
+        if (isset($arrImageDeleted) && count($arrImageDeleted) > 0) {
+            foreach ($imageOld as $key => $img) {
+                if (!in_array($key, $arrImageDeleted)) {
+                    array_push($imageDeleted, $img);
+                    array_push($arrTemp, $key);
+                }
+            }
+            foreach ($arrTemp as $key) {
+                unset($imageOld[$key]);
+            }
+            if (count($imageDeleted) > 0) {
+                foreach ($imageDeleted as $image) {
+                    Storage::delete('images-post/'.$image);
+                }
+            }
+        }
+        $data = [
+            "imageOld" => $imageOld,
+            "imageNew" => $arrImages,
+        ];
+        return $data;
     }
 
     /**
