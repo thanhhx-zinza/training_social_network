@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="{{ asset("assets/js/dist/image-uploader.min.css") }}">
-<script type="text/javascript" src="{{ asset("assets/js/dist/image-uploader.min.js") }}"></script>
+    <link rel="stylesheet" href="{{ asset("assets/js/dist/image-uploader.min.css") }}">
+    <script type="text/javascript" src="{{ asset("assets/js/dist/image-uploader.min.js") }}"></script>
 </head>
 
 <body>
