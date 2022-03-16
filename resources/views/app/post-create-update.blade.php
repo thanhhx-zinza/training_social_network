@@ -65,22 +65,21 @@
     </form>
 @endsection
 @push('scripts')
-
     <script>
-       $('.input-images-1').imageUploader();
+        $('.input-images-1').imageUploader();
     </script>
-        @if(isset($post) && !empty(json_decode($post->images)))
-<script>
-    const images =  {!! $post->images !!}
-    const arr = [];
-    for (const property in images) {
-        arr.push({id: property, src: 'http://localhost:8080/storage/images-post/'+images[property]});
-    }
-    $('.input-images-1').imageUploader({
-        preloaded: [
-            ...arr
-        ]
-    });
-    </script>
-        @endif
+    @if(isset($post) && !empty(json_decode($post->images)))
+        <script>
+            const images =  {!! $post->images !!}
+            const arr = [];
+            for (const property in images) {
+                arr.push({id: property, src: 'http://localhost:8080/storage/images-post/'+images[property]});
+            }
+            $('.input-images-1').imageUploader({
+                preloaded: [
+                    ...arr
+                ]
+            });
+        </script>
+    @endif
 @endpush

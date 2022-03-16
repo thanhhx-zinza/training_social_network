@@ -65,14 +65,8 @@ class PostController extends Controller
         if (!Post::checkAudience($request->audience)) {
             throw new ErrorException();
         }
-        $arrImages = [];
         if ($request->hasFile('images')) {
-            foreach ($request->images as $image) {
-                $imageName = uniqid().'.'.$image->extension();
-                $image->storeAs('images-post', $imageName, 'public');
-                array_push($arrImages, $imageName);
-            }
-            $images = json_encode($arrImages, JSON_FORCE_OBJECT);
+            $images = json_encode($this->storeImage($request->images), JSON_FORCE_OBJECT);
         }
         $this->currentUser()->posts()->create([
             'content' => $request->content,
@@ -120,7 +114,7 @@ class PostController extends Controller
     public function update(PostRequest $request, Post $post)
     {
         if (!Post::checkAudience($request->audience)
-        || $post->user_id !== $this->currentUser()->id
+            || $post->user_id !== $this->currentUser()->id
         ) {
             throw new ErrorException();
         }
@@ -128,20 +122,18 @@ class PostController extends Controller
             $imageOld = json_decode($post->images, true);
             if (!empty($imageOld)) {
                 $data = $this->handleImageOld($request->images, $imageOld, $request->preloaded);
-                foreach ($data['imageNew'] as $image) {
-                    if (!in_array($image, $data['imageOld'])) {
-                        array_push($data['imageOld'], $image);
+                if (empty($data['imageNew'])) {
+                    $images = json_encode($data['imageOld'], JSON_FORCE_OBJECT);
+                } else {
+                    foreach ($data['imageNew'] as $image) {
+                        if (!in_array($image, $data['imageOld'])) {
+                            array_push($data['imageOld'], $image);
+                        }
                     }
+                    $images = json_encode($data['imageOld'], JSON_FORCE_OBJECT);
                 }
-                $images = json_encode($data['imageOld']);
             } else {
-                $arrImages = [];
-                foreach ($request->images as $image) {
-                    $imageName = uniqid().'.'.$image->extension();
-                    $image->storeAs('images-post', $imageName, 'public');
-                    array_push($arrImages, $imageName);
-                }
-                $images = json_encode($arrImages);
+                $images = json_encode($this->storeImage($request->images), JSON_FORCE_OBJECT);
             }
         } else {
             $images = $post->images;
@@ -157,23 +149,18 @@ class PostController extends Controller
     private function handleImageOld($imageNew, $imageOld, $arrImageDeleted)
     {
         $imageDeleted = [];
-        $arrImages = [];
-        $arrTemp = [];
+        $arrElement = [];
         if (isset($imageNew) && count($imageNew) > 0) {
-            foreach ($imageNew as $image) {
-                $imageName = uniqid().'.'.$image->extension();
-                $image->storeAs('images-post', $imageName, 'public');
-                array_push($arrImages, $imageName);
-            }
+            $imageNew = $this->storeImage($imageNew);
         }
         if (isset($arrImageDeleted) && count($arrImageDeleted) > 0) {
             foreach ($imageOld as $key => $img) {
                 if (!in_array($key, $arrImageDeleted)) {
                     array_push($imageDeleted, $img);
-                    array_push($arrTemp, $key);
+                    array_push($arrElement, $key);
                 }
             }
-            foreach ($arrTemp as $key) {
+            foreach ($arrElement as $key) {
                 unset($imageOld[$key]);
             }
             if (count($imageDeleted) > 0) {
@@ -184,9 +171,20 @@ class PostController extends Controller
         }
         $data = [
             "imageOld" => $imageOld,
-            "imageNew" => $arrImages,
+            "imageNew" => $imageNew,
         ];
         return $data;
+    }
+
+    private function storeImage($images)
+    {
+        $arrImages = [];
+        foreach ($images as $image) {
+            $imageName = uniqid().'.'.$image->extension();
+            $image->storeAs('images-post', $imageName, 'public');
+            array_push($arrImages, $imageName);
+        }
+        return $arrImages;
     }
 
     /**
