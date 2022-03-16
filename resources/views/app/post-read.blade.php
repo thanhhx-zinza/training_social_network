@@ -30,7 +30,7 @@
                 </div>
                 <div class="row my-3 mx-1">
                     <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3" disabled>{{ $post->content }}</textarea>
-                @php  $images = json_decode($post->images); @endphp
+                @php  $images = json_decode($post->images, true); @endphp
                 @if (is_array($images))
                     <div class="flex-wrap overflow-hidden h-100 p-3 w-100">
                         @foreach ($images as $image)

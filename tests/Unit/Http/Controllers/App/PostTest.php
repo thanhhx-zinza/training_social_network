@@ -224,27 +224,6 @@ class PostTest extends TestCase
     /**
      * Test function update successfully
      */
-    public function testUpdateSuccess()
-    {
-        $user = User::first();
-        $this->be($user);
-        $post = Post::where('user_id', '=', $user->id)->first();
-        Session::start();
-        $response = $this->put('posts/'.$post->id, [
-            '_token' => csrf_token(),
-            'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
-            'audience' => 'public',
-        ]);
-        $this->assertDatabaseHas('posts', [
-            'id' => $post->id,
-            'user_id' => $user->id,
-            'content' => 'fjl;asdjflkasdjflkajsdf;laksdjfl;aksdjflsakdjf;',
-            'audience' => 'public',
-        ]);
-        $response->assertStatus(302);
-        $response->assertRedirect('/posts');
-    }
-
     /**
      * Test function authenticate fail in validate
      *
