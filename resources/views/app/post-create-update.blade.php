@@ -50,6 +50,10 @@
                 </div>
             </div>
         @endif
+        <div class="input-field">
+            <label class="active">Photos</label>
+            <div class="input-images-1" style="padding-top: .5rem;"></div>
+        </div>
         <div class="row my-3">
             <div class="col-10"></div>
             <div class="col-2">
@@ -59,6 +63,24 @@
             </div>
         </div>
     </form>
-
-
 @endsection
+@push('scripts')
+    <script>
+        $('.input-images-1').imageUploader();
+    </script>
+    @if(isset($post) && !empty(json_decode($post->images)))
+        <script>
+            const images =  {!! $post->images !!}
+            const arr = [];
+            let url = window.location.href.slice(0, window.location.href.indexOf(window.location.pathname));
+            for (const property in images) {
+                arr.push({id: property, src: url+'/storage/images-post/'+images[property]});
+            }
+            $('.input-images-1').imageUploader({
+                preloaded: [
+                    ...arr
+                ]
+            });
+        </script>
+    @endif
+@endpush

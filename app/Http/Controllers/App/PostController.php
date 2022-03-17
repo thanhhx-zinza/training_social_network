@@ -7,6 +7,7 @@ use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Exceptions\ErrorException;
 use Spatie\Valuestore\Valuestore;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -64,10 +65,14 @@ class PostController extends Controller
         if (!Post::checkAudience($request->audience)) {
             throw new ErrorException();
         }
+        if ($request->hasFile('images')) {
+            $images = json_encode($this->storeImage($request->images), JSON_FORCE_OBJECT);
+        }
         $this->currentUser()->posts()->create([
             'content' => $request->content,
             'audience' => $request->audience,
             'display' => 1,
+            "images" => $images ?? ""
         ]);
         return redirect()->route('posts.index');
     }
@@ -105,6 +110,7 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
+
     public function update(PostRequest $request, Post $post)
     {
         if (!Post::checkAudience($request->audience)
@@ -112,11 +118,69 @@ class PostController extends Controller
         ) {
             throw new ErrorException();
         }
+        if ($request->hasFile('images') || count($request->preloaded) < count(json_decode($post->images, true))) {
+            $imageOld = json_decode($post->images, true);
+            if (!empty($imageOld)) {
+                $images = $this->handleImageOld($request->images, $imageOld, $request->preloaded);
+            } else {
+                $images = json_encode($this->storeImage($request->images), JSON_FORCE_OBJECT);
+            }
+        } else {
+            $images = $post->images;
+        }
         $post->update([
             'content' => $request->content,
             'audience' => $request->audience,
+            "images" => $images
         ]);
         return redirect()->route('posts.index');
+    }
+
+    private function handleImageOld($imageNew, $imageOld, $arrImageDeleted)
+    {
+        $imageDeleted = [];
+        $arrElement = [];
+        if (isset($imageNew) && count($imageNew) > 0) {
+            $imageNew = $this->storeImage($imageNew);
+        }
+        if (isset($arrImageDeleted) && count($arrImageDeleted) > 0) {
+            foreach ($imageOld as $key => $img) {
+                if (!in_array($key, $arrImageDeleted)) {
+                    array_push($imageDeleted, $img);
+                    array_push($arrElement, $key);
+                }
+            }
+            foreach ($arrElement as $key) {
+                unset($imageOld[$key]);
+            }
+            if (count($imageDeleted) > 0) {
+                foreach ($imageDeleted as $image) {
+                    Storage::delete('images-post/'.$image);
+                }
+            }
+        }
+        if (empty($imageNew)) {
+            $data = json_encode($imageOld, JSON_FORCE_OBJECT);
+        } else {
+            foreach ($imageNew as $image) {
+                if (!in_array($image, $imageOld)) {
+                    array_push($imageOld, $image);
+                }
+            }
+            $data = json_encode($imageOld, JSON_FORCE_OBJECT);
+        }
+        return $data;
+    }
+
+    private function storeImage($images)
+    {
+        $arrImages = [];
+        foreach ($images as $image) {
+            $imageName = uniqid().'.'.$image->extension();
+            $image->storeAs('images-post', $imageName, 'public');
+            array_push($arrImages, $imageName);
+        }
+        return $arrImages;
     }
 
     /**
@@ -129,6 +193,12 @@ class PostController extends Controller
     {
         if ($post->user_id != $this->currentUser()->id) {
             throw new ErrorException();
+        }
+        $images = json_decode($post->images);
+        if (!empty($images)) {
+            foreach ($images as $image) {
+                Storage::delete('images-post/'.$image);
+            }
         }
         $post->delete();
         return redirect(route("posts.index"));

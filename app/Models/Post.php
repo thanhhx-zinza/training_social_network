@@ -72,7 +72,7 @@ class Post extends Model
         return $this->morphMany(Reaction::class, 'reactiontable');
     }
 
-    protected $fillable = ['user_id', 'content', 'display', 'audience'];
+    protected $fillable = ['user_id', 'content', 'display', 'audience', "images"];
 
     public function getPostIsExitComment($id)
     {
