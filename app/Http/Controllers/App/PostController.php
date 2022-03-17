@@ -121,17 +121,7 @@ class PostController extends Controller
         if ($request->hasFile('images') || count($request->preloaded) < count(json_decode($post->images, true))) {
             $imageOld = json_decode($post->images, true);
             if (!empty($imageOld)) {
-                $data = $this->handleImageOld($request->images, $imageOld, $request->preloaded);
-                if (empty($data['imageNew'])) {
-                    $images = json_encode($data['imageOld'], JSON_FORCE_OBJECT);
-                } else {
-                    foreach ($data['imageNew'] as $image) {
-                        if (!in_array($image, $data['imageOld'])) {
-                            array_push($data['imageOld'], $image);
-                        }
-                    }
-                    $images = json_encode($data['imageOld'], JSON_FORCE_OBJECT);
-                }
+                $images = $this->handleImageOld($request->images, $imageOld, $request->preloaded);
             } else {
                 $images = json_encode($this->storeImage($request->images), JSON_FORCE_OBJECT);
             }
@@ -169,10 +159,16 @@ class PostController extends Controller
                 }
             }
         }
-        $data = [
-            "imageOld" => $imageOld,
-            "imageNew" => $imageNew,
-        ];
+        if (empty($imageNew)) {
+            $data = json_encode($imageOld, JSON_FORCE_OBJECT);
+        } else {
+            foreach ($imageNew as $image) {
+                if (!in_array($image, $imageOld)) {
+                    array_push($imageOld, $image);
+                }
+            }
+            $data = json_encode($imageOld, JSON_FORCE_OBJECT);
+        }
         return $data;
     }
 
