@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -12,8 +11,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\App\ReactionController;
 use App\Http\Controllers\NoticesController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\CustomerPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,10 +22,6 @@ use App\Http\Controllers\Admin\CustomerPostController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::prefix('admin')->group(function () {
-    Route::resource('/customers', CustomerController::class);
-    Route::resource('users.posts', CustomerPostController::class);
-});
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authenticate');

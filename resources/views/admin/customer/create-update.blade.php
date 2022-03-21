@@ -18,9 +18,9 @@
             <div class="alert alert-error">{{session('message')}}</div>
         @endif
         @if (!isset($customer))
-            <form  method="post" action="{{ route('customers.store') }} ">
+            <form  method="post" action="{{ route('users.store') }} ">
         @else
-            <form  method="post" action="{{ route('customers.update', ['customer' => $customer->id]) }} ">
+            <form  method="post" action="{{ route('users.update', ['user' => $customer->id]) }} ">
             @method('PUT')
         @endif
                 <div class="form-group row">

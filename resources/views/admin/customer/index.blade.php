@@ -1,7 +1,7 @@
 @extends("admin.layout.master")
 @section("main")
 <div class="text-right my-3">
-    <a href="{{ route("customers.create") }}" type="button" class="btn btn-success">Create new</a>
+    <a href="{{ route("users.create") }}" type="button" class="btn btn-success">Create new</a>
 </div>
 <div class="p-3">
     @if(session('message'))
@@ -31,8 +31,8 @@
             <td>{{ $user->email }}</td>
             <td class="text-center">
                 <a href="{{ route("users.posts.index", ["user" => $user->id]) }}" type="button" class="btn btn-primary"><i class="fa-solid fa-eye mr-1"></i>Seen</a>
-                <a href="{{ route("customers.edit", ["customer" => $user->id]) }}" class="btn btn-warning"><i class="fa-solid fa-pen mr-1"></i>Edit</a>
-                <form action="{{ route("customers.destroy", ["customer" => $user->id]) }}" method="post">
+                <a href="{{ route("users.edit", ["user" => $user->id]) }}" class="btn btn-warning"><i class="fa-solid fa-pen mr-1"></i>Edit</a>
+                <form action="{{ route("users.destroy", ["user" => $user->id]) }}" method="post">
                     @csrf
                     @method("delete")
                     <button type="submit" onClick="return confirm('Are you sure want delete ?')" class="btn btn-danger"><i class="fa-solid fa-trash mr-1"></i>Delete</button>

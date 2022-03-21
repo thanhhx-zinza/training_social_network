@@ -9,7 +9,7 @@ use Spatie\Valuestore\Valuestore;
 use Illuminate\Http\Request;
 use Hash;
 
-class CustomerController extends AdminController
+class UserController extends AdminController
 {
     private $paginationNum = 0;
 
@@ -18,6 +18,7 @@ class CustomerController extends AdminController
         $settings = Valuestore::make(storage_path('app/settings.json'));
         $this->paginationNum = $settings->get('post_pagination', 0);
     }
+
     /**
      * Display a listing of the resource.
      *
