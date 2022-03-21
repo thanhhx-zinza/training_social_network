@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminController;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Valuestore\Valuestore;
 
-class CustomerPostController extends Controller
+class CustomerPostController extends AdminController
 {
     private $paginationNum = 0;
 
@@ -24,9 +24,18 @@ class CustomerPostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $postList = User::find($id)->posts()->newestPosts()->paginate($this->paginationNum);
+        if ($postList->count() > 0) {
+            foreach ($postList as $row) {
+                $row->audience = Post::getAudienceValue($row->audience);
+            }
+        }
+        return view('admin.customer.list-post', [
+            'posts' => $postList,
+            'paginationNum' => $this->paginationNum,
+        ]);
     }
 
     /**
@@ -58,16 +67,6 @@ class CustomerPostController extends Controller
      */
     public function show($id)
     {
-        $postList = User::find($id)->posts()->newestPosts()->paginate($this->paginationNum);
-        if ($postList->count() > 0) {
-            foreach ($postList as $row) {
-                $row->audience = Post::getAudienceValue($row->audience);
-            }
-        }
-        return view('admin.customer.list-post', [
-            'posts' => $postList,
-            'paginationNum' => $this->paginationNum,
-        ]);
     }
 
     /**
