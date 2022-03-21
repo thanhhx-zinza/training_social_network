@@ -19,9 +19,9 @@ class PostController extends AdminController
         $this->paginationNum = $settings->get('post_pagination', 0);
     }
 
-    public function index($id)
+    public function index($user_id)
     {
-        $postList = User::find($id)->posts()->newestPosts()->paginate($this->paginationNum);
+        $postList = User::find($user_id)->posts()->newestPosts()->paginate($this->paginationNum);
         if ($postList->count() > 0) {
             foreach ($postList as $row) {
                 $row->audience = Post::getAudienceValue($row->audience);
