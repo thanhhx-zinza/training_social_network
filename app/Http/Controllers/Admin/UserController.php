@@ -53,7 +53,7 @@ class UserController extends AdminController
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         if ($user->save()) {
-            return redirect()->route("customers.index");
+            return redirect()->route("users.index");
         }
         return redirect()->back()->with("message", "Create new fails");
     }
@@ -65,9 +65,13 @@ class UserController extends AdminController
      * @return \Illuminate\Http\Response
      */
 
-    public function edit(User $customer)
+    public function edit($user_id)
     {
-        return view("admin.customer.create-update", ["customer" => $customer]);
+        $user = User::find($user_id);
+        if (!empty($user)) {
+            return view("admin.customer.create-update", ["user" => $user]);
+        }
+            return redirect()->back()->with("message", "Can not found");
     }
 
     /**
@@ -77,13 +81,13 @@ class UserController extends AdminController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RegisterRequest $request, User $customer)
+    public function update(RegisterRequest $request, User $user)
     {
-        $customer->name = $request->name;
-        $customer->email = $request->email;
-        $customer->password = Hash::make($request->password);
-        if ($customer->save()) {
-            return redirect()->route("customers.index");
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        if ($user->save()) {
+            return redirect()->route("users.index");
         }
         return redirect()->back()->with("message", "Update fails");
     }
@@ -94,9 +98,9 @@ class UserController extends AdminController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $customer)
+    public function destroy(User $user)
     {
-        if ($customer->delete()) {
+        if ($user->delete()) {
             return redirect()->back()->with("messageSuccess", "Delete successfully");
         }
         return redirect()->back()->with("message", "Delete fails");
