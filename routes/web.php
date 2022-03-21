@@ -40,7 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 
     Route::resource('posts.comments', CommentController::class)->middleware('verified');
-
     Route::get('/profile', [ProfileController::class, 'getProfile'])->name('profile.get_profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('profile/upload', [ ProfileController::class, 'upload' ])->name('profile.upload');
@@ -52,8 +51,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/posts/friends', [PostController::class, 'getFriendPosts'])->name('post.get_friend_posts');
     Route::resource('posts', PostController::class);
-
-
     Route::get('/relations/myfriend', [RelationController::class, 'getMyFriends'])->name('relations.myfriend');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [SettingController::class, 'changeSettings'])->name('settings.change_settings');
