@@ -21,7 +21,7 @@
             </ul>
         </li>
         <li class="border-bottom border-top">
-            <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="{{ route("customers.index") }}"><i class="fa-solid fa-users mx-1"></i>Customers</a>
+            <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="{{ route("users.index") }}"><i class="fa-solid fa-users mx-1"></i>Customers</a>
         </li>
         <li class="active border-bottom border-top">
             <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="collapsed text-decoration-none d-block dropdown-toggle p-3 text-white"><i class="fa-solid fa-users mx-1"></i>Pages</a>
