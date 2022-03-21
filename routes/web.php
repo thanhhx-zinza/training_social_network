@@ -27,7 +27,7 @@ use App\Http\Controllers\Admin\CustomerPostController;
 */
 Route::prefix('admin')->group(function () {
     Route::resource('/customers', CustomerController::class);
-    Route::resource('/customer-posts', CustomerPostController::class);
+    Route::resource('users.posts', CustomerPostController::class);
 });
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -41,17 +41,21 @@ Route::get('/error', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
+
     Route::get('/email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+
     Route::resource('posts.comments', CommentController::class)->middleware('verified');
     Route::get('/profile', [ProfileController::class, 'getProfile'])->name('profile.get_profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('profile/upload', [ ProfileController::class, 'upload' ])->name('profile.upload');
+
     Route::get('/relations', [RelationController::class, 'getAddFriendList'])->name('relations.get_add_friend_list');
     Route::post('/relations/{relation}', [RelationController::class, 'addFriend'])->name('relations.add_friend');
     Route::get('/relations/requests', [RelationController::class, 'getRequests'])->name('relations.get_requests');
     Route::patch('/relations/{relation}', [RelationController::class, 'responseRequest'])->name('relations.response_request');
+
     Route::get('/posts/friends', [PostController::class, 'getFriendPosts'])->name('post.get_friend_posts');
     Route::resource('posts', PostController::class);
     Route::get('/relations/myfriend', [RelationController::class, 'getMyFriends'])->name('relations.myfriend');

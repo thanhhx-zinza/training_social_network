@@ -30,7 +30,7 @@
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td class="text-center">
-                <a href="{{ route("customer-posts.show", ["customer_post" => $user->id]) }}" type="button" class="btn btn-primary"><i class="fa-solid fa-eye mr-1"></i>Seen</a>
+                <a href="{{ route("users.posts.index", ["user" => $user->id]) }}" type="button" class="btn btn-primary"><i class="fa-solid fa-eye mr-1"></i>Seen</a>
                 <a href="{{ route("customers.edit", ["customer" => $user->id]) }}" class="btn btn-warning"><i class="fa-solid fa-pen mr-1"></i>Edit</a>
                 <form action="{{ route("customers.destroy", ["customer" => $user->id]) }}" method="post">
                     @csrf
