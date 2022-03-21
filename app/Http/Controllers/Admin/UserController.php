@@ -71,7 +71,7 @@ class UserController extends AdminController
         if (!empty($user)) {
             return view("admin.customer.create-update", ["user" => $user]);
         }
-            return redirect()->back()->with("message", "Can not found");
+        return redirect()->back()->with("message", "Can not found");
     }
 
     /**
