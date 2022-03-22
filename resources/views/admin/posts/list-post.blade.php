@@ -43,8 +43,8 @@
                 </div>
             </td>
             <td class="text-center">
-                <a href="#" class="btn btn-warning"><i class="fa-solid fa-pen mr-1"></i>Edit</a>
-                <form action="#" method="post">
+                <a href="{{ route("admin.post.edit", ["user" => $user->id, "post" => $post->id]) }}" class="btn btn-warning"><i class="fa-solid fa-pen mr-1"></i>Edit</a>
+                <form action="{{ route("admin.post.delete", ["user" => $user->id, "post"=>$post->id]) }}" method="post">
                     @csrf
                     @method("delete")
                     <button type="submit" onClick="return confirm('Are you sure want delete ?')" class="btn btn-danger"><i class="fa-solid fa-trash mr-1"></i>Delete</button>
