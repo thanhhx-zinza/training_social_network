@@ -35,9 +35,9 @@ class AdminTest extends TestCase
     public function testListAdminSuccess()
     {
         Session::start();
-        $admin = Admin::where('level', 0)->first();
+        $admin = Admin::first();
         Auth::guard("admin")->login($admin);
-        $response = $this->get('/admin/list-admin/index');
+        $response = $this->get('admin/admins');
         $response->assertOk();
     }
 
@@ -50,9 +50,9 @@ class AdminTest extends TestCase
     public function testCreateAdminSuccess()
     {
         Session::start();
-        $admin = Admin::where('level', 0)->first();
+        $admin = Admin::first();
         Auth::guard("admin")->login($admin);
-        $response = $this->get('/admin/list-admin/create');
+        $response = $this->get('admin/admins/create');
         $response->assertViewIs('admin.list-admin.create-update');
         $response->assertOk();
     }
@@ -66,16 +66,16 @@ class AdminTest extends TestCase
     {
         Session::start();
         $faker = Factory::create();
-        $admin = Admin::where('level', 0)->first();
+        $admin = Admin::first();
         Auth::guard("admin")->login($admin);
-        $response = $this->post('/admin/list-admin/store', [
+        $response = $this->post('/admin/admins', [
             'name' => $faker->name,
             'password' => 12345678,
             'email' => $faker->email,
             '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/admin/list-admin/index");
+        $response->assertRedirect("/admin/admins");
     }
 
     /**
@@ -89,18 +89,18 @@ class AdminTest extends TestCase
 
     public function testStoreFailInValidate($name, $email, $password)
     {
-        $this->get('/admin/list-admin/create');
+        $this->get('/admin/admins/create');
         Session::start();
         $admin = Admin::where('level', 0)->first();
         Auth::guard("admin")->login($admin);
-        $response = $this->post('/admin/list-admin/store', [
+        $response = $this->post('/admin/admins', [
             'name' => $name,
             'password' => $password,
             'email' => $email,
             '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/admin/list-admin/create");
+        $response->assertRedirect("/admin/admins/create");
     }
 
     /**
@@ -129,10 +129,9 @@ class AdminTest extends TestCase
     public function testEditAdminSuccess()
     {
         Session::start();
-        $admin = Admin::where('level', 0)->first();
+        $admin = Admin::first();
         Auth::guard("admin")->login($admin);
-        $subAdmin = Admin::where("level", 1)->first();
-        $response = $this->get('/admin/list-admin/edit/'.$subAdmin->id);
+        $response = $this->get('/admin/admins/'.$admin->id.'/edit/');
         $data = $response->getOriginalContent()->getData();
         $this->assertTrue(isset($data['admin']));
         $response->assertOk();
@@ -146,14 +145,13 @@ class AdminTest extends TestCase
 
     public function testEditAdminFail()
     {
-        $this->get('/admin/list-admin/index/');
+        $this->get('/admin/admins');
         Session::start();
-        $admin = Admin::where('level', 0)->first();
+        $admin = Admin::first();
         Auth::guard("admin")->login($admin);
-        $subAdmin = Admin::where("level", 1)->first();
-        $response = $this->get('/admin/list-admin/edit/'.$subAdmin->id."1274");
+        $response = $this->get('/admin/admins/'.$admin->id.'135/edit');
         $response->assertStatus(302);
-        $response->assertRedirect('/admin/list-admin/index/');
+        $response->assertRedirect('/admin/admins/');
     }
 
     /**
@@ -166,17 +164,16 @@ class AdminTest extends TestCase
     {
         Session::start();
         $faker = Factory::create();
-        $admin = Admin::where('level', 0)->first();
+        $admin = Admin::first();
         Auth::guard("admin")->login($admin);
-        $subAdmin = Admin::where("level", 1)->first();
-        $response = $this->put('/admin/list-admin/update/'.$subAdmin->id, [
+        $response = $this->put('/admin/admins/'.$admin->id, [
             'name' => $faker->name,
             'password' => 12345678,
             'email' => $faker->email,
             '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/admin/list-admin/index");
+        $response->assertRedirect("/admin/admins");
     }
 
      /**
@@ -188,14 +185,14 @@ class AdminTest extends TestCase
     public function testDestroySuccess()
     {
         Session::start();
-        $this->get('/admin/list-admin/index/');
-        $admin = Admin::where('level', 0)->first();
+        $this->get('/admin/admins');
+        $admin = Admin::first();
+        $otherAdmin = Admin::orderBy("id", "desc")->first();
         Auth::guard("admin")->login($admin);
-        $subAdmin = Admin::where("level", 1)->first();
-        $response = $this->delete('/admin/list-admin/delete/'.$subAdmin->id, [
+        $response = $this->delete('/admin/admins/'.$otherAdmin->id, [
             '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/admin/list-admin/index");
+        $response->assertRedirect("/admin/admins");
     }
 }

@@ -27,6 +27,9 @@ class PostController extends BaseAdminController
     public function index($user_id)
     {
         $user = User::find($user_id);
+        if (empty($user)) {
+            return redirect()->route("error.404");
+        }
         $postList = $user->posts()->newestPosts()->paginate($this->paginationNum);
         if ($postList->count() > 0) {
             foreach ($postList as $row) {

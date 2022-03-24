@@ -18,7 +18,7 @@ class AdminController extends BaseAdminController
 
     public function index()
     {
-        $admins = $this->admin->getListAdmin();
+        $admins = $this->admin->all();
         return view("admin.list-admin.index", compact("admins"));
     }
 
@@ -34,7 +34,7 @@ class AdminController extends BaseAdminController
         $admin->email = $request->email;
         $admin->password = Hash::make($request->password);
         if ($admin->save()) {
-            return redirect()->route("admin.subAdmin.index");
+            return redirect()->route("admins.index");
         }
         return redirect()->back()->with("message", "Create new fails");
     }
@@ -50,20 +50,29 @@ class AdminController extends BaseAdminController
 
     public function update(RegisterRequest $request, Admin $admin)
     {
+        if (empty($admin)) {
+            return redirect()->back()->with("message", "Can't find the admin to update");
+        }
         $admin->name = $request->name;
         $admin->email = $request->email;
         $admin->password = Hash::make($request->password);
         if ($admin->save()) {
-            return redirect()->route("admin.subAdmin.index");
+            return redirect()->route("admins.index");
         }
         return redirect()->back()->with("message", "Update fails");
     }
 
     public function destroy(Admin $admin)
     {
+        if (empty($admin)) {
+            return redirect()->back()->with("message", "Can't find the admin to delete");
+        }
+        if ($this->currentAdmin()->id == $admin->id) {
+            return redirect()->back()->with("message", "Cant delete myself");
+        }
         if ($admin->delete()) {
             return redirect()->back()->with("messageSuccess", "Delete successfully");
         }
-        return redirect()->back()->with("message", "Delete fails");
+        return redirect()->back()->with("message", "Delete Fail");
     }
 }

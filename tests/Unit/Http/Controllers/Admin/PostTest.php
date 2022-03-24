@@ -45,7 +45,7 @@ class PostTest extends TestCase
     {
         $user = User::orderBy("id", "DESC")->first();
         $post = Post::where('user_id', $user->id)->first();
-        $response = $this->get("admin/posts/edit/".$user->id.'/'.$post->id);
+        $response = $this->get("admin/users/".$user->id."/posts/".$post->id."/edit");
         $response->assertOk();
         $response->assertViewIs('admin.posts.edit');
         $data = $response->getOriginalContent()->getData();
@@ -61,9 +61,8 @@ class PostTest extends TestCase
         $user = User::orderBy("id", "DESC")->first();
         $this->get('/admin/users/'.$user->id.'/posts');
         $faker = Factory::create();
-        Storage::fake('images-post');
         $post = Post::where('user_id', $user->id)->first();
-        $response = $this->put("admin/posts/update/".$user->id.'/'.$post->id, [
+        $response = $this->put("admin/users/".$user->id."/posts/".$post->id, [
             "content" => $faker->realText(),
             '_token' => csrf_token(),
         ]);
@@ -81,7 +80,7 @@ class PostTest extends TestCase
         $user = User::orderBy("id", "DESC")->first();
         $this->get('/admin/users/'.$user->id.'/posts');
         $post = Post::where('user_id', '=', $user->id)->first();
-        $response = $this->delete('admin/posts/delete/'.$user->id.'/'.$post->id, [
+        $response = $this->delete("admin/users/".$user->id."/posts/".$post->id, [
             '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
