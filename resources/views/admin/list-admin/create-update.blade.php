@@ -18,9 +18,9 @@
             <div class="alert alert-error">{{session('message')}}</div>
         @endif
         @if (!isset($admin))
-            <form  method="post" action="{{ route('admin.subAdmin.store') }} ">
+            <form  method="post" action="{{ route('admins.store') }} ">
         @else
-            <form  method="post" action="{{ route('admin.subAdmin.update', ['admin' => $admin->id]) }} ">
+            <form  method="post" action="{{ route('admins.update', ['admin' => $admin->id]) }} ">
             @method('PUT')
         @endif
                 <div class="form-group row">

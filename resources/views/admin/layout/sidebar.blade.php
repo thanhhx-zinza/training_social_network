@@ -40,11 +40,9 @@
             </ul>
         </li>
         @if(Auth::guard("admin")->check())
-            @if (Auth::guard("admin")->user()->level == 0)
                 <li class="active border-bottom border-top">
-                    <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="{{ route("admin.subAdmin.index") }}"><i class="fa-solid fa-users mx-1"></i>Manager Sub Admin</a>
+                    <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="{{ route("admins.index") }}"><i class="fa-solid fa-users mx-1"></i>Manager Sub Admin</a>
                 </li>
-            @endif
         @endif
         <li class="active border-bottom border-top">
             <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="#"><i class="fa-solid fa-users mx-1"></i>Contact</a>

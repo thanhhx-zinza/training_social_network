@@ -24,7 +24,7 @@
         </div>
     @endif
     @if(!empty($user) && !empty($post))
-       <form enctype="multipart/form-data" method="post" action="{{ route("admin.post.update", ["user" => $user->id, "post" => $post->id]) }}">
+       <form enctype="multipart/form-data" method="post" action="{{ route("users.posts.update", ["user" => $user->id, "post" => $post->id]) }}">
         @csrf
         @method("put")
         <div class="form-group">
