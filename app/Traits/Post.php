@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 trait Post
 {
-    private function handleImageOld($imageNew, $imageOld, $arrImageDeleted)
+    public function handleImageOld($imageNew, $imageOld, $arrImageDeleted)
     {
         $imageDeleted = [];
         $arrElement = [];
@@ -42,7 +42,7 @@ trait Post
         return $data;
     }
 
-    private function storeImage($images)
+    public function storeImage($images)
     {
         $arrImages = [];
         foreach ($images as $image) {
