@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BaseAdminController;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Spatie\Valuestore\Valuestore;
 use Illuminate\Http\Request;
 use Hash;
 
-class UserController extends AdminController
+class UserController extends BaseAdminController
 {
     private $paginationNum = 0;
 
