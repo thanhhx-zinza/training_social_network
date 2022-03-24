@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BaseAdminController;
 use App\Http\Requests\LoginRequest;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends AdminController
+class AuthController extends BaseAdminController
 {
     public function login(Request $request)
     {

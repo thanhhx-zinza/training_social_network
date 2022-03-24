@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BaseAdminController;
 use App\Models\Post;
 use App\Models\User;
 use Spatie\Valuestore\Valuestore;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Exceptions\ErrorException;
+use App\Traits\Post as TraitPost;
 use Illuminate\Support\Facades\Storage;
 
-class PostController extends AdminController
+class PostController extends BaseAdminController
 {
+    use TraitPost;
     private $paginationNum = 0;
 
     public function __construct()
@@ -70,53 +72,6 @@ class PostController extends AdminController
             "images" => $images
         ]);
         return redirect()->route('users.posts.index', ["user" => $user->id]);
-    }
-
-    private function handleImageOld($imageNew, $imageOld, $arrImageDeleted)
-    {
-        $imageDeleted = [];
-        $arrElement = [];
-        if (isset($imageNew) && count($imageNew) > 0) {
-            $imageNew = $this->storeImage($imageNew);
-        }
-        if (isset($arrImageDeleted) && count($arrImageDeleted) > 0) {
-            foreach ($imageOld as $key => $img) {
-                if (!in_array($key, $arrImageDeleted)) {
-                    array_push($imageDeleted, $img);
-                    array_push($arrElement, $key);
-                }
-            }
-            foreach ($arrElement as $key) {
-                unset($imageOld[$key]);
-            }
-            if (count($imageDeleted) > 0) {
-                foreach ($imageDeleted as $image) {
-                    Storage::delete('images-post/'.$image);
-                }
-            }
-        }
-        if (empty($imageNew)) {
-            $data = json_encode($imageOld, JSON_FORCE_OBJECT);
-        } else {
-            foreach ($imageNew as $image) {
-                if (!in_array($image, $imageOld)) {
-                    array_push($imageOld, $image);
-                }
-            }
-            $data = json_encode($imageOld, JSON_FORCE_OBJECT);
-        }
-        return $data;
-    }
-
-    private function storeImage($images)
-    {
-        $arrImages = [];
-        foreach ($images as $image) {
-            $imageName = uniqid().'.'.$image->extension();
-            $image->storeAs('images-post', $imageName, 'public');
-            array_push($arrImages, $imageName);
-        }
-        return $arrImages;
     }
 
     public function destroy(User $user, Post $post)
