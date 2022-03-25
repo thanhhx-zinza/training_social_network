@@ -1,10 +1,12 @@
 <div class="sidebar h-100 bg-info">
     <ul class="list-unstyled components h-100">
         <div class="p-3 text-white">
-            <h4>Welcome: Adminstrator</h4>
+            @if(Auth::guard("admin")->check())
+            <h4>Welcome: {{ Auth::guard("admin")->user()->name }}</h4>
+            @endif
         </div>
         <li class="border-bottom border-top">
-            <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="#"><i class="fa-solid fa-users mx-1"></i>Dashboard</a>
+            <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="{{ route("dashboard.index") }}"><i class="fa-solid fa-users mx-1"></i>Dashboard</a>
         </li>
         <li class="active border-bottom border-top">
             <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none"><i class="fa-solid fa-house mx-1"></i>Home</a>
@@ -37,9 +39,11 @@
                 </li>
             </ul>
         </li>
-        <li class="active border-bottom border-top">
-            <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="#"><i class="fa-solid fa-users mx-1"></i>Portfolio</a>
-        </li>
+        @if(Auth::guard("admin")->check())
+                <li class="active border-bottom border-top">
+                    <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="{{ route("admins.index") }}"><i class="fa-solid fa-users mx-1"></i>Manager Sub Admin</a>
+                </li>
+        @endif
         <li class="active border-bottom border-top">
             <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="#"><i class="fa-solid fa-users mx-1"></i>Contact</a>
         </li>
