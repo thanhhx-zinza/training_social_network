@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             CommentReactionSeeder::class,
             ReactionSeeder::class,
             RelationSeeder::class,
-            AdminSeeder::class
+            AdminSeeder::class,
+            RoleSeeder::class
         ]);
     }
 }

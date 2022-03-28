@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [AuthController::class, "show"])->name("login.show");
@@ -13,6 +15,8 @@ Route::middleware('adminAuth')->group(function () {
     Route::resource('users.posts', PostController::class);
     Route::resource('admins', AdminController::class);
     Route::resource('users', UserController::class);
+    Route::resource('roles', RoleController::class);
+    Route::resource('permission', PermissionController::class)->only(['create', 'store']);
     Route::get('dashboard', [DashboardController::class, "index"])->name("dashboard.index");
     Route::get('logout', [AuthController::class, "logout"])->name("admin.logout");
 });

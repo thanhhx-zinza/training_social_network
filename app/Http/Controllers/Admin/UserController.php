@@ -8,6 +8,7 @@ use App\Models\User;
 use Spatie\Valuestore\Valuestore;
 use Illuminate\Http\Request;
 use Hash;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends BaseAdminController
 {
@@ -26,8 +27,11 @@ class UserController extends BaseAdminController
      */
     public function index()
     {
-        $users = User::orderBy("id", "DESC")->paginate($this->paginationNum);
-        return view("admin.customer.index", compact("users"));
+        if (Gate::forUser($this->currentAdmin())->allows('users-list')) {
+            $users = User::orderBy("id", "DESC")->paginate($this->paginationNum);
+            return view("admin.customer.index", compact("users"));
+        }
+        return abort(403);
     }
 
     /**
@@ -37,7 +41,10 @@ class UserController extends BaseAdminController
      */
     public function create()
     {
-        return view("admin.customer.create-update");
+        if (Gate::forUser($this->currentAdmin())->allows('users-add')) {
+            return view("admin.customer.create-update");
+        }
+        return abort(403);
     }
 
     /**
@@ -48,14 +55,17 @@ class UserController extends BaseAdminController
      */
     public function store(RegisterRequest $request)
     {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        if ($user->save()) {
-            return redirect()->route("users.index");
+        if (Gate::forUser($this->currentAdmin())->allows('users-add')) {
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            if ($user->save()) {
+                return redirect()->route("users.index");
+            }
+            return redirect()->back()->with("message", "Create new fails");
         }
-        return redirect()->back()->with("message", "Create new fails");
+        return abort(403);
     }
 
     /**
@@ -67,11 +77,14 @@ class UserController extends BaseAdminController
 
     public function edit($user_id)
     {
-        $user = User::find($user_id);
-        if (!empty($user)) {
-            return view("admin.customer.create-update", ["user" => $user]);
+        if (Gate::forUser($this->currentAdmin())->allows('users-edit')) {
+            $user = User::find($user_id);
+            if (!empty($user)) {
+                return view("admin.customer.create-update", ["user" => $user]);
+            }
+            return redirect()->back()->with("message", "Can not found");
         }
-        return redirect()->back()->with("message", "Can not found");
+        return abort(403);
     }
 
     /**
@@ -83,13 +96,16 @@ class UserController extends BaseAdminController
      */
     public function update(RegisterRequest $request, User $user)
     {
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        if ($user->save()) {
-            return redirect()->route("users.index");
+        if (Gate::forUser($this->currentAdmin())->allows('users-edit')) {
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            if ($user->save()) {
+                return redirect()->route("users.index");
+            }
+            return redirect()->back()->with("message", "Update fails");
         }
-        return redirect()->back()->with("message", "Update fails");
+        return abort(403);
     }
 
     /**
@@ -100,9 +116,12 @@ class UserController extends BaseAdminController
      */
     public function destroy(User $user)
     {
-        if ($user->delete()) {
-            return redirect()->back()->with("messageSuccess", "Delete successfully");
+        if (Gate::forUser($this->currentAdmin())->allows('users-delete')) {
+            if ($user->delete()) {
+                return redirect()->back()->with("messageSuccess", "Delete successfully");
+            }
+            return redirect()->back()->with("message", "Delete fails");
         }
-        return redirect()->back()->with("message", "Delete fails");
+        return abort(403);
     }
 }

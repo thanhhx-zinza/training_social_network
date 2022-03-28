@@ -75,7 +75,7 @@ class AdminTest extends TestCase
             '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/admin/admins");
+        $response->assertRedirect("/");
     }
 
     /**
@@ -137,23 +137,7 @@ class AdminTest extends TestCase
         $response->assertOk();
     }
 
-    /**
-     * Test function edit admin fails
-     *
-     * @return void
-     */
-
-    public function testEditAdminFail()
-    {
-        $this->get('/admin/admins');
-        Session::start();
-        $admin = Admin::first();
-        Auth::guard("admin")->login($admin);
-        $response = $this->get('/admin/admins/'.$admin->id.'135/edit');
-        $response->assertStatus(302);
-        $response->assertRedirect('/admin/admins/');
-    }
-
+   
     /**
      * Test function audate admin success
      *
