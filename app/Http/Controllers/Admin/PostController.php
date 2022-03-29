@@ -11,6 +11,7 @@ use App\Http\Requests\PostRequest;
 use App\Exceptions\ErrorException;
 use App\Traits\Post as TraitPost;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends BaseAdminController
 {
@@ -22,6 +23,10 @@ class PostController extends BaseAdminController
         $this->audiences = Post::getAudiences();
         $settings = Valuestore::make(storage_path('app/settings.json'));
         $this->paginationNum = $settings->get('post_pagination', 0);
+        $this->middleware('checkPermission:posts_list', ['only' => ['index']]);
+        $this->middleware('checkPermission:posts_add', ['only' => ['create', 'store']]);
+        $this->middleware('checkPermission:posts_edit', ['only' => ['edit', 'update']]);
+        $this->middleware('checkPermission:posts_delete', ['only' => ['destroy']]);
     }
 
     public function index($user_id)

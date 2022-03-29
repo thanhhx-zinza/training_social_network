@@ -2,8 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Admin;
+use App\Policies\PostPolicy;
+use App\Policies\AdminPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -24,7 +29,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
     }
 }

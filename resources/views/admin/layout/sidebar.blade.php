@@ -9,16 +9,13 @@
             <a class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none" href="{{ route("dashboard.index") }}"><i class="fa-solid fa-users mx-1"></i>Dashboard</a>
         </li>
         <li class="active border-bottom border-top">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none"><i class="fa-solid fa-house mx-1"></i>Home</a>
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="collapsed d-block dropdown-toggle p-3 text-white text-decoration-none"><i class="fa-solid fa-house mx-1"></i>Decentralization</a>
             <ul class="collapse list-unstyled text-white" id="homeSubmenu">
                 <li class="bg-light border-bottom p-3">
-                    <a href="#">Home 1</a>
+                    <a href="{{ route("roles.index") }}">Roles</a>
                 </li>
                 <li class="bg-light border-bottom p-3">
-                    <a href="#">Home 1</a>
-                </li>
-                <li class="bg-light border-bottom p-3">
-                    <a href="#">Home 1</a>
+                    <a href="{{ route("permission.create") }}">Permission</a>
                 </li>
             </ul>
         </li>

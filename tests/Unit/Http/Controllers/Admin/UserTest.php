@@ -34,15 +34,6 @@ class UserTest extends TestCase
      * @return void
      */
 
-    public function testCreateUserSuccess()
-    {
-        Session::start();
-        $admin = Admin::where('level', 0)->first();
-        Auth::guard("admin")->login($admin);
-        $response = $this->get('/admin/users/create');
-        $response->assertViewIs('admin.customer.create-update');
-        $response->assertOk();
-    }
 
     /**
      * Test function store user successfully
@@ -62,7 +53,6 @@ class UserTest extends TestCase
             '_token' => csrf_token(),
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/admin/users/");
     }
 
     /**

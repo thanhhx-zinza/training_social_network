@@ -8,6 +8,7 @@ use App\Models\User;
 use Spatie\Valuestore\Valuestore;
 use Illuminate\Http\Request;
 use Hash;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends BaseAdminController
 {
@@ -17,6 +18,10 @@ class UserController extends BaseAdminController
     {
         $settings = Valuestore::make(storage_path('app/settings.json'));
         $this->paginationNum = $settings->get('post_pagination', 0);
+        $this->middleware('checkPermission:users_list', ['only' => ['index']]);
+        $this->middleware('checkPermission:users_add', ['only' => ['create', 'store']]);
+        $this->middleware('checkPermission:users_edit', ['only' => ['edit', 'update']]);
+        $this->middleware('checkPermission:users_delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -83,6 +88,9 @@ class UserController extends BaseAdminController
      */
     public function update(RegisterRequest $request, User $user)
     {
+        if (empty($user)) {
+            return redirect()->back()->with("message", "Can't find the user to update");
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
@@ -100,6 +108,9 @@ class UserController extends BaseAdminController
      */
     public function destroy(User $user)
     {
+        if (empty($user)) {
+            return redirect()->back()->with("message", "Can't find the user to delete");
+        }
         if ($user->delete()) {
             return redirect()->back()->with("messageSuccess", "Delete successfully");
         }
