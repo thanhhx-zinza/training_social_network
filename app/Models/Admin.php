@@ -18,16 +18,4 @@ class Admin extends Authenticatable
     {
         return $this->belongsToMany(Roles::class, "admin_role", "admin_id", "role_id");
     }
-
-    public function checkPermissionAcess($keyCode)
-    {
-        $roles = Auth::guard("admin")->user()->roles;
-        foreach ($roles as $role) {
-            $permissions = $role->permissions;
-            if ($permissions->contains("key_code", $keyCode)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

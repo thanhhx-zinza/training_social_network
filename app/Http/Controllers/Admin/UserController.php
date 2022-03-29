@@ -18,6 +18,10 @@ class UserController extends BaseAdminController
     {
         $settings = Valuestore::make(storage_path('app/settings.json'));
         $this->paginationNum = $settings->get('post_pagination', 0);
+        $this->middleware('checkPermission:users_list', ['only' => ['index']]);
+        $this->middleware('checkPermission:users_add', ['only' => ['create', 'store']]);
+        $this->middleware('checkPermission:users_edit', ['only' => ['edit', 'update']]);
+        $this->middleware('checkPermission:users_delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -27,11 +31,8 @@ class UserController extends BaseAdminController
      */
     public function index()
     {
-        if (Gate::forUser($this->currentAdmin())->allows('users-list')) {
-            $users = User::orderBy("id", "DESC")->paginate($this->paginationNum);
-            return view("admin.customer.index", compact("users"));
-        }
-        return abort(403);
+        $users = User::orderBy("id", "DESC")->paginate($this->paginationNum);
+        return view("admin.customer.index", compact("users"));
     }
 
     /**
@@ -41,10 +42,7 @@ class UserController extends BaseAdminController
      */
     public function create()
     {
-        if (Gate::forUser($this->currentAdmin())->allows('users-add')) {
-            return view("admin.customer.create-update");
-        }
-        return abort(403);
+        return view("admin.customer.create-update");
     }
 
     /**
@@ -55,17 +53,14 @@ class UserController extends BaseAdminController
      */
     public function store(RegisterRequest $request)
     {
-        if (Gate::forUser($this->currentAdmin())->allows('users-add')) {
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            if ($user->save()) {
-                return redirect()->route("users.index");
-            }
-            return redirect()->back()->with("message", "Create new fails");
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        if ($user->save()) {
+            return redirect()->route("users.index");
         }
-        return abort(403);
+        return redirect()->back()->with("message", "Create new fails");
     }
 
     /**
@@ -77,14 +72,11 @@ class UserController extends BaseAdminController
 
     public function edit($user_id)
     {
-        if (Gate::forUser($this->currentAdmin())->allows('users-edit')) {
-            $user = User::find($user_id);
-            if (!empty($user)) {
-                return view("admin.customer.create-update", ["user" => $user]);
-            }
-            return redirect()->back()->with("message", "Can not found");
+        $user = User::find($user_id);
+        if (!empty($user)) {
+            return view("admin.customer.create-update", ["user" => $user]);
         }
-        return abort(403);
+        return redirect()->back()->with("message", "Can not found");
     }
 
     /**
@@ -96,16 +88,16 @@ class UserController extends BaseAdminController
      */
     public function update(RegisterRequest $request, User $user)
     {
-        if (Gate::forUser($this->currentAdmin())->allows('users-edit')) {
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            if ($user->save()) {
-                return redirect()->route("users.index");
-            }
-            return redirect()->back()->with("message", "Update fails");
+        if (empty($user)) {
+            return redirect()->back()->with("message", "Can't find the user to update");
         }
-        return abort(403);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        if ($user->save()) {
+            return redirect()->route("users.index");
+        }
+        return redirect()->back()->with("message", "Update fails");
     }
 
     /**
@@ -116,12 +108,12 @@ class UserController extends BaseAdminController
      */
     public function destroy(User $user)
     {
-        if (Gate::forUser($this->currentAdmin())->allows('users-delete')) {
-            if ($user->delete()) {
-                return redirect()->back()->with("messageSuccess", "Delete successfully");
-            }
-            return redirect()->back()->with("message", "Delete fails");
+        if (empty($user)) {
+            return redirect()->back()->with("message", "Can't find the user to delete");
         }
-        return abort(403);
+        if ($user->delete()) {
+            return redirect()->back()->with("messageSuccess", "Delete successfully");
+        }
+        return redirect()->back()->with("message", "Delete fails");
     }
 }

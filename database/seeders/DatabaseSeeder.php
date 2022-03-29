@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             ReactionSeeder::class,
             RelationSeeder::class,
             AdminSeeder::class,
-            RoleSeeder::class
+            RoleSeeder::class,
+            PermissionSeeder::class,
         ]);
     }
 }
