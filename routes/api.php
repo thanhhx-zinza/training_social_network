@@ -17,5 +17,5 @@ use App\Http\Controllers\Api\ProfileController;
 Route::middleware(['api', 'auth:api'])->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('auth.login')->withoutMiddleware('auth:api');
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::put('profile/update', [ProfileController::class, 'update'])->name("profiles.update");
+    Route::put('profile', [ProfileController::class, 'update'])->name("profiles.update");
 });
